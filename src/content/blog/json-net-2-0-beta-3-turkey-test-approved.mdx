@@ -1,0 +1,48 @@
+---
+title: "Json.NET 2.0 Beta 3 - Turkey Test Approved"
+description: "Json.NET 2.0 Beta 3 - Turkey Test Approved"
+pubDate: "Apr 08 2008"
+source: "https://james.newtonking.com/archive/2008/04/08/json-net-2-0-beta-3-turkey-test-approved"
+---
+![I've just enrolled in a screenwriting class. I yearn to tell the story of an idealistic young Hindu, pushed too far by convenience store bandits. I call it 'Hands Off My Jerky, Turkey'.](http://james.newtonking.com/images/Json.NET2.0Beta3TurkeyTestApproved_13E6E/turkeyTestLogo.png "I've just enrolled in a screenwriting class. I yearn to tell the story of an idealistic young Hindu, pushed too far by convenience store bandits. I call it 'Hands Off My Jerky, Turkey'.")
+
+[This post](http://www.moserware.com/2008/02/does-your-code-pass-turkey-test.html) on handling different cultures in .NET really caught my imagination a couple of months back. Today I can proudly say that Json.NET passes the Turkey Test!
+ 
+Aside from poultry, the main focus of this Json.NET release has been fixing all the little issues in the LINQ to JSON objects (JObject, JArray, JValue, etc). [NCover](http://www.ncover.com/) has been a great help highlighting methods that didn't have any tests over the top of them. Test coverage has improved significantly in this release.
+ 
+The JsonSerializer has also seen some changes. All reported bugs have been fixed and a couple of new features have been added. The most significant new feature is the JsonObjectAttribute. Placed on a class the JsonObjectAttribute lets you control whether properties are serialized by default (e.g. XmlSerializer behaviour) or whether you must explicitly include each property you want serialized with the JsonPropertyAttribute (e.g. WCF behaviour).
+ 
+```csharp
+[JsonObject(MemberSerialization.OptIn)]
+public class Person
+{
+  [JsonProperty]
+  public string Name { get; set; }
+
+  [JsonProperty]
+  public DateTime BirthDate { get; set; }
+
+  // not serialized
+  public string Department { get; set; }
+}
+```
+
+The default behaviour for classes without the attribute remains properties are serialized by default (opt-out).
+
+## Changes
+
+- New feature - Added JsonObjectAttribute with ability to opt-in or opt-out members by default.
+- New feature - Added Skip() method to JsonReader.
+- New feature - Added ObjectCreationHandling property to JsonSerializer.
+- Change - LOTS of little fixes and changes to the LINQ to JSON objects.
+- Change - CultureInfo is specified across Json.NET when converting objects to and from text.
+- Change - Improved behaviour of JsonReader.Depth property.
+- Change - GetSerializableMembers on JsonSerializer is now virtual.
+- Fix - Floating point numbers now use ToString("r") to avoid an overflow error when serializing and deserializing a boundary value.
+- Fix - JsonSerializer now correctly serializes and deserializes DBNull.
+- Fix - JsonSerializer no longer errors when skipping a multi-token JSON structure.
+- Fix - Clone a JToken if it already has a parent and is being added as a child to a new token
+
+[**Json.NET CodePlex Project**](http://www.codeplex.com/Json) 
+
+[**Json.NET 2.0 Beta 3 Download**](http://www.codeplex.com/Release/ProjectReleases.aspx?ProjectName=Json&amp;ReleaseId=12368) - Json.NET source code and binaries

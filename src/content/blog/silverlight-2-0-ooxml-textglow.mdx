@@ -1,0 +1,39 @@
+---
+title: "Silverlight 2.0 + OOXML = TextGlow"
+description: "Silverlight 2.0 + OOXML = TextGlow"
+pubDate: "Mar 06 2008"
+source: "https://james.newtonking.com/archive/2008/03/06/silverlight-2-0-ooxml-textglow"
+---
+![Let us all bask in television's warm glowing warming glow.](http://james.newtonking.com/Media/Default/images/blog/textglow_thumb.png "Let us all bask in television's warm glowing warming glow.")
+
+Over the last couple of months I have had the opportunity to work on an exciting project called [TextGlow](http://www.textglow.net/).
+
+TextGlow is a Silverlight 2.0 application for viewing Word 2007 documents on the Internet. With TextGlow it is possible to instantly view a document within a web page, with no Microsoft Office applications installed. Since Silverlight is cross platform the user doesn't even have to be running Windows!
+
+## How it Works
+
+![See those blue and silver guys, Maggie? They're the Dallas Cowboys. They're Daddy's favorite team, and he wants them to lose by at least three points.](http://james.newtonking.com/Media/Default/images/blog/150pxSilverlight_1_thumb.png "See those blue and silver guys, Maggie? They're the Dallas Cowboys. They're Daddy's favorite team, and he wants them to lose by at least three points.")
+
+The first step to TextGlow displaying a document is going out and downloading it. TextGlow is a Silverlight application and runs completely client side, and that means it needs a local copy to work with. This process happens automatically using the new [WebClient](http://msdn2.microsoft.com/en-us/library/system.net.webclient%28VS.95%29.aspx) class in Silverlight 2.0. Like you would expect from a class called WebClient it provides simple web request, but what makes WebClient great are the download progress events it provides. Making a progress bar to show the status of a download is a snap.
+
+Next the various files inside the document are extracted. An OOXML document (docx) is actually just a zip file containing XML and other resource files, such as any images that might appear in the document. Fortunately Silverlight has built in zip file support using the [Application.GetResourceStream](http://msdn2.microsoft.com/en-us/library/cc190632%28VS.95%29.aspx) method.
+
+![I bent my Wookie.](http://james.newtonking.com/Media/Default/images/blog/openxmldeveloper_thumb.gif "I bent my Wookie.")Now that TextGlow has the OOXML it parses the XML and builds an object model of the document. To parse the XML I used [LINQ to XML](http://go.microsoft.com/fwlink/?LinkId=109813), which is new in Silverlight 2.0. After an initial learning curve (mainly suppressing the memory of many years of working with horrible DOM APIs 😉), I found LINQ to XML to be wonderful to work with. I blogged about a couple of the [cool features](http://james.newtonking.com/archive/2007/12/11/linq-to-xml-over-large-documents.aspx) I discovered while working with LINQ to XML along the way.
+
+Using the object model of the document TextGlow then creates WPF controls to display the content. Writing custom Silverlight WPF controls to render the content was definitely the hardest aspect of the project. When I started work on it with the Silverlight 1.1 Alpha there were no layout controls like StackPanel or Grid. Everything was absolutely position and I had to write my own flow layout controls. Paragraphs and complex flowing text was also surprisingly difficult to get right in Silverlight. Fortunatly Silverlight 2.0 includes controls like these and makes writing an application like TextGlow much easier.
+
+The final step in display a document is simply WPF plying its magic and rendering the WPF controls. The user now has the Word 2007 document render on their screen using nothing but the power of Silverlight.
+
+## Thanks to...
+
+TextGlow has be a great application to work on and it was awesome being able to design and build my own idea.
+
+Thanks to [Nas](http://naskhan.com/) for mocking up the UI. If the UI was left up to me TextGlow would make Notepad look good 😉
+
+Big thanks to [Chris Auld](http://www.syringe.net.nz/) for providing a launch pad for the idea and then providing regular injections of enthusiasm into the project.
+
+If you're interested in seeing more of TextGlow, visit http://www.textglow.com
+
+Update:
+
+## [TextGlow Open Sourced](http://james.newtonking.com/archive/2009/03/29/textglow-open-sourced.aspx)

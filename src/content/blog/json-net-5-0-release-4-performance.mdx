@@ -1,0 +1,29 @@
+---
+title: "Json.NET 5.0 Release 4 – Performance"
+description: "Json.NET 5.0 Release 4 – Performance"
+pubDate: "Apr 25 2013"
+source: "https://james.newtonking.com/archive/2013/04/25/json-net-5-0-release-4-performance"
+---
+This release of Json.NET ships with many performance improvements, and is over 30% faster serializing and deserializing JSON compared to Json.NET 4.5.
+
+![Smithers, release the hounds.](http://james.newtonking.com/Media/Default/images/blog/jsonnet50performance.png "Smithers, release the hounds.")
+
+Json.NET extends its performance lead over DataContractJsonSerializer and continues to be significantly faster than JavaScriptSerializer which is used by ASP.NET MVC.
+
+## Compiled Expressions on Windows 8 and Windows Phone 8
+
+An additional performance improvement specific to Windows 8 and Windows Phone 8 is the switch from the serializer internally using latebound reflection to compiled expressions. In exchange for a small one off cost the first time a type is serialized, compiled expressions are considerably faster than latebound reflection and provide an additional speed boost to Json.NET on Win8 and WP8.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 5.0 Release 1.
+
+- New feature - Added JsonWriter.SetWriteState to support inheritance from JsonWriter implementations
+- Change - Changed .NET 4.5 portable library and WinRT library to use compiled expressions reflection
+- Fix - Fixed error serializing non-generic types that implement IEnumerable&lt;T&gt;
+
+## Links
+
+[**Json.NET CodePlex Project**](http://json.codeplex.com/)
+
+**[Json.NET 5.0 Release 4 Download](https://json.codeplex.com/releases/view/105633)** - Json.NET source code and assemblies

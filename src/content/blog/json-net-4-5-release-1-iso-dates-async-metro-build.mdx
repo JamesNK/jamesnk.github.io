@@ -1,0 +1,83 @@
+---
+title: "Json.NET 4.5 Release 1 - ISO dates, Async, Metro build"
+description: "Json.NET 4.5 Release 1 - ISO dates, Async, Metro build"
+pubDate: "Mar 20 2012"
+source: "https://james.newtonking.com/archive/2012/03/20/json-net-4-5-release-1-iso-dates-async-metro-build"
+---
+This is the first major release of Json.NET 4.5. Read on for the details.
+  
+## ISO Dates
+  
+Json.NET now writes dates as an [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) string by default instead of Microsoft’s format.
+  
+The reason for the change is the ISO format is becoming the standard for JSON libraries. All major browsers output an ISO date from the [JSON.stringify](http://msdn.microsoft.com/en-us/library/cc836459%28v=vs.85%29.aspx) function for example. Other benefits are the ISO 8601 standard is human readable unlike Unix ticks and the format is better at handling time zones.
+  
+This is a breaking change but there is option to make dates go back to what they were called DateFormatHandling. Setting DateFormatHandling on either the JsonSerializer or JsonSerializerSettings to MicrosoftDateFormat will keep your dates nice and Unix ticky.
+  
+## Async Serialization
+  
+There are new helper methods on JsonConvert for serializing and deserializing JSON asynchronously.
+  
+```csharp
+private static async Task<ExpensiveViewModel> CreateExpensiveViewModel()
+{
+  // these happen simultaneously
+  var people = JsonConvert.SerializeObjectAsync(GetPeople());
+  var products = JsonConvert.SerializeObjectAsync(GetProducts());
+
+  return new ExpensiveViewModel
+  {
+    People = await people,
+    Products = await products
+  };
+}
+```
+
+## Metro Build
+
+Json.NET now supports Windows 8 Metro applications (i.e. WinRT). Since WinRT is still in beta, and because reflection has to be rewritten for this build ([booo](http://msdn.microsoft.com/en-us/library/system.reflection.typeinfo%28v=vs.110%29.aspx)) there maybe bugs in more esoteric serialization scenarios.
+
+## Assembly Versioning
+
+I’m going to experiment with only updating the assembly version at major version changes (i.e. 4.5.0.0) and letting the assembly file version keep the true version number, similar to what the ASP.NET team do with MVC assemblies. Breaking changes will only happen on major version changes.
+
+Hopefully this should reduce the amount of assembly binding redirecting [going on](http://james.newtonking.com/archive/2012/02/11/json-net-4-0-release-8-bug-fixes.aspx) for everyone.
+
+## And other stuff
+
+A sweet bug fix means that a performance test now runs 70,000% faster, the path of the current JSON location is now on JsonReader and exceptions for easier debugging and a potential security hole when serializing ISerializable types in partial trust has been closed.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.0 Release 8.
+
+- New feature - Windows 8 Metro build
+- New feature - JsonTextReader automatically reads ISO strings as dates
+- New feature - Added DateFormatHandling to control whether dates are written in the MS format or ISO format, with ISO as the default
+- New feature - Added DateTimeZoneHandling to control reading and writing DateTime time zone details
+- New feature - Added async serialize/deserialize methods to JsonConvert
+- New feature - Added Path to JsonReader/JsonWriter/ErrorContext and exceptions with the JSON path of the current position
+- New feature - Added collection type to JsonArrayContract
+- New feature - Added dictionary key type and dictionary value type to JsonDictionaryContract
+- New feature - Added reader/writer specific Formatting, DateFormatHandling and DateTimeZoneHandling to JsonSerializerSettings
+- New feature - Added ReadAsDate and ReadAsString to JsonReader
+- New feature - Added IgnoreSerializableInterface to DefaultContractResolver
+- Change - Dates are now serialized as the ISO format by default
+- Change - The ReadAsXXX methods on JsonReader now return null at the end of an array instead of throwing an error
+- Change - JsonReaders now to set TokenType to JsonToken.None after finishing content
+- Change - Deserializing will fallback to use a private default constructor
+- Change - The error message when deserializing a JSON object/array onto the wrong kind of type is more descriptive
+- Change - Serializing ISerializable types under partial trust now errors to fix potential security issue
+- Fix - Fixed reading scientific notation numbers with no decimal point
+- Fix - Fixed LinqBridge collision error in .NET 2.0 by moving types to a different namespace
+- Fix - Fixed error when deserializing nullable types with no content
+- Fix - Fixed JObject.Keys null reference error when the object has no items
+- Fix - Fixed error handling when failing to parse array content
+- Fix - Fixed error handling when there are missing required properties
+- Fix - Fixed performance issue when building deeply nested JSON to LINQ to JSON objects
+
+## Links
+
+## [Json.NET CodePlex Project](http://json.codeplex.com/)
+
+**[Json.NET 4.5 Release 1 Download](http://json.codeplex.com/releases/view/84550)** - Json.NET source code, documentation and binaries

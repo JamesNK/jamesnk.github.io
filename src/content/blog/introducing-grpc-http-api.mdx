@@ -1,0 +1,115 @@
+---
+title: "Introducing gRPC HTTP API"
+description: "Introducing gRPC HTTP API"
+pubDate: "Mar 31 2020"
+source: "https://james.newtonking.com/archive/2020/03/31/introducing-grpc-http-api"
+---
+gRPC is a modern way to communicate between apps. gRPC uses HTTP/2, streaming, Protobuf and message contracts to create high-performance, realtime services. Support for gRPC on ASP.NET Core [was added in .NET Core 3.0](https://grpc.io/blog/grpc-on-dotnetcore/).
+
+The catch with gRPC is not every platform can use it. Browsers don't fully support HTTP/2, making REST and JSON still the primary way to get data into your browser apps. Even with the benefits that gRPC brings, REST and JSON still have an important place in modern apps. Building gRPC **and** REST services adds unwanted overhead to app development.
+
+Wouldn't it be great if we could build services once in ASP.NET Core and get gRPC and REST? Now you can! Introducing gRPC HTTP API for ASP.NET Core.
+
+## gRPC or REST? Why not both
+
+gRPC HTTP API is an experimental extension for ASP.NET Core that creates RESTful HTTP APIs for gRPC services. Once configured, gRPC HTTP API allows you to call gRPC methods with familiar HTTP concepts:
+
+- HTTP verbs
+- URL parameter binding
+- JSON requests/responses
+
+RESTful APIs for your gRPC services. No duplication!
+
+![I choo-choo-choose you?](http://james.newtonking.com/Media/Default/images/blog/grpc-rest-logo.png "I choo-choo-choose you?")
+
+## Demo
+
+Visit https://grpchttpapi.azurewebsites.net/ to see gRPC HTTP API in action.
+
+Source code of the demo is available [here](https://github.com/aspnet/AspLabs/tree/12d388c1964c8844dcbbdcd643f8bd7c6423a4c4/src/GrpcHttpApi/sample).
+
+## Getting started
+
+1. The first step is to create a gRPC service (if you don't already have one). [Create a gRPC client and service](https://docs.microsoft.com/aspnet/core/tutorials/grpc/grpc-start) is a great tutorial for getting started with gRPC on .NET Core.
+2. Next, add a package reference to *Microsoft.AspNetCore.Grpc.HttpApi* to the server. Register it in Startup.cs with *services.AddGrpcHttpApi()*.
+3. The last step is annotating your gRPC .proto file with HTTP bindings and routes. The annotations define how gRPC services map to the JSON request and response. You will need to add *import "google/api/annotations.proto";* to the gRPC proto file and have a copy of [annotations.proto](https://github.com/aspnet/AspLabs/blob/12d388c1964c8844dcbbdcd643f8bd7c6423a4c4/src/GrpcHttpApi/sample/Proto/google/api/annotations.proto) and [http.proto](https://github.com/aspnet/AspLabs/blob/12d388c1964c8844dcbbdcd643f8bd7c6423a4c4/src/GrpcHttpApi/sample/Proto/google/api/http.proto) in your project.
+
+```csharp
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+package greet;
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {
+    option (google.api.http) = {
+      get: "/v1/greeter/{name}"
+    };
+  }
+  rpc SayHelloFrom (HelloRequestFrom) returns (HelloReply) {
+    option (google.api.http) = {
+      post: "/v1/greeter"
+      body: "*"
+    };
+  }
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloRequestFrom {
+  string name = 1;
+  string from = 2;
+}
+
+message HelloReply {
+  string message = 1;
+}
+```
+
+In the sample above, the *SayHello* gRPC method can now be invoked as gRPC and as a RESTful API:
+
+- Request: HTTP/1.1 GET /v1/greeter/world
+- Response: &#123; "message": "Hello world" &#125;
+
+And browser apps call it like any other RESTful API:
+
+```csharp
+fetch('https://localhost:5001/v1/greeter/world')
+    .then((response) => response.json())
+    .then((result) => {
+        console.log(result.message);
+        // Hello world
+    });
+```
+
+This is a simple example. See [HttpRule](https://cloud.google.com/service-infrastructure/docs/service-management/reference/rpc/google.api#google.api.HttpRule) for more customization options.
+
+## FAQ
+
+Q: Are RESTful APIs for gRPC a brand new concept?
+
+A: No. [grpc-gateway](https://grpc-ecosystem.github.io/grpc-gateway/) provides RESTful JSON services for gRPC using the same .proto annotations. grpc-gateway is in heavy use today. For example, GCP uses it to offer gRPC and REST endpoints for GCP services. A key difference between the two technologies is grpc-gateway requires a reverse proxy, while gRPC HTTP API is hosted directly by ASP.NET alongside the gRPC service.
+
+Q: Does this replace ASP.NET Core MVC?
+
+A: No. gRPC HTTP API only supports JSON, and it is very opinionated. Only customization options offered by `HttpRule` are supported. A good scenario to use gRPC HTTP API is building new services using gRPC and JSON.
+
+Q: How is this different than gRPC-Web?
+
+A: gRPC-Web lets you call gRPC services from the browser with the gRPC-Web client and Protobuf. gRPC HTTP API allows you to call your services as if they were RESTful APIs with JSON. It doesn't replace gRPC-Web.
+
+Q: When will this be released?
+
+A: A pre-release package is on NuGet [right now](https://www.nuget.org/packages/Microsoft.AspNetCore.Grpc.HttpApi)! gRPC HTTP API is an experiment and the decision to invest more time on it depends on user feedback.
+
+## Try it today!
+
+gRPC HTTP API is a framework idea that I have been playing around with. It is very experimental, but I think it has the opportunity for .NET developers to offer gRPC **and** REST services much faster than they can today.
+
+- [GrpcHttpApi @ aspnet/AspLabs repository](https://github.com/aspnet/AspLabs/tree/master/src/GrpcHttpApi) on GitHub - Source code and instructions
+- [Microsoft.AspNetCore.Grpc.HttpApi package](https://www.nuget.org/packages/Microsoft.AspNetCore.Grpc.HttpApi) on NuGet.org - Pre-release package
+
+You can use the pre-release package on NuGet now. Whether more time is invested in making it a supported product depends on user feedback. [Give feedback](https://github.com/grpc/grpc-dotnet/issues/167) on GitHub or contact me [@JamesNK](https://twitter.com/JamesNK) on Twitter. I'm looking forward to seeing how this framework is used.

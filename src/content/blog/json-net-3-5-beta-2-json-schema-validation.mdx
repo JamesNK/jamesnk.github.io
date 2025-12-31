@@ -1,0 +1,94 @@
+---
+title: "Json.NET 3.5 Beta 2 – JSON schema validation"
+description: "Json.NET 3.5 Beta 2 – JSON schema validation"
+pubDate: "Jan 04 2009"
+source: "https://james.newtonking.com/archive/2009/01/04/json-net-3-5-beta-2-json-schema-validation"
+---
+## Notice:
+
+The JSON Schema functionality in Json.NET has been **moved to its own package**. Please visit **http://www.newtonsoft.com/jsonschema** for more details.
+
+* * *
+
+I’ve been hard at work on [Json.NET](http://james.newtonking.com/projects/json-net.aspx) over the holidays. I spent most of December setting up environments, writing PowerShell scripts and deploying applications so it was nice to do a little .NET development for a change.
+
+## JSON Schema
+
+The big new feature in Beta 2 is JSON schema validation. [JSON Schema](http://json-schema.org/) is a specification for defining the structure of JSON. Think of it as XML Schema for JSON except it is actually readable.
+
+```csharp
+{
+  "description": "A person",
+  "type": "object",
+  "properties":
+  {
+    "name": {"type":"string"},
+    "hobbies": {
+      "type": "array",
+      "items": {"type":"string"}
+    }
+  }
+}
+```
+
+I have put together a demo page of the new JSON Schema features: [**JSON Schema Validation Demo**](http://james.newtonking.com/projects/json/schema.aspx)
+
+There are a couple of different ways of validating using JSON Schema in Json.NET. The simplest is using an extension method for the LINQ to JSON objects. IsValid in this example just returns a flag but there are other overloads that let you also capture validation messages.
+
+```csharp
+JsonSchema schema = JsonSchema.Parse(schemaJson);
+
+JObject person = JObject.Parse(@"{
+  ""name"": ""James"",
+  ""hobbies"": ["".NET"", ""Blogging"", ""Reading"", ""Xbox"", ""LOLCATS""]
+}");
+
+bool valid = person.IsValid(schema);
+// true
+```
+
+As well as validation, for fun, and to help with testing, I wrote a class called JsonSchemaGenerator. This class looks at a .NET type and using reflection it generates a schema for it. The schemas on the demo page are all generated at runtime.
+
+## JSON line and position Information
+
+JsonTextReader now reports line and position information. Line and position information was needed for the schema validator to help point out to a user in an error message which part the JSON was invalid. The nice flow on effect of this feature is now when you give Json.NET bad JSON, the resulting exception will tell you the location of the invalid character.
+
+```csharp
+JObject person = JObject.Parse(@"{
+  ""name"": ""James"",
+  ]!#$THIS IS: BAD JSON![{}}}}]
+}");
+
+// Invalid property identifier character: ]. Line 3, position 3.
+```
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 3.5 Beta 1.
+
+- New feature - Added JSON Schema implementation
+- New feature - Added IJsonLineInfo. Implemented by JsonTextReader, JsonTokenReader, JsonValidatingReader, JToken
+- New feature - Added line details to JsonTextReader exception messages and JsonValidatingReader errors
+- New feature - Added JsonContainerAttribute with Id, Title and Description members. JsonObject and JsonArray inherit from this attribute
+- New feature - Added JsonArrayAttribute. Has flag to control whether array can contain null items
+- New feature - Added IsRequired to JsonProperty
+- New feature - Added Load(JsonReader) to JProperty, JConstructor
+- New feature - Added the ability for JsonTokenWriter to write individual values as well as arrays and objects
+- New feature - Added CreateReader to JToken
+- New feature - Added FromObject to JToken
+- New feature - Added ReadFrom to JToken
+- Change - Renamed JavaScriptConvert to JsonConvert
+- Change - Value&lt;T&gt; on JObject supports getting nullable values
+- Change - Type values now serialize and deserialize to the type name string
+- Change - GetSerializableMembers has been removed and replaced with GetMemberMappings on JsonSerializer
+- Fix - JsonConvert now always write a floating point number with a decimal place
+- Fix - JsonSerializer now correctly skips missing members
+- Fix - JsonWriter now allows objects and arrays to be written in a constructor
+- Fix - QuoteChar not getting set when parsing property name
+- Fix - JProperty now correctly loads content from a collection
+
+## Links
+
+[**Json.NET CodePlex Project**](http://www.codeplex.com/json)
+
+[**Json.NET 3.5 Beta 2 Download**](http://www.codeplex.com/Json/Release/ProjectReleases.aspx?ReleaseId=21341) - Json.NET source code, documentation and binaries

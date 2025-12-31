@@ -1,0 +1,40 @@
+---
+title: "Json.NET 1.3 + New license + Now on CodePlex"
+description: "Json.NET 1.3 + New license + Now on CodePlex"
+pubDate: "Sept 08 2007"
+source: "https://james.newtonking.com/archive/2007/09/08/json-net-1-3-new-license-now-on-codeplex"
+---
+![Homer: Welcome to the internet my friend, how can I help you? Comic Book Guy: I'm interested in upgrading my twenty eight point eight kilobaud internet connection to a one point five megabit fibre-optic T-1 line. Will you be able to provide an IP router that's compatable with my token ring ethernet LAN configuration? Homer: (long pause) Can I have some money now?](http://james.newtonking.com/BlogFiles/Json.NE.3releasedNewlicenseNowonCodeplex_121EB/jsonxmlbutton.png "Homer: Welcome to the internet my friend, how can I help you? Comic Book Guy: I'm interested in upgrading my twenty eight point eight kilobaud internet connection to a one point five megabit fibre-optic T-1 line. Will you be able to provide an IP router that's compatable with my token ring ethernet LAN configuration? Homer: (long pause)
+
+Can I have some money now?") Since the last release of Json.NET [JSON](http://www.json.org/)'s popularity and usage has continued to grow, with many people taking the time to report bugs and make suggestions. This latest version addresses all known bugs and adds a few of the most requested features.
+ 
+- New feature - Added JsonPropertyAttribute. This attribute lets you define the name of a JSON property when serializing and deserializing. It is equivalent to XmlElementAttribute for XML serialization.
+- New feature - JsonSerializer now supports deserializing read only collections and has better support for custom collections.
+- Change - Improved JavaScript string escaping.
+- Bug fix - XmlNodeConverter now correctly writes integers, floats, booleans and dates in elements.
+- Bug fix - JSON text that ends with whitespace no longer causes the JsonReader to enter an infinite loop.
+- Bug fix - Fix for culture issues with DateTimes and doubles when deserializing.
+
+## What's New
+ 
+The most notable new feature is the ability to control the name of the JSON property a .NET property will serailize to and from using an attribute. For example if you want the BillingAddress property on your Person .NET class to be serialized as billing\_address on your JSON object, just add the JsonPropertyAttribute to the BillingAddress in .NET and set the PropertyName to billing\_address. This feature is equivalent to the functionality the XmlElementAttribute providers for XML serialization.
+ ```csharp
+public class Person {   private Guid _internalId;   private string _firstName;     [JsonIgnore]   public Guid InternalId   {     get { return _internalId; }     set { _internalId = value; }   }     [JsonProperty("first_name")]   public string FirstName   {     get { return _firstName; }     set { _firstName = value; }   } }
+``` 
+## New license
+ 
+I have changed the license Json.NET is provided under to the [MIT license](http://en.wikipedia.org/wiki/MIT_License). Json.NET previously used a Creative Commons license, a license which is more commonly used with media than software. Also since Creative Commons isn't compatible with the GPL I have regularly been getting emails asking whether it is ok to use Json.NET in a GPL licensed project, which I have no problem with.
+ 
+I chose the MIT license because it is the least restrictive license in common use that I could find. Json.NET is yours to do with it as you want 😊
+ 
+## Codeplex
+ 
+Finally, I've created a [CodePlex project](http://www.codeplex.com/json) for Json.NET and uploaded the source code plus this release. I've downloaded many projects off CodePlex since it was created but this will be the first time I've set one up. Hopefully Codeplex will be beneficial to Json.NET (plus a good learning experience 😊)
+ 
+[**Json.NET CodePlex Project**](http://www.codeplex.com/json)
+ 
+[**Json.NET 1.3.1 Download**](http://www.codeplex.com/json/Release/ProjectReleases.aspx) - Json.NET source code and binaries
+
+## Update:
+
+There was a bug in 1.3's JavaScript string escaping. It has been corrected in Json.NET 1.3.1 which is now on [CodePlex](http://www.codeplex.com/json/Release/ProjectReleases.aspx).

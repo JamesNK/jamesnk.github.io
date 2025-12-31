@@ -1,0 +1,118 @@
+---
+title: "ASP.NET MVC and Json.NET"
+description: "ASP.NET MVC and Json.NET"
+pubDate: "Oct 16 2008"
+source: "https://james.newtonking.com/archive/2008/10/16/asp-net-mvc-and-json-net"
+---
+This is an ActionResult I wrote to return JSON from [ASP.NET MVC](http://www.asp.net/mvc/) to the browser using [Json.NET](http://james.newtonking.com/projects/json-net.aspx).
+  
+The benefit of using JsonNetResult over the built in JsonResult is you get a better serializer (IMO 😊) and all the other benefits of Json.NET like nicely formatted JSON text.
+  
+```csharp
+public class JsonNetResult : ActionResult
+{
+  public Encoding ContentEncoding { get; set; }
+  public string ContentType { get; set; }
+  public object Data { get; set; }
+
+  public JsonSerializerSettings SerializerSettings { get; set; }
+  public Formatting Formatting { get; set; }
+
+  public JsonNetResult()
+  {
+    SerializerSettings = new JsonSerializerSettings();
+  }
+
+  public override void ExecuteResult(ControllerContext context)
+  {
+    if (context == null)
+      throw new ArgumentNullException("context");
+
+    HttpResponseBase response = context.HttpContext.Response;
+
+    response.ContentType = !string.IsNullOrEmpty(ContentType)
+      ? ContentType
+      : "application/json";
+
+    if (ContentEncoding != null)
+      response.ContentEncoding = ContentEncoding;
+
+    if (Data != null)
+    {
+      JsonTextWriter writer = new JsonTextWriter(response.Output) { Formatting = Formatting };
+
+      JsonSerializer serializer = JsonSerializer.Create(SerializerSettings);
+      serializer.Serialize(writer, Data);
+
+      writer.Flush();
+    }
+  }
+}
+```
+
+Using JsonNetResult within your application is pretty simple. The example below serializes the NumberFormatInfo settings for the .NET invariant culture.
+
+```csharp
+public ActionResult GetNumberFormatting()
+{
+  JsonNetResult jsonNetResult = new JsonNetResult();
+  jsonNetResult.Formatting = Formatting.Indented;
+  jsonNetResult.Data = CultureInfo.InvariantCulture.NumberFormat;
+
+  return jsonNetResult;
+}
+```
+
+And here is the nicely formatted result.
+
+```csharp
+{
+  "CurrencyDecimalDigits": 2,
+  "CurrencyDecimalSeparator": ".",
+  "IsReadOnly": true,
+  "CurrencyGroupSizes": [
+    3
+  ],
+  "NumberGroupSizes": [
+    3
+  ],
+  "PercentGroupSizes": [
+    3
+  ],
+  "CurrencyGroupSeparator": ",",
+  "CurrencySymbol": "¤",
+  "NaNSymbol": "NaN",
+  "CurrencyNegativePattern": 0,
+  "NumberNegativePattern": 1,
+  "PercentPositivePattern": 0,
+  "PercentNegativePattern": 0,
+  "NegativeInfinitySymbol": "-Infinity",
+  "NegativeSign": "-",
+  "NumberDecimalDigits": 2,
+  "NumberDecimalSeparator": ".",
+  "NumberGroupSeparator": ",",
+  "CurrencyPositivePattern": 0,
+  "PositiveInfinitySymbol": "Infinity",
+  "PositiveSign": "+",
+  "PercentDecimalDigits": 2,
+  "PercentDecimalSeparator": ".",
+  "PercentGroupSeparator": ",",
+  "PercentSymbol": "%",
+  "PerMilleSymbol": "‰",
+  "NativeDigits": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "DigitSubstitution": 1
+}
+```
+
+[**Download source**](http://www.codeplex.com/JsonContrib/Release/ProjectReleases.aspx?ReleaseId=18429)

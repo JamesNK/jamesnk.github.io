@@ -1,0 +1,66 @@
+---
+title: "Oracle Peeves"
+description: "Oracle Peeves"
+pubDate: "Aug 27 2006"
+source: "https://james.newtonking.com/archive/2006/08/27/Oracle-Peeves"
+---
+![](http://james.newtonking.com/Media/Default/images/blog/oracle.png)
+
+I'm changing jobs soon and after nearly 3 years of working with Oracle, and little chance of my using it in the near future, I'd like to share (vent) some of my top Oracle peeves.
+
+I'd like to state up front that I don't [hate Oracle](http://thedailywtf.com/ShowForum.aspx?ForumID=17), and I haven't had enough experience with other databases to know exactly how good or bad Oracle is in comparison. These are just some little things (hopefully [valid](http://www.rittman.net/archives/2006/04/top_ten_things_i_hate_about_th.html)) that have irked me over the years 😊
+
+## 30 character name limits
+
+I'm not a fan of [Hungarian notation](http://en.wikipedia.org/wiki/Hungarian_notation) or most abbreviations (we spend far more time reading code than writing it so any time saved typing will be lost deciphering, besides auto-complete anyone?) so Oracles 30 character limit on names has annoyed me to no end. It usually isn't a problem with table or column names but when you have a foreign key naming standard that is comprised of the table the key is coming from and going to, things start to get hairy:
+
+E\_S\_SEC\_E\_PROC\_SUB\_TYPE\_FK1 [^o)]
+
+**select \* from dual**
+
+[Why Oracle why?](http://asktom.oracle.com/pls/ask/f?p=4950:8:::::F4950_P8_DISPLAYID:1562813956388)
+
+To be honest I've always found the dual table kind of facinating although Oracle's limitation does make some do [crazy things](http://oracle-wtf.blogspot.com/2006/03/create-your-own-dual-table.html).
+
+## SQL statements automatically handling no\_data\_found
+
+In PL/SQL when you want to populate a variable with a value from a table you use "select into". The select into statement has to return one row. If none are returned then you get a no\_data\_found exception. If more than one is returned then you get an aptly named too\_many\_rows exception. Sound fairly simple? The gotcha is that if the exception is thrown by a function being used inside a SQL statement then it is automatically caught. The hows and whys of this behavior confused the bejesus out of me until I came across this [Ask Tom question](http://asktom.oracle.com/pls/ask/f?p=4950:8:::::F4950_P8_DISPLAYID:10321465390114#10326465506637).
+
+## Varchar2
+
+A general grab-bag of aggravating issues around strings in Oracle:
+
+- Apparently Oracle promotes the use of varchar2, rather than varchar, because it wants to avoid problems if the SQL standard is ever changed so that possible new varchar behavior doesn't cause bugs in existing code. DBAs are big on backwards compatibility so a change like that seems a pretty big if to me. Personally I think Oracle should have just stuck with varchar. If the standard ever changed in a way that caused bugs with existing code either used a database flag to turn it on or off or at that point introduce a varchar2 with the new behavior.
+- By default the length on a varchar2 column specifies byte length, not the number of characters. Most commonly used English text is single byte but it can be a bug lying in waiting if you are unaware of it.
+- Empty strings are considered null. '' = ''? Not in Oracle!
+- The string concatenation operator in Oracle is ||. Yuck. To be fair to Oracle this is the operator specified in the ANSI SQL standard.
+
+**Memory Usage**Oracle likes it's RAM. Having a dedicated database machine (at least if you're writing, running and debugging .NET applications from Visual Studio) is pretty much compulsory. Oracle having Java embedded inside it can't help.
+
+## Select Into
+
+In PL/SQL you can't use the result from a select in an expression. Instead you have to declare the variable, select into the variable (don't forget no\_data\_found and too\_many\_rows error handling!) and only then use the variable in an if test or whatever. Painful.
+
+## Package Headers
+
+Packages are a Good Thing™ and I have a feeling I'll miss them in SQL Server land but separate headers to control external visibility is so 1990. Having to modify the header signature along with the body is annoying.
+
+## Declaring all variables at the top of a procedure/function
+
+Woah. [Sixth Form Certificate](http://en.wikipedia.org/wiki/Sixth_Form_Certificate) programming class [Pascal](http://en.wikipedia.org/wiki/Pascal_programming_language) flashback.
+
+## ![](http://james.newtonking.com/Media/Default/images/blog/suse.png)Installing Oracle on Linux
+
+10g or 9i? R1 or R2? x86 or x86-64? Redhat Enterprise Linux, Fedora Core, SUSE Enterprise Linux or something else?
+
+There are a lot of permutations and luckily for you there are [instructions for all of them](http://www.oracle.com/technology/tech/linux/install/index.html) because Oracle installs on each of them differently. Hurrah!
+
+When you do find the guide you are looking for don't worry, you are halfway there! Only [21 pages of instructions](http://www.puschitz.com/InstallingOracle10g.shtml) to follow...
+
+## Oracle .NET client size
+
+209 megabytes. Compressed.
+
+***Update:***
+
+To be fair to Oracle, its quirks and WTFs can't compare with the [silly things](http://oracle-wtf.blogspot.com/) some developers do with it.

@@ -1,0 +1,88 @@
+---
+title: "Json.NET 3.5 Release 8 – 3.5 Final"
+description: "Json.NET 3.5 Release 8 – 3.5 Final"
+pubDate: "Aug 14 2010"
+source: "https://james.newtonking.com/archive/2010/08/13/json-net-3-5-release-8-3-5-final"
+---
+Baring any [terrible, terrible damage](http://starcraft.wikia.com/wiki/Terrible_terrible_damage) bugs, Release 8 will be the final 3.5 version of [Json.NET](http://james.newtonking.com/projects/json-net.aspx).
+  
+## TypeNameHandling
+  
+Json.NET supports including type information in JSON. In the past this was a global flag to include type names for every object. The last release of Json.NET added TypeNameHandling as a flag on JsonPropertyAttribute, allowing type names to be included only for specified values.
+  
+```csharp
+public class Message
+{
+  public string Address { get; set; }
+
+  [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
+  public object Body { get; set; }
+}
+
+public class SearchDetails
+{
+  public string Query { get; set; }
+  public string Language { get; set; }
+}
+```
+
+Any payload of data can be assigned to Message.Body and the type name will be included when it is serialized. Json.NET will automatically deserialize back to that type.
+
+```csharp
+Message message = new Message();
+message.Address = "http://www.google.com";
+message.Body = new SearchDetails
+  {
+    Query = "Json.NET",
+    Language = "en-us"
+  };
+
+string json = JsonConvert.SerializeObject(message, Formatting.Indented);
+// {
+//   "Address": "http://www.google.com",
+//   "Body": {
+//     "$type": "Newtonsoft.Json.Tests.Serialization.SearchDetails, Newtonsoft.Json.Tests",
+//     "Query": "Json.NET",
+//     "Language": "en-us"
+//   }
+// }
+
+Message deserialized = JsonConvert.DeserializeObject<Message>(json);
+
+SearchDetails searchDetails = (SearchDetails) deserialized.Body;
+// Json.NET
+```
+
+## TypeNameHandling.Auto
+
+Another new TypeNameHandling feature is TypeNameHandling.Auto. When serializing an object and this flag is set Json.NET will check whether the value of a object matches the property it is declared against. If they aren’t the same, e.g. a property with a type of Mammal has a derived instance of Dog assigned, then Json.NET will automatically include the type name. TypeNameHandling.Auto is pretty neat in that it will ensure that type information isn’t lost for you automatically.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 3.5 Release 7.
+
+- New feature - Added TypeNameHandling.Auto to automatically write the type name when a value doesn't match the declared type
+- New feature - Added CLSCompliant attributes
+- New feature - Added Required.Always attribute validation when writing JSON
+- New feature - Added DateTimeKindHandling to BsonWriter to control how a DateTime is converted prior to being serialized
+- New feature - Added SerializeCompilerGeneratedMembers to DefaultContractResolver to control serializing compiler generated fields
+- Change - Improved OverflowException message for integer values larger than an Int64
+- Change - Added interfaces, structs and enums as valid targets of JsonConverterAttribute
+- Change - Added structs as a valid target of JsonObjectAttribute
+- Change - Improved default null and value handing when JSON value is not compatible with property value
+- Change - Serialization attributes now supported in .NET 2.0
+- Change - HtmlColorConverter and System.Drawing.dll dependency removed
+- Fix - Fix reading hexadecimal numbers that contain an e
+- Fix - Generic simple type names no longer include full qualified assembly information for nested generate types
+- Fix - Corrected culture invariance issues
+- Fix - Correct incorrect BSON string reading for multi-byte characters
+- Fix - Fix error when converting a JValue to a compatible type
+- Fix - Fix security exception when generating simple type names on Silverlight
+- Fix - JsonProperty now inherited on overriden properties
+- Fix - JTokenReader.ReadAsBytes no longer errors when reading null token value
+
+## Links
+
+[**Json.NET CodePlex Project**](http://json.codeplex.com/)
+
+[**Json.NET 3.5 Release 8 Download**](http://json.codeplex.com/releases/view/50552) - Json.NET source code, documentation and binaries

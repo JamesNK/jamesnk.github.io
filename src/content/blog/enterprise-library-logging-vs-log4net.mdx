@@ -1,0 +1,33 @@
+---
+title: "Enterprise Library Logging vs log4net"
+description: "Enterprise Library Logging vs log4net"
+pubDate: "Jun 05 2007"
+source: "https://james.newtonking.com/archive/2007/06/05/enterprise-library-logging-vs-log4net"
+---
+[![image](http://www.newtonsoft.com/BlogFiles/jamesnk/WindowsLiveWriter/EnterpriseLibraryLoggingvslog4net_126AE/image_thumb.png)](http://www.newtonsoft.com/BlogFiles/jamesnk/WindowsLiveWriter/EnterpriseLibraryLoggingvslog4net_126AE/image.png) I did a presentation today to the [Intergen](http://www.intergen.co.nz/) development team on the [Microsoft Enterprise Library](http://codeplex.com/entlib). As someone who doesn't have much experience with giving presentations I thought it went really well. I've had a lot of positive feedback from co-workers which is nice as I was sure it was going to be a disaster. (Interesting note: During one of my interviews for Intergen, in a moment of foolishness, I gave public speaking as the answer to "What is your biggest weakness?". Just as a reference to all future potential employers: my ***real*** biggest weakness is that I just work too gosh darn hard.)
+ 
+One feature of my EntLib presentation that I thought was worthwhile sharing was a comparison of the [Enterprise Library Logging Block](http://msdn2.microsoft.com/en-us/library/aa480464.aspx) verse [log4net](http://logging.apache.org/log4net/). All the examples I found on the net comparing the two were out of date. They often compared log4net with the logging in EntLib 1.1, which is quite different from EntLib 2.0 & 3.0.
+ 
+Here are what I believe are the strengths of each:
+ 
+## Enterprise Library Logging Application Block
+ 
+- **More actively developed** - The recently released Enterprise Library 3.0 contained a number of new features for logging, including WCF support. The last release for log4net on the other hand was over a year ago.
+- **Takes advantage of and supports newer technologies** - The 3.0 release included support for WCF.
+- **Integrates with other application blocks** - The Policy Injection Block and Exception Handling Block both include logging handlers to automatically invoke the Logging Application Block.
+- **Very extensible** - Pretty much all aspects of the Logging Block can be extended and customized. You can create your own TraceListeners, Filters and Formaters quite easily.
+- **Configuration tool** - Enterprise Library comes with a great tool for creating and modifying its configuration sections. This takes away a lot of the pain and guess work of configuring the EntLib application blocks.
+
+## log4net
+
+- **Works with .NET 1.0 & 1.1** - The much improved logging of EntLib 2.0 and above is only available if your application is running on .NET 2.0 or greater. log4net however works on all versions of .NET.
+- **Simpler install** - When using the Enterprise Library there are some services you really should install. This is as simple as running a bat file included with EntLib but it does complicate your deployment process.
+- **Slightly faster** - log4net was significantly quicker than EntLib 1.1 logging. EntLib 2.0
+onwards has improved its performance but log4net remains slightly faster. A
+benchmark I found while researching my presentation had EntLib taking approximately 5-6
+seconds to log 100,000 entries while log4net took about 3 seconds. Does
+the speed difference matter? Probably not. However log4net net does support...
+- **Appender Buffering** - Buffering support with some appenders lets log4net queue up log entries and write them in a single go. If you are writing entries to the database then buffering is a good way to improve performance.
+- **More platforms** - Enterprise Library does not support the .NET Compact Framework while log4net does.
+
+If you have any other thoughts on the Logging Application Block or log4net I'd love to hear them.

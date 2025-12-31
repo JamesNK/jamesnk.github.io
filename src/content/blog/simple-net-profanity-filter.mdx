@@ -1,0 +1,94 @@
+---
+title: "Simple .NET Profanity Filter"
+description: "Simple .NET Profanity Filter"
+pubDate: "Jul 03 2009"
+source: "https://james.newtonking.com/archive/2009/07/03/simple-net-profanity-filter"
+---
+A website I am working on right now accepts public comments, and one of the requirements is to do a basic check for dirty language. Surprisingly for such a common problem I wasn’t able to find any code on the net that did what I wanted and so I’ve ended up writing my own.
+  
+The Censor class is pretty simple: you give it a list of words you want to censor, either simple text or with wildcards, and the censor will star out any matches it finds.
+  
+```csharp
+IList<string> censoredWords = new List<string>
+{
+  "gosh",
+  "drat",
+  "darn*",
+};
+
+Censor censor = new Censor(censoredWords);
+string result;
+
+result = censor.CensorText("I stubbed my toe. Gosh it hurts!");
+// I stubbed my toe. **** it hurts!
+
+result = censor.CensorText("The midrate on the USD -> EUR forex trade has soured my day. Drat!");
+// The midrate on the USD -> EUR forex trade has soured my day. ****!
+
+result = censor.CensorText("Gosh darnit, my shoe laces are undone.");
+// **** ******, my shoe laces are undone.
+```
+
+The first example is a simple whole word match on gosh. The second example replaces drat but doesn’t star out the drat in midrate. The final example shows the censor starting out multiple matches and also matching darnit against the wildcard darn\*.
+
+I’m passing a collection of strings in my examples but it is easy enough to find a list of swear words on the net, put them in a text file and call something like [File.GetAllLines](http://msdn.microsoft.com/en-us/library/system.io.file.readalllines.aspx) to get an array of words to filter on.
+
+The code:
+
+```csharp
+public class Censor
+{
+  public IList<string> CensoredWords { get; private set; }
+
+  public Censor(IEnumerable<string> censoredWords)
+  {
+    if (censoredWords == null)
+      throw new ArgumentNullException("censoredWords");
+
+    CensoredWords = new List<string>(censoredWords);
+  }
+
+  public string CensorText(string text)
+  {
+    if (text == null)
+      throw new ArgumentNullException("text");
+
+    string censoredText = text;
+
+    foreach (string censoredWord in CensoredWords)
+    {
+      string regularExpression = ToRegexPattern(censoredWord);
+
+      censoredText = Regex.Replace(censoredText, regularExpression, StarCensoredMatch,
+        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    }
+
+    return censoredText;
+  }
+
+  private static string StarCensoredMatch(Match m)
+  {
+    string word = m.Captures[0].Value;
+
+    return new string('*', word.Length);
+  }
+
+  private string ToRegexPattern(string wildcardSearch)
+  {
+    string regexPattern = Regex.Escape(wildcardSearch);
+
+    regexPattern = regexPattern.Replace(@"\*", ".*?");
+    regexPattern = regexPattern.Replace(@"\?", ".");
+
+    if (regexPattern.StartsWith(".*?"))
+    {
+      regexPattern = regexPattern.Substring(3);
+      regexPattern = @"(^\b)*?" + regexPattern;
+    }
+
+    regexPattern = @"\b" + regexPattern + @"\b";
+
+    return regexPattern;
+  }
+}
+```

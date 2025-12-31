@@ -1,0 +1,15 @@
+---
+title: "What Is Coming In Json.NET 2.1"
+description: "What Is Coming In Json.NET 2.1"
+pubDate: "Jun 08 2008"
+source: "https://james.newtonking.com/archive/2008/06/08/what-is-coming-in-json-net-2-1"
+---
+![Okay folks, show's over. Nothing to see here, show's... Oh my god! A horrible plane crash! Hey everybody, get a load of this flaming wreckage! Come on, crowd around, crowd around!](http://james.newtonking.com/images/WhatIsComingInJson.NET2.1_13FA6/ComingSooninStar.jpg "Okay folks, show's over. Nothing to see here, show's... Oh my god! A horrible plane crash! Hey everybody, get a load of this flaming wreckage! Come on, crowd around, crowd around!")
+
+I have just checked in two new features coming soon in [Json.NET](http://james.newtonking.com/projects/json-net.aspx) 2.1: Silverlight client support and improvements to the LINQ to JSON objects. If you are feeling cutting edge you can download the latest source code from [CodePlex](http://www.codeplex.com/Json/SourceControl/ListDownloadableCommits.aspx). Buyer beware: Code coverage of the changes is currently light.
+ 
+To compile a Silverlight build of Json.NET you will need the latest [Silverlight 2.0 Beta 2](http://weblogs.asp.net/scottgu/archive/2008/06/06/silverlight-2-beta2-released.aspx) bits. There is also a unit test project in the solution for the Silverlight build. Read about how it works [here](http://weblogs.asp.net/nunitaddin/archive/2008/05/01/silverlight-nunit-projects.aspx) (I *really* wish this was around when I was working on [TextGlow](http://james.newtonking.com/archive/2008/03/06/silverlight-2-0-ooxml-textglow.aspx)).
+ 
+The LINQ to JSON changes are minor but useful. JObject now implements IDictionary and JArray now implements IList. For those that are new to Json.NET these common interfaces should make working with LINQ to JSON objects much more familiar.
+ 
+If you have any suggestions of what you would like to see in Json.NET 2.1 [let me know](http://james.newtonking.com/archive/2008/06/08/what-is-coming-in-json-net-2-1.aspx#comments).

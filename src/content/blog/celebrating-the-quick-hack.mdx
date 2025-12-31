@@ -1,0 +1,74 @@
+---
+title: "Celebrating the Quick Hack"
+description: "Celebrating the Quick Hack"
+pubDate: "May 07 2008"
+source: "https://james.newtonking.com/archive/2008/05/07/celebrating-the-quick-hack"
+---
+![How ironic. My crusade against television has come to an end so formulaic it could've spewed from the Powerbook of the laziest Hollywood hack.](http://james.newtonking.com/images/CelebratingtheQuickHack_1096F/LumberCarA.jpg "How ironic. My crusade against television has come to an end so formulaic it could've spewed from the Powerbook of the laziest Hollywood hack.")
+
+Sometimes you want something working now. Code that is understandable, maintainable, extensible and performant has its place but there are times you need a piece of functionality ASAP. Enter the quick hack.
+ 
+Below is a quick hack I did recently for a temporary dev tool. This isn't a post showing off a piece of code's elegancy or simplicity. Instead while it functioned perfectly and took no time to do, this code was so judged so unreadable and it performed so badly that I believe the hack deserves some kind recognition anyway.
+ 
+## The Task
+ 
+Take a utility console application and turn it into a Windows Forms app that has a minimal UI.
+ 
+## The Problem
+ 
+The console application writes a lot of debug data to the console. I want that information to be visible in the Winform app and so need to display the console output in a text area.
+ 
+## The Quick Hack
+ 
+Sure you could abstract away writing to the console through a more generic logging interface and then replace every call to Console.Write, but that is far too smart and time consuming if you ask me 😉
+ 
+Instead in the spirit of Quick Hack I chose to set my own TextWriter to [Console.Out](http://msdn.microsoft.com/en-us/library/system.console.out.aspx) and have it write to the Winforms textbox.
+ 
+```csharp
+public class DelegateTextWriter : TextWriter
+{
+  private readonly Encoding _encoding;
+  private readonly Action<char> _writeAction;
+
+  public DelegateTextWriter(Encoding encoding, Action<char> writeAction)
+  {
+    _encoding = encoding;
+    _writeAction = writeAction;
+  }
+
+  public override Encoding Encoding
+  {
+    get { return _encoding; }
+  }
+
+  public override void Write(char value)
+  {
+    _writeAction(value);
+  }
+}
+```
+
+The TextWriter that will be set to Console.Out. Nothing too outrageous so far... 
+
+```csharp
+Console.SetOut(new DelegateTextWriter(Console.OutputEncoding, c => {
+    Invoke(new Action(() => ConsoleOutputTextBox.Text += c.ToString()));
+}));
+```
+
+Haha! How deliciously unreadable.
+
+For the curious what is going on there is a lambda function is being created which takes a char. Because Console.Write is being called from a non UI thread we need to use [Control.Invoke](http://msdn.microsoft.com/en-us/library/zyzhdc6b.aspx). The function creates another lambda function which adds the character to the end of the Winforms textbox. That lambda is called then passed to Invoke to be run.
+
+The icing on the cake is not only is it hard to understand at a glance but its also incredibly slow. *For every single character* being written to the console the app will:
+
+- Call two delegates
+- Call Control.Invoke
+- Turn the character being written into a string
+- Create a new string of the *entire contents* of the textbox so far plus the new character
+
+No wonder it maxed out a CPU core and output got written to the textbox like a type writer.
+
+After showing off how awesomely bad this hack was I did spend a couple of minutes making it usable. Splitting the code up and adding comments made it somewhat understandable and to fix performance all that was needed was an override for [TextWriter.Write(char\[\])](http://msdn.microsoft.com/en-us/library/7dzzaxxx.aspx) and replacing the string concatenation with [TextBox.AppendText](http://msdn.microsoft.com/en-us/library/system.windows.forms.textboxbase.appendtext.aspx).
+
+If you have any quick hacks of your own that you are proud of (both elegant and horrible) I would love to hear them.

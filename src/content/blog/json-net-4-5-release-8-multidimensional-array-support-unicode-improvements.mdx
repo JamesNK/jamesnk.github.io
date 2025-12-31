@@ -1,0 +1,57 @@
+---
+title: "Json.NET 4.5 Release 8 – Multidimensional Array Support, Unicode Improvements"
+description: "Json.NET 4.5 Release 8 – Multidimensional Array Support, Unicode Improvements"
+pubDate: "Aug 06 2012"
+source: "https://james.newtonking.com/archive/2012/08/06/json-net-4-5-release-8-multidimensional-array-support-unicode-improvements"
+---
+## Multidimensional Array Support
+  
+Json.NET now supports serializing and deserializing multidimensional arrays. There isn't anything you need to do, if one of your types has a multidimensional array property It Just Works™.
+  
+```csharp
+string[,] famousCouples = new string[,]
+  {
+    { "Adam", "Eve" },
+    { "Bonnie", "Clyde" },
+    { "Donald", "Daisy" },
+    { "Han", "Leia" }
+  };
+
+string json = JsonConvert.SerializeObject(famousCouples, Formatting.Indented);
+// [
+//   ["Adam", "Eve"],
+//   ["Bonnie", "Clyde"],
+//   ["Donald", "Daisy"],
+//   ["Han", "Leia"]
+// ]
+
+string[,] deserialized = JsonConvert.DeserializeObject<string[,]>(json);
+
+Console.WriteLine(deserialized[3, 0] + ", " + deserialized[3, 1]);
+// Han, Leia
+```
+
+## Unicode Performance Improvements
+
+Prior versions of Json.NET allocated a new array and string object to the heap for every Unicode character; a potentially expensive situation if your application is writing a lot of Unicode characters.
+
+This release improves Unicode serialization so that Json.NET will only allocate a single array for all Unicode text and then writes the text directly to the underlying output stream. These changes improve Json.NET performance of Unicode intensive objects by about 20% and significantly reduces the time spent doing garbage collection.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.5 Release 7.
+
+- New feature - Serialize and deserialize multidimensional arrays
+- New feature - Members on dynamic objects with JsonProperty/DataMember will now be included in serialized JSON
+- New feature - LINQ to JSON load methods will read past preceding comments when loading JSON
+- New feature - Improved error handling to return incomplete values upon reaching the end of JSON content
+- Change - Improved performance and memory usage when serializing Unicode characters
+- Change - The serializer now creates objects using GetUninitializedObject when deserializing a Serializable type
+- Fix - Added SecurityTransparent attribute to WinRT build
+- Fix - Fixed infinite loop error caused by error handling upon reaching the end of JSON content
+
+## Links
+
+## [Json.NET CodePlex Project](http://json.codeplex.com/)
+
+**[Json.NET 4.5 Release 8 Download](http://json.codeplex.com/releases/view/92198)** - Json.NET source code and assemblies

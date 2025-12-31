@@ -1,0 +1,92 @@
+---
+title: "WebRequestDetailedErrorEvent"
+description: "WebRequestDetailedErrorEvent"
+pubDate: "Aug 10 2006"
+source: "https://james.newtonking.com/archive/2006/08/10/WebRequestDetailedErrorEvent"
+---
+**[Download DetailedErrorEvent](http://james.newtonking.com/downloads/detailederrorevent/detailederrorevent.zip)** - DetailedErrorEvent dll and C# source code
+
+One of the least talked about new ASP.NET 2.0 features, and one of my favorites, is the health monitoring system. Designed to help you monitor the status of a deployed website, the ASP.NET health monitoring system makes what could potentially be a chore easy. With just a few lines in your site’s web.config you can automatically log a variety of events to a file, a database or even send an email to an email address.
+
+While overall health monitoring it is a great new feature for ASP.NET, the WebRequestErrorEvent class provides disappointingly small amount of information. Raised when an unhandled exception is thrown during a web request, only basic information about the request that caused the error is provided such as the URL, the user host address and the authenticated user. Vital information like the request headers, form values, cookies and server variables are missing, making debugging the error more difficult than it needs to be.
+
+## WebRequestDetailedErrorEvent
+
+The WebRequestDetailedErrorEvent class inherits from WebRequestErrorEvent and includes the information that the base class is missing.
+
+One interesting aspect of the health monitoring events is that they are written asynchronously. While this allows them to be buffered and written without impacting performance, it also means that a copy of the request details need to be taken as HttpContext.Current will be null when the FormatCustomEventDetails method is called.
+
+```csharp
+private void Init(Exception exception)
+{
+    // FormatCustomEventDetails is called outside of a web request
+    // need to take a copies of all the web request information to log
+    HttpContext context = HttpContext.Current;
+
+    if (context != null)
+    {
+        HttpRequest request = context.Request;
+
+        _cookies = new HttpCookie[request.Cookies.Count];
+        request.Cookies.CopyTo(_cookies, 0);
+
+        _httpHeaders = new NameValueCollection(request.Headers);
+        _form = new NameValueCollection(request.Form);
+        _queryString = new NameValueCollection(request.QueryString);
+        _serverVariables = new NameValueCollection(request.ServerVariables);
+    }
+    else
+    {
+        _cookies = new HttpCookie[0];
+        _httpHeaders = new NameValueCollection();
+        _form = new NameValueCollection();
+        _queryString = new NameValueCollection();
+        _serverVariables = new NameValueCollection();
+    }
+}
+```
+
+## WebRequestDetailedErrorModule
+
+Unfortunately there is no seamless way to automatically raise the new web request error event instead old so a new HttpModule is required to do it for us. WebRequestDetailedErrorModule attaches a method to the Error event of the HttpApplication object and then raises WebRequestDetailedErrorEvent when a web request exception goes unhandled. Not all exceptions raised the default event so some logic is required to filter them out.
+
+```csharp
+private void RaiseErrorEvent(object sender, EventArgs e)
+{
+    HttpApplication application = (HttpApplication)sender;
+    HttpContext context = application.Context;
+    Exception exception = context.Error;
+
+    // unwrap exception if top exception is an HttpUnhandledException
+    if (exception is HttpUnhandledException && exception.InnerException != null)
+        exception = exception.InnerException;
+
+    HttpException httpException = exception as HttpException;
+
+    // don't log file not found exceptions
+    if (httpException != null && httpException.GetHttpCode() == 404)
+        return;
+
+    // viewstate exceptions raise a WebViewStateFailureAuditEvent, not an exception event
+    if (httpException != null && httpException.InnerException is ViewStateException)
+        return;
+
+    WebBaseEvent.Raise(new WebRequestDetailedErrorEvent("An unhandled exception has occurred.", this, WebEventCodes.WebExtendedBase + 3005, 0, exception));
+}
+```
+
+The old event will still be raised so if you may want to modify your web.config to not log events numbered 3005.
+
+## Usage
+
+To use the WebRequestDetailedErrorEvent simply add the module to your website’s httpModule section.
+
+```csharp
+<httpModules>
+    <add name="WebRequestDetailedErrorModule" type="Newtonsoft.DetailedErrorEvent.WebRequestDetailedErrorModule, Newtonsoft.DetailedErrorEvent"/>
+</httpModules>
+```
+
+And that’s it. The new error event is now raised whenever an unhandled exception is thrown from a web request. Note that if you haven’t already setup ASP.NET to log health monitor events you can find out how [here](http://www.asp.net/QuickStart/aspnet/doc/monitoring/webevents.aspx).
+
+**[Download DetailedErrorEvent](http://james.newtonking.com/downloads/detailederrorevent/detailederrorevent.zip)** - DetailedErrorEvent dll and C# source code

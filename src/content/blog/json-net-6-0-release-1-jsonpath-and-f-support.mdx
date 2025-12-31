@@ -1,0 +1,130 @@
+---
+title: "Json.NET 6.0 Release 1 - JSONPath and F# Support"
+description: "Json.NET 6.0 Release 1 - JSONPath and F# Support"
+pubDate: "Feb 01 2014"
+source: "https://james.newtonking.com/archive/2014/02/01/json-net-6-0-release-1-–-jsonpath-and-f-support"
+---
+## JSONPath
+
+Json.NET has supported basic path queries with SelectToken [since forever](http://james.newtonking.com/archive/2009/12/26/json-net-3-5-release-6-binary-json-bson-support). Json.NET 6.0 supes up SelectToken with full support for [JSONPath](http://goessner.net/articles/JsonPath/), an XPath like querying language for JSON.
+
+```csharp
+JObject o = JObject.Parse(@"{
+  ""Manufacturers"": [
+    {
+      ""Name"": ""Acme Co"",
+      ""Products"": [
+        {
+          ""Name"": ""Anvil"",
+          ""Price"": 50
+        }
+      ]
+    },
+    {
+      ""Name"": ""Contoso"",
+      ""Products"": [
+        {
+          ""Name"": ""Elbow Grease"",
+          ""Price"": 99.95
+        },
+        {
+          ""Name"": ""Headlight Fluid"",
+          ""Price"": 4
+        }
+      ]
+    }
+  ]
+}");
+
+// manufacturer with the name 'Acme Co'
+var acme = o.SelectToken("$.Manufacturers[?(@.Name == 'Acme Co')]");
+
+Console.WriteLine(acme);
+// { "Name": "Acme Co", Products: [{ "Name": "Anvil", "Price": 50 }] }
+```
+
+A SelectTokens (plural) method has been added for returning a range of results from a JSONPath query.
+
+```csharp
+// name of all products priced 50 and above
+var pricyProducts = o.SelectTokens("$..Products[?(@.Price >= 50)].Name");
+
+Console.WriteLine(pricyProducts);
+// Anvil
+// Elbow Grease
+```
+
+While LINQ to JSON offers more features and flexibility, JSONPath being string based makes it a good choice for persisting a queries or constructing dynamic queries.
+
+## F# Support
+
+Json.NET 6.0 adds support for serializing and deserializing [F# discriminated unions](http://msdn.microsoft.com/en-us/library/dd233226.aspx). There is nothing you need to do, F# discriminated unions will now Just Work.
+
+```csharp
+type Shape =
+    | Rectangle of width : float * length : float
+    | Circle of radius : float
+    | Empty
+
+[<EntryPoint>]
+let main argv =
+
+    let shape1 = Rectangle(1.3, 10.0)
+
+    let json = JsonConvert.SerializeObject(shape1)
+    // {
+    //   "Case": "Rectangle",
+    //   "Fields": [
+    //     1.3,
+    //     10.0
+    //   ]
+    // }
+
+    let shape2 = JsonConvert.DeserializeObject<Shape>(json)
+
+    Console.ReadKey() |> ignore
+    0
+```
+
+## Assembly Version Happenings
+
+Json.NET has had a static assembly version since 4.5 to avoid binding redirects. The problem with having a static assembly version is if a strongly named assembly with the same version number is found in the GAC, the GAC version will be used ahead for the /bin version. Some people have been encountering the problem that their applications break when someone else GACs an old Json.NET 4.5 on their server. I’m looking at you .NET CMSes.
+
+The plan going forward is to increase the assembly version with major Json.NET releases. 6.0 Release 1 -&gt; 6.0.0.0, 6.0 Release 2 -&gt; 6.0.0.0, 7.0 Release 1 -&gt; 7.0.0.0. Hopefully this will provide a balance between binding redirects and having the GAC ruin your day.
+
+## And The Rest
+
+Tons of smaller features like parsing single line comments in JSON, reading multiple pieces of JSON content from a stream with one JsonReader, obsoleting of bad methods and lots of bug fixes.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 5.0 Release 8.
+
+- New feature - Added support for JSONPath
+- New feature - Added support for serializing F# discriminated unions
+- New feature - Added support for deserializing nested DataTables and arrays in DataTables
+- New feature - Added support for reading multiple pieces of JSON with a JsonReader
+- New feature - Added AllowIntegerValues setting to StringEnumConverter
+- New feature - Added Decimal and DateTimeOffset constructors to JValue
+- New feature - Added support for reading JSON single line comments
+- New feature - Improved number parsing error messages
+- Change - Changed assembly version to 6.0.0.0
+- Change - .NET 4 Portable build targets MonoTouch and MonoDroid in NuGet package
+- Change - .NET 4 Portable build targets WP8 and SL5 instead of WP7 and SL4
+- Removed - DefaultMemberSearchFlags on DefaultContractResolver is obsolete
+- Removed - SerializeObjectAsync, DeserializeObjectAsync, PopulateObjectAsync on JsonConvert are obsolete
+- Fix - Fixed JObject ICustomTypeDescriptor properties returning incorrect value
+- Fix - Fixed error when casting dynamic base64 string to byte array
+- Fix - Fixed EntityKeyMemberConverter not using property name resolve
+- Fix - Fixed serializing JValues with readonly JsonConverters
+- Fix - Fixed formatting override on SerializeObject methods
+- Fix - Fixed error when wrapping an exception in a JsonConverter
+- Fix - Fixed using extension data with a non-default constructor
+- Fix - Fixed Uri serialization roundtripping with Uri.OriginalString
+- Fix - Fixed TypeNameHandling.Auto with JsonSerializer.Serialize inside a JsonConverter
+
+## Links
+
+[**Json.NET GitHub Project**](https://github.com/JamesNK/Newtonsoft.Json)
+
+[**Json.NET 6.0 Release 1 Download**](https://json.codeplex.com/releases/view/117958) - Json.NET source code and assemblies

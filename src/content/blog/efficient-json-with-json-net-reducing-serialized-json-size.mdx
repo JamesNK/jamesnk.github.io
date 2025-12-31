@@ -1,0 +1,225 @@
+---
+title: "Efficient JSON with Json.NET – Reducing Serialized JSON Size"
+description: "Efficient JSON with Json.NET – Reducing Serialized JSON Size"
+pubDate: "Oct 24 2009"
+source: "https://james.newtonking.com/archive/2009/10/23/efficient-json-with-json-net-reducing-serialized-json-size"
+---
+Latest version of this guide: **[Reducing Serialized JSON Size](http://james.newtonking.com/projects/json/help/?topic=html/ReducingSerializedJSONSize.htm)**
+
+## ---
+
+One of the common problems encountered when serializing .NET objects to JSON is that the JSON ends up containing a lot of unwanted properties and values. This can be especially important when returning JSON to the client. More JSON means more bandwidth and a slower website.
+
+To solve the issue of unwanted JSON [Json.NET](http://james.newtonking.com/projects/json-net.aspx) has a range of built in options to fine tune what gets written from a serialized object. 
+
+**JsonIgnoreAttribute and DataMemberAttribute** 
+
+By default Json.NET will include all of a classes public properties and fields in the JSON it creates. Adding the [JsonIgnoreAttribute](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_JsonIgnoreAttribute.htm) to a property tells the serializer to always skip writing it to the JSON result. 
+
+```csharp
+public class Car
+{
+  // included in JSON
+  public string Model { get; set; }
+  public DateTime Year { get; set; }
+  public List<string> Features { get; set; }
+
+  // ignored
+  [JsonIgnore]
+  public DateTime LastModified { get; set; }
+}
+```
+
+If a class has many properties and you only want to serialize a small subset of them then adding JsonIgnore to all the others will be tedious and error prone. The way to tackle this scenario is to add the [DataContractAttribute](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.datacontractattribute.aspx) to the class and DataMemberAttributes to the properties to serialize. This is opt-in serialization, only the properties you mark up with be serialized, compared to opt-out serialization using JsonIgnoreAttribute. 
+
+```csharp
+[DataContract]
+public class Computer
+{
+  // included in JSON
+  [DataMember]
+  public string Name { get; set; }
+  [DataMember]
+  public decimal SalePrice { get; set; }
+
+  // ignored
+  public string Manufacture { get; set; }
+  public int StockCount { get; set; }
+  public decimal WholeSalePrice { get; set; }
+  public DateTime NextShipmentDate { get; set; }
+}
+```
+
+**Formatting** 
+
+JSON written by the serializer with an option of [Formatting.Indented](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_Formatting.htm) produces nicely formatted, easy to read JSON - great when you are developing. [Formatting.None](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_Formatting.htm) on the other hand keeps the JSON result small, skipping all unnecessary spaces and line breaks to produce the most compact and efficient JSON possible. 
+
+**NullValueHandling** 
+
+[NullValueHandling](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_NullValueHandling.htm) is an option on the JsonSerializer and controls how the serializer handles properties with a null value. By setting a value of NullValueHandling.Ignore the JsonSerializer skips writing any properties that have a value of null.
+
+```csharp
+public class Movie
+{
+  public string Name { get; set; }
+  public string Description { get; set; }
+  public string Classification { get; set; }
+  public string Studio { get; set; }
+  public DateTime? ReleaseDate { get; set; }
+  public List<string> ReleaseCountries { get; set; }
+}
+```
+
+```csharp
+Movie movie = new Movie();
+movie.Name = "Bad Boys III";
+movie.Description = "It's no Bad Boys";
+
+string included = JsonConvert.SerializeObject(movie,
+  Formatting.Indented,
+  new JsonSerializerSettings { });
+
+// {
+//   "Name": "Bad Boys III",
+//   "Description": "It's no Bad Boys",
+//   "Classification": null,
+//   "Studio": null,
+//   "ReleaseDate": null,
+//   "ReleaseCountries": null
+// }
+
+string ignored = JsonConvert.SerializeObject(movie,
+  Formatting.Indented,
+  new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+// {
+//   "Name": "Bad Boys III",
+//   "Description": "It's no Bad Boys"
+// }
+```
+
+NullValueHandling can also be customized on individual properties using the a [JsonPropertyAttribute](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_JsonPropertyAttribute.htm). The JsonPropertyAttribute value of NullValueHandling will override the setting on the JsonSerializer for that property. 
+
+**DefaultValueHandling** 
+
+[DefaultValueHandling](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_NullValueHandling.htm) is an option on the JsonSerializer and controls how the serializer handles properties with a default value. Setting a value of DefaultValueHandling.Ignore will make the JsonSerializer skip writing any properties that have a default value to the JSON result. For object references this will be null. For value types like int and DateTime the serializer will skip the default unitialized value for that value type. 
+
+Json.NET also allows you to customize what the default value of an individual property is using the [DefaultValueAttribute](http://msdn.microsoft.com/en-us/library/system.componentmodel.defaultvalueattribute.aspx). For example if a string property called Department always returns an empty string in its default state and you didn't want that empty string in your JSON then placing the DefaultValueAttribute on Department with that value will mean Department is no longer written to JSON unless it has a value. 
+
+```csharp
+public class Invoice
+{
+  public string Company { get; set; }
+  public decimal Amount { get; set; }
+
+  // false is default value of bool
+  public bool Paid { get; set; }
+  // null is default value of nullable
+  public DateTime? PaidDate { get; set; }
+
+  // customize default values
+  [DefaultValue(30)]
+  public int FollowUpDays { get; set; }
+  [DefaultValue("")]
+  public string FollowUpEmailAddress { get; set; }
+}
+```
+
+```csharp
+Invoice invoice = new Invoice
+{
+  Company = "Acme Ltd.",
+  Amount = 50.0m,
+  Paid = false,
+  FollowUpDays = 30,
+  FollowUpEmailAddress = string.Empty,
+  PaidDate = null
+};
+
+string included = JsonConvert.SerializeObject(invoice,
+  Formatting.Indented,
+  new JsonSerializerSettings { });
+
+// {
+//   "Company": "Acme Ltd.",
+//   "Amount": 50.0,
+//   "Paid": false,
+//   "PaidDate": null,
+//   "FollowUpDays": 30,
+//   "FollowUpEmailAddress": ""
+// }
+
+string ignored = JsonConvert.SerializeObject(invoice,
+  Formatting.Indented,
+  new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
+
+// {
+//   "Company": "Acme Ltd.",
+//   "Amount": 50.0
+// }
+```
+
+DefaultValueHandling can also be customized on individual properties using the a [JsonPropertyAttribute](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_JsonPropertyAttribute.htm). The JsonPropertyAttribute value of DefaultValueHandling will override the setting on the JsonSerializer for that property.
+
+## IContractResolver
+
+For more flexibility the [IContractResolver](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_Serialization_IContractResolver.htm) provides an interface to customize almost every aspect of how a .NET object gets serialized to JSON, including changing serialization behavior at runtime.
+
+```csharp
+public class DynamicContractResolver : DefaultContractResolver
+{
+  private readonly char _startingWithChar;
+  public DynamicContractResolver(char startingWithChar)
+  {
+    _startingWithChar = startingWithChar;
+  }
+
+  protected override IList<JsonProperty> CreateProperties(JsonObjectContract contract)
+  {
+    IList<JsonProperty> properties = base.CreateProperties(contract);
+
+    // only serializer properties that start with the specified character
+    properties =
+      properties.Where(p => p.PropertyName.StartsWith(_startingWithChar.ToString())).ToList();
+
+    return properties;
+  }
+}
+
+public class Book
+{
+  public string BookName { get; set; }
+  public decimal BookPrice { get; set; }
+  public string AuthorName { get; set; }
+  public int AuthorAge { get; set; }
+  public string AuthorCountry { get; set; }
+}
+```
+
+```csharp
+Book book = new Book
+              {
+                BookName = "The Gathering Storm",
+                BookPrice = 16.19m,
+                AuthorName = "Brandon Sanderson",
+                AuthorAge = 34,
+                AuthorCountry = "United States of America"
+              };
+
+string startingWithA = JsonConvert.SerializeObject(book, Formatting.Indented,
+  new JsonSerializerSettings { ContractResolver = new DynamicContractResolver('A') });
+
+// {
+//   "AuthorName": "Brandon Sanderson",
+//   "AuthorAge": 34,
+//   "AuthorCountry": "United States of America"
+// }
+
+string startingWithB = JsonConvert.SerializeObject(book, Formatting.Indented,
+  new JsonSerializerSettings { ContractResolver = new DynamicContractResolver('B') });
+
+// {
+//   "BookName": "The Gathering Storm",
+//   "BookPrice": 16.19
+// }
+```

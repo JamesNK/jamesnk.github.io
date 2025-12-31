@@ -1,0 +1,80 @@
+---
+title: "FormatWith 2.0 - String formatting with named variables"
+description: "FormatWith 2.0 - String formatting with named variables"
+pubDate: "Mar 28 2008"
+source: "https://james.newtonking.com/archive/2008/03/29/formatwith-2-0-string-formatting-with-named-variables"
+---
+The problem with string formatting is that &#123;0&#125;, &#123;1&#125;, &#123;2&#125;, etc, aren't very descriptive. Figuring out what the numbers represent means either deducing their values from their usage context in the string or examining the arguments passed to String.Format. Things become more difficult when you are working with a format string stored in an external resource as the second option no longer available.
+
+## FormatWith 2.0
+
+I have updated the original [FormatWith](http://james.newtonking.com/archive/2008/03/27/formatwith-string-format-extension-method.aspx) with an overload that takes a single argument and allows the use of property names in the format string.
+
+```csharp
+MembershipUser user = Membership.GetUser();
+
+Status.Text = "{UserName} last logged in at {LastLoginDate}".FormatWith(user);
+```
+
+It also works with anonymous types:
+
+```csharp
+"{CurrentTime} - {ProcessName}".FormatWith(new { CurrentTime = DateTime.Now, ProcessName = p.ProcessName });
+```
+
+And even allows for sub-properties and indexes:
+
+```csharp
+var student = new
+{
+  Name = "John",
+  Email = "john@roffle.edu",
+  BirthDate = new DateTime(1983, 3, 20),
+  Results = new[]
+  {
+    new { Name = "COMP101", Grade = 10 },
+    new { Name = "ECON101", Grade = 9 }
+  }
+};
+
+Console.WriteLine("Top result for {Name} was {Results[0].Name}".FormatWith(student));
+// "Top result for John was COMP101"
+```
+
+There isn't much to the code itself. Most of the heavy lifting is done in a regular expression and the .NET [DataBinder](http://msdn2.microsoft.com/en-us/library/system.web.ui.databinder.aspx) class.
+
+To start with a regular expression picks all the &#123;Property&#125; blocks out of the string. The the property expression inside the brackets is then evaluated using the DataBinder class on the object argument to get the property value. That value is then put into a list of values and the &#123;Property&#125; block is replaced in the string with the index of the value in the list, e.g. &#123;1&#125;. Finally the rewritten string, which now looks like any other format string, and the list of evaluated values are passed to String.Format.
+
+```csharp
+public static string FormatWith(this string format, object source)
+{
+  return FormatWith(format, null, source);
+}
+
+public static string FormatWith(this string format, IFormatProvider provider, object source)
+{
+  if (format == null)
+    throw new ArgumentNullException("format");
+
+  Regex r = new Regex(@"(?<start>\{)+(?<property>[\w\.\[\]]+)(?<format>:[^}]+)?(?<end>\})+",
+    RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
+  List<object> values = new List<object>();
+  string rewrittenFormat = r.Replace(format, delegate(Match m)
+  {
+    Group startGroup = m.Groups["start"];
+    Group propertyGroup = m.Groups["property"];
+    Group formatGroup = m.Groups["format"];
+    Group endGroup = m.Groups["end"];
+
+    values.Add((propertyGroup.Value == "0")
+      ? source
+      : DataBinder.Eval(source, propertyGroup.Value));
+
+    return new string('{', startGroup.Captures.Count) + (values.Count - 1) + formatGroup.Value
+      + new string('}', endGroup.Captures.Count);
+  });
+
+  return string.Format(provider, rewrittenFormat, values.ToArray());
+}
+```

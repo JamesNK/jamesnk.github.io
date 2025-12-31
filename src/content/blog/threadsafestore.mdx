@@ -1,0 +1,78 @@
+---
+title: "ThreadSafeStore"
+description: "ThreadSafeStore"
+pubDate: "Jun 18 2009"
+source: "https://james.newtonking.com/archive/2009/06/18/threadsafestore"
+---
+Developers and multithreading fall into 3 camps:
+  
+- Doesn’t know anything. This developer avoids thinking about other threads at all costs. Followers of the HttpContext. **90% of developers.**
+- Knows everything. This developer is either a savant or writes operating systems for fun. Most likely sports a sweet hippy beard. **3.14159% of developers.**
+- Doesn’t know everything but knows enough. This developer will happily write multithreaded applications. It turns out however he/she ***doesn’t*** know enough and said applications are full of hard to find, intermittent bugs just waiting to corrupt data and deadlock. **The rest us.**
+
+I fall into the third category: knows enough to be dangerous.
+  
+The latest example of my thread safety [failure](http://www.sadtrombone.com/) is knowing that two threads modifying a dictionary at the same time is very bad, but then not considering that getting from a dictionary that is being modified is also not a terribly good idea. Thanks to [Amir](http://json.codeplex.com/WorkItem/View.aspx?WorkItemId=13457) for the pointer.
+  
+## ThreadSafeStore
+  
+I’ve written a simple helper class that wraps a [Dictionary](http://msdn.microsoft.com/en-us/library/xfhwa508.aspx) called ThreadSafeStore. ThreadSafeStore treats its internal Dictionary as immutable. Each time a new value is added the wrapper will create a new Dictionary with the new value and reassigns the internal reference. There is no chance a thread could access the Dictionary while it is being modified. ThreadSafeStore is aimed towards read performance with no lock on read required.
+  
+The downside to this approach is a new Dictionary is being created with every add. An improvement would be to introduce a second level Dictionary and buffer up new values before adding them to the main store, reducing total object’s allocated. For now I’ve left it simple. Suggestions welcome 😊
+  
+```csharp
+public class ThreadSafeStore<TKey, TValue>
+{
+  private Dictionary<TKey, TValue> _store;
+  private readonly Func<TKey, TValue> _creator;
+
+  public ThreadSafeStore(Func<TKey, TValue> creator)
+  {
+    if (creator == null)
+      throw new ArgumentNullException("creator");
+
+    _creator = creator;
+  }
+
+  public TValue Get(TKey key)
+  {
+    if (_store == null)
+      return AddValue(key);
+
+    TValue value;
+    if (!_store.TryGetValue(key, out value))
+      return AddValue(key);
+
+    return value;
+  }
+
+  private TValue AddValue(TKey key)
+  {
+    lock (this)
+    {
+      TValue value;
+
+      if (_store == null)
+      {
+        _store = new Dictionary<TKey, TValue>();
+        value = _creator(key);
+        _store[key] = value;
+      }
+      else
+      {
+        // double check locking
+        if (_store.TryGetValue(key, out value))
+          return value;
+
+        Dictionary<TKey, TValue> newStore = new Dictionary<TKey, TValue>(_store);
+        value = _creator(key);
+        newStore[key] = value;
+
+        _store = newStore;
+      }
+
+      return value;
+    }
+  }
+}
+```

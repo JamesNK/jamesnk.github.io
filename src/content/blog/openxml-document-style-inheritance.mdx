@@ -1,0 +1,35 @@
+---
+title: "OpenXML document style inheritance"
+description: "OpenXML document style inheritance"
+pubDate: "Jan 08 2008"
+source: "https://james.newtonking.com/archive/2008/01/09/openxml-document-style-inheritance"
+---
+The biggest challenge I encountered when writing an object model for OOXML documents was handling inheritance.  
+
+WordprocessingML has a relatively complex inheritance hierarchy (illustrated for the most part in the diagram below) and it was a struggle to come up with a solution that would be both quick to implement for every property across the entire model, and yet be flexible enough to handle every situation and edge case.  
+
+Fortunately I was able to leverage one of my favorite features of OpenXML, property elements, and come up with a quick and (IMO 😊) simple solution.  
+
+![Nelson: Make sure your affairs are in order. Bart: I've set up a trust. It bypasses the inheritance tax. Nelson: Only until 2008. Look into it!](http://james.newtonking.com/BlogFiles/OpenXMLdocumentstyleinheritance_12D59/styleOrder.png "Nelson: Make sure your affairs are in order. Bart: I've set up a trust. It bypasses the inheritance tax. Nelson: Only until 2008. Look into it!")
+
+**Property elements**  
+
+OpenXML has a standard approach to defining data and meta-data for an element. Rather than embedding information in attributes directly against the element, OpenXML's approach is to separate the information into a child properties element. For example a run element (&lt;r&gt;) has its data defined in a run properties element (&lt;rPr&gt;), a paragraph element (&lt;p&gt;) has paragraph properties (&lt;pPr&gt;), a table cell element (&lt;tc&gt;) has table cell properties (&lt;tcPr&gt;), etc, etc.  
+
+```csharp
+<w:r>   <w:rPr>     <w:b />     <w:szw:val="52" />     <w:rFontsw:ascii="Cambria" />   </w:rPr>   <w:t>OpenXML document style inheritance</w:t> </w:r>
+```
+ 
+Property elements are reused throughout the specification. Run properties for example can be defined directly against a run like the example above, but can also appear in a style element and in the document itself as the document defaults. The appearance of a piece of text is then determined by looking at this hierarchy properties and using the first value it encounters, from direct formatting first to document defaults last.  
+
+**Inheritance solution**  
+
+I found the property element approach quite beneficial when writing an object model. Reusing property classes was one benefit but I also found the approach useful when implementing inheritance.  
+
+Since the hierarchy is made up of the same object repeated in different places, e.g. run properties directly against a run, run properties on a style, document default run properties, I simply wrote a method which took a delegate for getting a value from the properties object and then ran that against each object in the hierarchy until a non-null value was returned.
+ 
+```csharp
+public T GetValue<T>(Func<RunProperties, T> valueGetter) {   // execute delegate against each RunProperties    // in inheritance hierarchy until a value is returned  }   public Unit? FontSize {   get { return GetValue(p => p._fontSize); }   set { _fontSize = value; } }
+```
+ 
+So far this solution has worked well for me and it has handled the various edge cases in OOXML.

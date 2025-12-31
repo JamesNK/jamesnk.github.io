@@ -1,0 +1,104 @@
+---
+title: "Json.NET 5.0 Release 1 – .NET 4.5, BigInteger, Read-Only Collections"
+description: "Json.NET 5.0 Release 1 – .NET 4.5, BigInteger, Read-Only Collections"
+pubDate: "Apr 07 2013"
+source: "https://james.newtonking.com/archive/2013/04/07/json-net-5-0-release-1-net-4-5-biginteger-read-only-collections"
+---
+## New and Updated Libraries
+
+In Json.NET 5.0 there are a bunch of library version changes:
+
+- Added .NET 4.5 library
+- Added portable library targeting .NET 4.5 + WP8 + Win8
+- Removed the Silverlight library[.](http://www.youtube.com/watch?v=r0yXqU-w9U0)
+- Removed the Windows Phone library
+
+Upgrading library versions allows Json.NET to support new .NET features such as dynamic and async across more platforms.
+
+A baseline portable class library still supports all platforms (.NET 4 + WP7 + SL5 + Win8) so have no fear  Silverlight and Windows Phone developers, even though the dedicated libraries have been removed you can continue use the latest version of Json.NET on Silverlight/Windows Phone with a portable class library.
+
+Note that the assembly version number of Json.NET 5.0 hasn't changed and is still 4.5.0.0 to avoid assembly redirect issues. Read more about assembly version numbers [here](http://james.newtonking.com/archive/2012/04/04/json-net-strong-naming-and-assembly-version-numbers.aspx).
+
+## Serializing NaN and Infinity Floating Point Values
+
+Json.NET no longer serializes NaN and positive and negative infinity floating point values as symbols, which is invalid JSON. With 5.0 the new default is to serialize those values as strings, e.g. "NaN" instead of NaN. There is no change to serializing normal floating point numbers.
+
+A FloatFormatHandling setting has been added so you can control how NaN and infinity values are serialized.
+
+```csharp
+string json;
+IList<double> d = new List<double> {1.1, double.NaN, double.PositiveInfinity};
+
+json = JsonConvert.SerializeObject(d);
+// [1.1,"NaN","Infinity"]
+
+json = JsonConvert.SerializeObject(d, new JsonSerializerSettings {FloatFormatHandling = FloatFormatHandling.Symbol});
+// [1.1,NaN,Infinity]
+
+json = JsonConvert.SerializeObject(d, new JsonSerializerSettings {FloatFormatHandling = FloatFormatHandling.DefaultValue});
+// [1.1,0.0,0.0]
+```
+
+## BigInteger and Read-Only Collections
+
+Json.NET 5.0 adds support for BigInteger. Now when reading and writing JSON there is no limit on the maximum size of integers Json.NET can handle.
+
+There is also support for read-only collection interfaces (IReadOnlyList&lt;T&gt; and IReadOnlyDictionary&lt;TKey, TValue&gt;) which were added in .NET 4.5. As long as there is an IEnumerable&lt;T&gt; constructor then Json.NET will deserialize to the read-only collection for you.
+
+```csharp
+string json = @"[
+  9000000000000000000000000000000000000000000000001
+]";
+
+var l = JsonConvert.DeserializeObject<IReadOnlyList<BigInteger>>(json);
+
+BigInteger nineQuindecillionAndOne = l[0];
+// 9000000000000000000000000000000000000000000000001
+```
+
+## Performance
+
+There are many performance and memory improvements in Json.NET 5.0, especially when serializing and deserializing collections, and Json.NET in Windows 8 Store apps.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.5 Release 11.
+
+- New feature - Added .NET 4.5 library
+- New feature - Added portable library targeting .NET 4.5, Win8, WP8
+- New feature - Added Path to JToken
+- New feature - Added BigInteger support
+- New feature - Added IReadOnlyCollection&lt;T&gt; and IReadOnlyDictionary&lt;TKey, TValue&gt; support
+- New feature - Added FloatFormatHandling to JsonWriter/JsonSerializer/JsonSerializerSettings
+- New feature - Added DateFormatString to JsonWriter/JsonSerializer/JsonSerializerSettings
+- New feature - Added support for multiple serialization events and use base type serialization events
+- New feature - Added DeserializeAnonymousType overload with JsonSerializerSettings
+- New feature - Added support for specifying root type when serializing JSON with TypeNameHandling.Auto
+- New feature - Added support for creating lists and dictionaries with an IEnumerable&lt;T&gt; constructor
+- New feature - Added IConvertible support to JValue
+- New feature - Added support for serializing custom IConvertible values
+- New feature - Added support for deserializing IList
+- New feature - Added support for converting byte array JValues to Guid
+- New feature - Added support for deserializing byte arrays to Guid
+- Change - NaN and Infinity floating point values are serialized as strings by default
+- Change - Minor breaking changes to JsonSchema type
+- Change - Upgraded Windows Phone assembly to WP8
+- Change - DateTime IDictionary keys are now serialized in ISO date format
+- Change - DataContractAttribute is no longer inherited to match DataConctractSerializer behavior
+- Change - StringEnumConverter converts empty strings to null for nullable enums
+- Change - Guids serialize to a binary UUID in BSON instead of a string
+- Remove - Removed SL4 library
+- Remove - Removed WP7 library
+- Fix - Fixed JTokenWriter returning a null reference
+- Fix - Fixed static fields to no longer be included with fields serialization
+- Fix - Fixed recursively reading type wrapper objects when deserializing
+- Fix - Fixed incorrect namespace when converting XML to JSON
+- Fix - Fixed poor performance when serializing/deserialize dynamic objects
+- Fix - Fixed StringEnumConverter to throw JsonSerializerException on error
+- Fix - Fixed hidden properties not being serialized
+
+## Links
+
+[**Json.NET CodePlex Project**](http://json.codeplex.com/)
+
+[**Json.NET 5.0 Release 1 Download**](https://json.codeplex.com/releases/view/104679) - Json.NET source code and assemblies

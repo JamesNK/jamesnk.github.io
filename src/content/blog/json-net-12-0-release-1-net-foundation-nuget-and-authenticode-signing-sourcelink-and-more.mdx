@@ -1,0 +1,68 @@
+---
+title: "Json.NET 12.0 Release 1 - .NET Foundation, NuGet and Authenticode signing, SourceLink and more"
+description: "Json.NET 12.0 Release 1 - .NET Foundation, NuGet and Authenticode signing, SourceLink and more"
+pubDate: "Nov 27 2018"
+source: "https://james.newtonking.com/archive/2018/11/27/json-net-12-0-release-1-net-foundation-nuget-and-authenticode-signing-sourcelink-and-more"
+---
+## .NET Foundation
+
+Json.NET has joined the .NET Foundation! The .NET Foundation is an independent organization dedicated to fostering the .NET open source community. The .NET Foundation provides technical and legal guidance .NET open source projects. Joining the .NET Foundation ensures that Json.NET stays open and supported into the future.
+
+Read more on the [.NET Foundation blog](https://dotnetfoundation.org/blog/2018/11/27/welcome-jsonnet-to-the-net-foundation).
+
+## NuGet package and Authenticode signing
+
+Json.NET 12 is the first release to sign the \*.nupkg using [NuGet package signing](https://blog.nuget.org/20180522/Introducing-signed-package-submissions.html) and sign the assembly files using [Authenticode](https://blogs.msdn.microsoft.com/ieinternals/2011/03/22/everything-you-need-to-know-about-authenticode-code-signing/). Although it isn't a common request, some users of Json.NET have asked for signed binaries because of company policy. This feature is made possible by the .NET Foundation, who offer code signing certificates and a signing service to member projects.
+
+## Better debugging with SourceLink
+
+SourceLink is an neat technology that links a library to its source code. Originally created in the community by [@ctaggart](https://github.com/ctaggart), SourceLink has been adopted by Microsoft and is supported in Visual Studio. This release adds SourceLink support to Json.NET, making it possible to step into the Json.NET source code as you debug your application.
+
+## And lots more
+
+JSON Path supports JavaScript's strict equality operators (=== & !==), StringEnumConverter can use a NamingStrategy and is faster, JavaScriptDateTimeConverter supports JavaScript date constructors with multiple arguments, there is a new option on JsonMergeSettings for case insensitive merging of property names, serializing Span&lt;T&gt; properties no longer errors, and dozens of other new features and bug fixes.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 11.0 Release 2.
+
+- New feature - Added NuGet package signing
+- New feature - Added Authenticode assembly signing
+- New feature - Added SourceLink support
+- New feature - Added constructors to StringEnumConverter for setting AllowIntegerValue
+- New feature - Added JsonNameTable and JsonTextReader.PropertyNameTable
+- New feature - Added line information to JsonSerializationException
+- New feature - Added JObject.Property overload with a StringComparison
+- New feature - Added JsonMergeSettings.PropertyNameComparison
+- New feature - Added support for multiple Date constructors with JavaScriptDateTimeConverter
+- New feature - Added support for strict equals and strict not equals in JSON Path queries
+- New feature - Added EncodeSpecialCharacters setting to XmlNodeConverter
+- New feature - Added trace message for serializing to non-writable properties
+- New feature - Added support for NamingStrategy to StringEnumConverter
+- New feature - Added JsonLoadSettings.DuplicatePropertyNameHandling setting
+- Change - JTokenReader now uses JsonReader.DateTimeZoneHandling setting for date values
+- Change - Excluded TargetSite when serializing Exceptions without SerializableAttribute
+- Change - Changed StringEnumConverter.ctor(bool camelCaseText) to obsolete
+- Change - Changed StringEnumConverter.CamelCaseText to obsolete
+- Fix - Fixed incorrect overflow when reading decimal values from JSON
+- Fix - Fixed error message when trying to deserialize an abstract serializable type
+- Fix - Fixed parsing decimals from a string with an exponent
+- Fix - Fixed losing DateTime.Kind when deserializing ISO date strings
+- Fix - Fixed calling constructors with ref and in parameters
+- Fix - Fixed rare race condition in name table when serializing
+- Fix - Fixed unhelpful exception message when unable to convert JSON value to DateTime
+- Fix - Fixed error when deserializing empty array in DataTable
+- Fix - Fixed deserializing empty string to empty byte array
+- Fix - Fixed blank extension data values with required properties and deserializing with constructor
+- Fix - Fixed ignored values being set in extension data when deserializing
+- Fix - Fixed comparing equal integer and floating point values in JSON Path
+- Fix - Fixed BsonReader when reading multiple content
+- Fix - Fixed setting extension data with existing key
+- Fix - Fixed including array attribute in XML with namespaces when converting JSON to XML
+- Fix - Fixed error when serializing ref struct properties by excluding them from serialization
+
+## Links
+
+## [Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)
+
+## [Json.NET 12.0 Release 1 Download - Json.NET source code and assemblies](https://github.com/JamesNK/Newtonsoft.Json/releases/tag/12.0.1)

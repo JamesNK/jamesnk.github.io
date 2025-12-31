@@ -1,0 +1,62 @@
+---
+title: "Json.NET 6.0 Release 6 - ASP.NET CoreCLR Support, Memory Usage Optimizations"
+description: "Json.NET 6.0 Release 6 - ASP.NET CoreCLR Support, Memory Usage Optimizations"
+pubDate: "Oct 24 2014"
+source: "https://james.newtonking.com/archive/2014/10/24/json-net-6-0-release-6-asp-net-coreclr-support-memory-usage-optimizations"
+---
+## ASP.NET CoreCLR
+ 
+Json.NET now supports running on the ASP.NET CoreCLR, a coming soon server optimized CLR for running applications in the cloud.
+
+>  
+> Today, you run ASP.NET using the same CLR that desktop apps use. We’re adding a cloud-optimized (my cloud, your cloud, their cloud - server stuff) version optimized for server scenarios like low-memory and high-throughput.  
+> 
+> ASP.NET vNext will **let you deploy your own version of the .NET Framework on an app-by-app-basis**. One app with new libraries can’t break an app next door with a different version. Different apps can even have their own cloud-optimized CLR of their own version. **The CLR and cloud-optimized libraries are NuGet packages!**
+
+Bin deploy ASP.NET to a Mac or Linux server? Sign. Me. Up. Find out more about the ASP.NET CoreCLR and ASP.NET vNext [here](http://www.hanselman.com/blog/IntroducingASPNETVNext.aspx).
+ 
+## Memory Usage Optimizations
+ 
+This release of Json.NET optimizes memory usage, in particular heap allocations when reading and writing JSON.
+ 
+Json.NET has always been memory efficient, streaming the reading and writing large documents rather than loading them entirely into memory, but I was able to find a couple of key places where object allocations could be reduced. Deserialization saw the biggest improvement with about a 35% decrease in allocations. Less allocations, less garbage collection. Less garbage collection, more requests per second.
+ 
+The before memory timeline when deserializing a 5 megabyte JSON file:
+ 
+![I have asked you nicely not to mangle my merchandise. You leave me no choice but to ask you nicely again.](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-6.0-.NET-CoreCLR-support-memory_142FF/image_5.png "I have asked you nicely not to mangle my merchandise. You leave me no choice but to ask you nicely again.")
+
+And the after timeline:
+ 
+![I've gotten word that a child is using his imagination... and I've come to put a stop to it](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-6.0-.NET-CoreCLR-support-memory_142FF/image_6.png "I've gotten word that a child is using his imagination... and I've come to put a stop to it")
+
+Grey is unmanaged memory, blue is the Gen0 heap, red is Gen1, green is Gen2 and the profiler used is [dotMemory](https://www.jetbrains.com/dotmemory/).
+ 
+For comparison, here is what JavaScriptSerializer looks like doing the same work:
+ 
+![All my life I've been an obese man trapped inside a fat man's body.](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-6.0-.NET-CoreCLR-support-memory_142FF/image_12.png "All my life I've been an obese man trapped inside a fat man's body.")
+
+JavaScriptSerializer only works with strings so the purple here is a 5 megabyte string being loaded into the [large object heap](http://msdn.microsoft.com/en-us/magazine/cc534993.aspx). After the latest optimizations Json.NET allocates 8 times less memory than JavaScriptSerializer.
+ 
+**Changes**  
+
+Here is a complete list of what has changed since Json.NET 6.0 Release 5.  
+
+- New feature - Added support for ASP.NET CoreCLR
+- New feature - Reduced memory allocations when reading and writing JSON
+- New feature - Added support for passing arguments to JsonConverters with JsonConvertAttribute
+- New feature - Added JsonConvert.ToString overload that takes a StringEscapeHandling parameter
+- Change - Omit fields array for F# discriminated union serialization when there are no fields
+- Change - Escape property names in path on readers/writers/tokens when a name contains special characters
+- Change - Provide line numbers for end tokens on JTokenReader
+- Fix - Fixed parsing in SelectToken when the path has an escaped property followed by an unescaped property
+- Fix - Fixed error when deserializing a GUID from certain BSON
+- Fix - Fixed null reference error when using a JEnumerable created with its default constructor
+- Fix - Fixed line breaks in exception messages to use Environment.NewLine
+- Fix - Fixed MetadataTypeAttribute reflection error on ASP.NET CoreCLR
+- Fix - Fixed immutable collections reflection error on ASP.NET CoreCLR
+
+**Links**  
+
+**[Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)**  
+
+[**Json.NET 6.0 Release 6 Download - Json.NET source code and assemblies**](https://json.codeplex.com/releases/view/135702)

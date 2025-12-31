@@ -1,0 +1,49 @@
+---
+title: "Logging JavaScript Errors To ASP.NET"
+description: "Logging JavaScript Errors To ASP.NET"
+pubDate: "May 02 2006"
+source: "https://james.newtonking.com/archive/2006/05/02/Logging-JavaScript-Errors-To-ASP.NET"
+---
+Over the past few years a huge jump in the complexity of JavaScript has occured on the browser, resulting in richer, more responsive and user friendly web applications. Unfortunatly this shift does not come without cost.Greater complexity on the client means more room for bugs, and without some effective means to log them you are left in the dark about problems until users are driven to complain.**Solution Overview**The client exception logger comprises of three parts: a script on the client that catches the exceptions and sends them to the server, a HttpHandler on the server that receives the error details and logs them, and an ASP.NET control that links the two together.Details logged include the following:
+
+- JavaScript exception message, line and file name
+- Date and time
+- IP Address
+- User agent (browser and platform details)
+- Session ID
+
+**Catching and Sending the Error on the Client** Whenever an exception is not caught in JavaScript it triggers an onerror event on the browser's window object. It is comparable to ASP.NET’s Application\_Error event in the global.asax.When the page is downloaded a ClientLogger object is created and a function is attached to the onerror event. That function calls a method on ClientLogger object which will send the error details to ASP.NET on the server using the XMLHttpRequest object. This is done asynchronously and does not effect the user.
+
+```csharp
+var logger = new ClientLogger({handlerUrl:'../../ClientLogger.axd',sessionID:'2rnbawbkzuovsw55ymvflz45'});
+window.onerror = function(message, url, line) { logger.Log(message, url, line); };
+```
+
+**Receiving and Logging the Error on the Server** When sending the error data back to the server, rather than the page calling back to itself, the logger posts the details a custom HttpHandler. This is done to minimize side effects or performance issues of creating the page again.Note that the handler does not contain any logic for logging the error details. Instead it uses the new ASP.NET 2.0 Web Event feature, and raises a custom WebJavaScriptErrorEvent event.
+
+```csharp
+WebBaseEvent.Raise(new WebJavaScriptErrorEvent(jsMessage, this, jsUrl, jsLine, pageUrl, userAgent, sessionID));
+```
+
+**Packaging Everything Together in a Control** The ASP.NET control includes the JavaScript file (embedded in the dll) on the page and registers some JavaScript that creates the client object and attaches it to the onerror event. To enable JavaScript error logging include the control on your master page:
+
+```csharp
+<%@ Register TagPrefix="ncl" Namespace="Newtonsoft.ClientLogger" Assembly="Newtonsoft.ClientLogger" %>
+<ncl:ClientLogger runat="server" />
+```
+
+And register the HttpHandler in the web.config:
+
+```csharp
+<addverb="*"path="clientlogger.axd"type="Newtonsoft.ClientLogger.ClientLoggerHandler, Newtonsoft.ClientLogger"/>
+```
+
+**Consuming The Web Event**The great thing about ASP.NET Web Events is that you can decide how you want to log the event, and it is simple as modifying your web application's web.config file. For example in just a few lines you can configure ASP.NET to log all errors to your database or send them to an email address. The rule below for example will log all errors to the database. You can learn more about using ASP.NET Web Events [here](http://www.asp.net/QuickStart/aspnet/doc/monitoring/webevents.aspx).
+
+```csharp
+<addname="SqlServerWebErrorLogger"
+    eventName="All Errors"
+    provider="SqlWebEventProvider"/>
+```
+
+And that's it. You will now know about JavaScript errors as they happen.The source and dll for the project can be downloaded here: [ClientLogger.zip](http://james.newtonking.com/downloads/clientlogger/clientlogger.zip)

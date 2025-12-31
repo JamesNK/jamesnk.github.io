@@ -1,0 +1,143 @@
+---
+title: "Json.NET 11.0 Release 1 - .NET Standard 2.0, JsonConverters, JSON Path and more"
+description: "Json.NET 11.0 Release 1 - .NET Standard 2.0, JsonConverters, JSON Path and more"
+pubDate: "Feb 22 2018"
+source: "https://james.newtonking.com/archive/2018/02/22/json-net-11-0-release-1-net-standard-2-0-jsonconverters-json-path-and-more"
+---
+## .NET Standard 2.0
+
+The big new feature in Json.NET 11 Release 1 is targeted support for .NET Standard 2.0.
+
+There are two main benefits of a library like Json.NET targeting .NET Standard 2.0. The first is more APIs: Json.NET with .NET Standard 2.0 almost matches Json.NET on the traditional Windows .NET Framework in features.
+
+For example, fans of serializing DataSets to and from JSON rejoice, .NET Core now supports your pro-DataSet lifestyle:
+
+```csharp
+DataTable dt = new DataTable();
+ dt.Columns.Add("PackageId", typeof(string));
+ dt.Columns.Add("Version", typeof(string));
+ dt.Columns.Add("ReleaseDate", typeof(DateTime));
+
+ dt.Rows.Add("Newtonsoft.Json", "11.0.1", new DateTime(2018, 2, 17));
+ dt.Rows.Add("NUnit", "3.9.0", new DateTime(2017, 11, 10));
+
+ string json = JsonConvert.SerializeObject(dt, Formatting.Indented);
+
+ Console.WriteLine(json);
+ // [
+ //   {
+ //     "PackageId": "Newtonsoft.Json",
+ //     "Version": "11.0.1",
+ //     "ReleaseDate": "2018-02-17T00:00:00"
+ //   },
+ //   {
+ //     "PackageId": "Newtonsoft.Json",
+ //     "Version": "10.0.3",
+ //     "ReleaseDate": "2017-06-18T00:00:00"
+ //   }
+ // ]
+```
+
+The other benefit of .NET Standard 2.0 is developers are no longer spammed with NuGet dependencies. UWP app authors for example saw NuGet pull in [over 100 packages](https://github.com/JamesNK/Newtonsoft.Json/issues/1291) when referencing Json.NET. UWP supporting .NET Standard 2.0 and consuming a netstandard2.0 package eliminates that problem.
+
+## JsonConverter Stuff
+
+Json.NET 11 adds a generic JsonConverter&lt;T&gt;. If you only care about serializing one specific type then JsonConverter&lt;T&gt; eliminates boiler plate code from your converter and keeps everything strongly typed.
+
+Also new is a UnixDateTimeConverter. There is [no standard for serializing dates in JSON](https://www.newtonsoft.com/json/help/html/DatesInJSON.htm) and so UnixDateTimeConverter is a useful converter for anyone who want to store time as an integer Unix epoch in their JSON.
+
+## JSON Path Stuff
+
+Json.NET 11 adds support for the regular expression operator in JSON Path queries. JSON Path has no formal specification (other than a [blog post](http://goessner.net/articles/JsonPath/)) but one common addition to it is support for querying with regular expressions.
+
+```csharp
+JArray packages = JArray.Parse(@"[
+   {
+     ""PackageId"": ""Newtonsoft.Json"",
+     ""Version"": ""11.0.1"",
+     ""ReleaseDate"": ""2018-02-17T00:00:00""
+   },
+   {
+     ""PackageId"": ""NUnit"",
+     ""Version"": ""3.9.0"",
+     ""ReleaseDate"": ""2017-11-10T00:00:00""
+   }
+ ]");
+
+ List<JToken> newtonsoftPackages = packages.SelectTokens(@"$.[?(@.PackageId =~ /^Newtonsoft\.(.*)$/)]").ToList();
+
+ Console.WriteLine(newtonsoftPackages.Count);
+ // 1
+```
+
+JSON Path has also seen many smaller bug fixes this release to improve its performance and support of escaped characters.
+
+## And lots more
+
+Serializing and deserializing enumerations by name is faster and more accurate, JsonReader.SupportMultipleContent supports reading multiple comma delimited fragments of JSON together, JObject exposes ContainsKey, error messages have improved in many exceptional situations, and dozens of other new features and bug fixes.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 10.0 Release 3.
+
+- New feature - Added netstandard2.0 build
+- New feature - Added generic JsonConverter&lt;T&gt;
+- New feature - Added UnixDateConverter for converting Unix timestaps
+- New feature - Added support for regex operator in JSON Paths
+- New feature - Added JsonObjectAttribute.ItemNullValueHandling
+- New feature - Added JsonObjectContract.ItemNullValueHandling
+- New feature - Improved performance when resolving serialization contracts by using ConcurrentDictionary
+- New feature - Improved performance of JToken.Path with a faster reverse
+- New feature - Improved performance of parsing Int32 JSON integer values
+- New feature - Improved performance of parsing and writing enum names
+- New feature - Added IgnoreIsSpecifiedMembers to DefaultContractResolver
+- New feature - Added IgnoreShouldSerializeMembers to DefaultContractResolver
+- New feature - Added support for reading multiple comma delimited values with JsonReader.SupportMultipleContent
+- New feature - Improved error message when an object is reused with PreserveReferencesHandling
+- New feature - Added IConvertible support to netstandard1.3
+- New feature - Added INotifyPropertyChanging support to netstandard1.3
+- New feature - Optimized internal buffering when writing very large strings
+- New feature - JObject.ContainsKey is now public
+- New feature - Improved the error message when serialized ByRef properties
+- New feature - Improved the error message when serializing FileInfo/DictionaryInfo without ISerializable
+- New feature - Improved the error message when failing conversion in JsonReader.ReadAsInt32 and JsonReader.ReadAsDecimal
+- New feature - Improved the error message when deserializing badly formatted regex strings
+- Change - Types that implement ISerializable but don't have [SerializableAttribute] are not serialized using ISerializable
+- Change - Changed JsonProperty.MemberConverter to obsolete
+- Change - Changed camel casing logic for all caps words to not leave last character capitalized
+- Change - Changed enum serialization in dictionary keys to use EnumMemberAttribute
+- Fix - Fixed converting default datetime in JSON to XML on netstandard1.3
+- Fix - Fixed deserializing ObservableCollection in .NET Core 2.0
+- Fix - Fixed incorrectly allowing static IsSpecified properties
+- Fix - Fixed not preserving trailing zeros when deserializing decimals
+- Fix - Fixed JValue.CompareTo with number and string values
+- Fix - Fixed not erroring when reading undefined for nullable long
+- Fix - Fixed serializing immutable collections when .NET 4.0 or previous Newtonsoft.Json assembly is GACed
+- Fix - Fixed writing null values by XmlNodeConverter and RegexConverter
+- Fix - Fixed deserializing with a TraceWriter when the reader is not at the start
+- Fix - Fixed TraceJsonWriter.WriteValue(object) writing value twice
+- Fix - Fixed deserializing with constructor and readonly collection property
+- Fix - Fixed error when writing unknown null value as JSON
+- Fix - Fixed merging null string values
+- Fix - Fixed missing CancellationToken usages in JsonTextWriter.WriteAsync
+- Fix - Fixed error with JsonSerializer.Populate and comments in JSON array
+- Fix - Fixed error handling when deserializing certain dictionary and lists
+- Fix - Fixed serializing collection that is nullable
+- Fix - Fixed JsonTextReader sync read in async method
+- Fix - Fixed JsonConverter not called when target type is list and token is a string
+- Fix - Fixed serializing a property that is defined in multiple interfaces
+- Fix - Fixed error when deserializing null value into ConcurrentDictionary
+- Fix - Fixed escaping special characters in generated JSON Paths
+- Fix - Fixed reading escaped special characters in JSON Paths
+- Fix - Fixed using extension data with dictionary that explicitly implements Add method
+- Fix - Fixed parsing enum name to exact casing value before falling back to case-insensitive value
+- Fix - Fixed DataContractAttribute not forcing object serialization of classes
+- Fix - Fixed bug when deserializing into existing non-IList collection
+- Fix - Fixed bug when deserializing into existing non-IDictionary collection
+- Fix - Fixed JsonReader.ReadAsInt32 with BigInteger values
+
+## Links
+
+## [Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)
+
+## [Json.NET 11.0 Release 1 Download - Json.NET source code and assemblies](https://github.com/JamesNK/Newtonsoft.Json/releases/tag/11.0.1)

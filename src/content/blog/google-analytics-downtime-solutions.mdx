@@ -1,0 +1,37 @@
+---
+title: "Google Analytics Downtime Solutions"
+description: "Google Analytics Downtime Solutions"
+pubDate: "Mar 09 2006"
+source: "https://james.newtonking.com/archive/2006/03/10/Google-Analytics-Downtime-Solutions"
+---
+![](http://james.newtonking.com/Media/Default/images/blog/analytics.jpg)[Google Analytics](http://www.google.com/analytics/) was down for a few hours today. While it is not unusual for an ASP service to have downtime, Google Analytics works by you including a link to their Javascript file on your website and while the website was down today that file was also unavailable. Anyone who linked to the file in the page header will have found that their websites were not loading. This is because no page content is displayed until all header files have been downloaded. This is a big deal if your business is based around the internet. [Some website owners](http://software.gurock.com/postings/google-analytics-is-down/) have decided to remove the service entirely because of todays incident.
+
+The simple fix to this is to include the script tag with the link to http://www.google-analytics.com/urchin.js at the bottom of webpage, which Google now recommends doing. If the Google Analytics website goes down, and the file is unavailable, the page will continue to display normally.
+
+Although this solves the big problem of no content being display, there are still two issues.
+
+## Analytics Functions
+
+The first is that any calls to the Google Analytics functions such as urchinTracker to track downloads or outbound links in click events will break. The script containing the function hasn't been loaded, either because Google is down or the user simply clicked the link before the page reached loading the script tag linking to Google. The solution to this is test whether the function exists before it is called.
+
+```csharp
+<a href="webdialog/webdialog.msi" class="imagelink" onclick="if (typeof(urchinTracker) != 'undefined') urchinTracker('/downloads/webdialog');">
+```
+
+The other problem is that any of your own Javascript in the page onload event will never be called. The onload event only runs once all content for the page, including Javascript, has been loaded by the browser. If Google Analytics is down and the browser is hung waiting on loading the Analytics script, the onload event on the page will never be raised and Javascript functions attached to the event will never be called. There are two way to deal with this issue: Either place any critical Javascript calls in an Init function, which is then called at the bottom of the page, or use Dean Edward's [onload work around](http://dean.edwards.name/weblog/2005/09/busted/).
+
+Google Analytics is a powerful service, at the right price (free!). Hopefully by taking these precautions you should be able to continue tracking visiters with Google Analytics without it interfering with the rest of your website.
+
+***Update:***
+
+## What NOT to do!
+
+Don't host a local copy of urchin.js yourself and link to that.
+
+The reason Google is giving out a link to a file, rather than the file itself, is so that they can easily update it when fixing bugs or adding functionality. Updates will trickle down to all websites automatically.
+
+If you are hosting urchin.js yourself then one day stats for your website may stop working without warning because your version of the file has become out of date.
+
+***Update 2:***
+
+Google has added a page about to their website about hosting the urchin.js file locally. For the same reasons I wrote above [they don't recommend it](http://www.google.com/support/analytics/bin/answer.py?answer=43183 "they don't recommend it").

@@ -1,0 +1,131 @@
+---
+title: "Json.NET 10.0 Release 1 - Async, performance, documentation and more"
+description: "Json.NET 10.0 Release 1 - Async, performance, documentation and more"
+pubDate: "Mar 21 2017"
+source: "https://james.newtonking.com/archive/2017/03/21/json-net-10-0-release-1-async-performance-documentation-and-more"
+---
+## Async support
+
+The headline feature in Json.NET 10 is enabling asyncronously reading and writing JSON with JsonReader and JsonWriter, and asyncronously loading JObject, JArray and friends.
+
+Async support means that reading or writing JSON to the file system or network will never block while waiting on IO. Client applications will be more responsive and web applications more scalable.
+
+```csharp
+JArray largeJson;
+
+ // read asynchronously from a file
+ using (FileStream asyncFileStream = new FileStream(@"large.json", FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
+ {
+     largeJson = await JArray.LoadAsync(new JsonTextReader(new StreamReader(asyncFileStream)));
+ }
+
+ JToken user = largeJson.SelectToken("$[?(@.name == 'Woodard Caldwell')]");
+ user["isActive"] = false;
+
+ // write asynchronously to a file
+ using (FileStream asyncFileStream = new FileStream(@"large.json", FileMode.Open, FileAccess.Write, FileShare.Write, 4096, true))
+ {
+     await largeJson.WriteToAsync(new JsonTextWriter(new StreamWriter(asyncFileStream)));
+ }
+```
+
+Although it looks simple on the surface, adding async support to Json.NET was a huge task. Special thanks to [Jon Hanna](https://github.com/JonHanna) for contributing most of this work.
+
+## Performance
+
+Json.NET now supports reading double and decimal values without internally converting the value to a string first. In addition to a small performance boost when deserializing double and decimal values, not creating a string for each double and decimal means less garbage for the garbage collector to clean up.
+
+## Obsoleting and removing
+
+In an effort to slim down Json.NET the BSON functionality has been marked as obsolete. A [Newtonsoft.Json.Bson](https://www.nuget.org/packages/Newtonsoft.Json.Bson) package is on NuGet and contains a copy of BsonReader and BsonWriter. Obsolete classes in Newtonsoft.Json will eventually be removed after a few major versions.
+
+Some previously obsoleted types and methods have been removed in Json.NET 10. These APIs aren't commonly used by end users, and all have been obsolete for multiple major versions. Check the detailed release notes below for more information.
+
+Finally the Portable Class Library assembly that targets .NET 4 has been removed from the NuGet package.
+
+## And lots more
+
+TypeConverters, BigInteger, ISerializable and XmlDocument are now supported in .NET Core applications, there have been multiple improvements to JSONPath querying of JObject/JArray, dozens of typos have been fixed in Json.NET's documentation, and many, many bugs have been reported and fixed across every part of Json.NET.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 9.0 Release 1.
+
+- New feature - Added async read support to JsonReader
+- New feature - Added async write support to JsonWriter
+- New feature - Added async support for loading JObject and JArray
+- New feature - Added non-allocating parsing of double and decimal values
+- New feature - Added support for TypeConverters to netstandard1.0+
+- New feature - Added support for BigInteger to netstandard1.3+
+- New feature - Added support for ISerializable to netstandard1.3+
+- New feature - Added support for XmlDocument to netstandard1.3+
+- New feature - Added support for SerializableAttribute and NonSerializedAttribute to netstandard1.3+
+- New feature - Added ISerializationBinder
+- New feature - Added SerializationBinder properties to JsonSerializer and JsonSerializerSettings
+- New feature - Added TypeNameAssemblyFormatHandling
+- New feature - Added TypeNameAssemblyFormatHandling properties to JsonSerializer and JsonSerializerSettings
+- New feature - Added support for root object selector in JSONPath filters
+- New feature - Added support for multiple names in JSONPath scan filter
+- New feature - Added support for any combination of paths and values in JSONPath filter expressions
+- New feature - Added support for extension data names to NamingStrategy
+- New feature - Added ProcessExtensionDataNames flag to NamingStrategy
+- New feature - Added JsonWriter.AutoCompleteOnClose to control whether JSON is auto-completed on JsonWriter.Close
+- New feature - Added JsonReaderException constructor with path, line number, line position
+- New feature - Added JsonWriterException constructor with path
+- New feature - Added JsonReader.SetToken method overload with option not to update position array index
+- New feature - Added support for automatically calling single constructor on immutable structs
+- Change - Removed .NET 4 portable class library target from NuGet package
+- Change - Removed obsolete JsonConverter.GetSchema method
+- Change - Removed obsolete constructor from DefaultContractResolver
+- Change - Removed obsolete async methods from JsonConvert
+- Change - Removed obsolete OnDeserialized, OnDeserializing, OnSerialized, OnSerializing, OnError from JsonContract
+- Change - Removed obsolete JsonDictionaryContract.PropertyNameResolver
+- Change - Removed obsolete ConstructorParameters, OverrideConstructor, ParametrizedConstructor from JsonObjectContract
+- Change - Obsoleted TypeNameAssemblyFormat properties on JsonSerializer and JsonSerializerSettings
+- Change - Obsoleted SerializationBinder
+- Change - Obsoleted Binder properties on JsonSerializer and JsonSerializerSettings
+- Change - Obsoleted FormatterAssemblyStyle in non-full .NET targets
+- Change - Obsoleted Newtonsoft.Json.Bson (moved to new NuGet package)
+- Change - Improved constructor parameter binding on .NET Core and portable builds
+- Change - Improved error when attempting to convert root JSON object property to an XML attribute
+- Change - Changed exception thrown when parsing invalid Unicode escape sequence to JsonReaderException
+- Change - Changed StringEnumConverter.AllowIntegerValues to also reject reading integer strings
+- Change - Changed StringEnumConverter.AllowIntegerValues to also reject writing enum values with no name
+- Fix - Fixed JsonTextReader.ReadAsXXX methods not erroring on missing commas between values
+- Fix - Fixed error when serializing F# lists with F# 4.1+
+- Fix - Fixed StringEnumConverter reading specified enum names that contain a comma
+- Fix - Fixed using a TraceWriter with nullable bytes
+- Fix - Fixed deserializing null Regex values
+- Fix - Fixed deserializing DataTable with error handling
+- Fix - Fixed DynamicReflectionDelegateFactory creating typed value type constructors
+- Fix - Fixed deserializing with type naming and complex nested generic types
+- Fix - Fixed error when converting certain JSON to XML on .NET Core
+- Fix - Fixed error handling skipping reading the next object value
+- Fix - Fixed date XML precision when converting certain JSON to XML on portable builds
+- Fix - Fixed not serializing readonly properties as references if they have corresponding creator parameters
+- Fix - Fixed type name being written with nullable structs and TypeNameHandling.Auto
+- Fix - Fixed deserializing a duplicate dictionary key from a parameterized constructor
+- Fix - Fixed not erroring when deserializing incomplete JSON with a parameterized constructor
+- Fix - Fixed incorrectly parsing scan filter when name is quoted
+- Fix - Fixed return type for SByte and SByteNullable in JToken.ToObject
+- Fix - Fixed deserializing generic only IList types with a constructor override
+- Fix - Fixed null reference error with ReadAsBytes and an empty JSON object
+- Fix - Fixed StringEnumConverter when EnumMember defines members that differ only by case
+- Fix - Fixed serializing protected override properties
+- Fix - Fixed merging null with complex type and MergeNullValueHandling.Ignore
+- Fix - Fixed roundtripping double.MaxValue and float.MaxValue as dictionary keys
+- Fix - Fixed JsonValidatingReader not closing underlying reader
+- Fix - Fixed writing duplicate nulls to trace with TraceJsonWriter.WriteValue for object, Uri, byte[]
+- Fix - Fixed BsonWriter.WriteValue erroring for null Uri or byte[]
+- Fix - Fixed not calling nullable WriteValue overloads in TraceJsonWriter
+- Fix - Fixed serializer not throwing an error when there is a comment followed by additional content with CheckAdditionalContent
+- Fix - Fixed JObject/JArray Parse not throwing an error when there is a comment followed by additional content
+- Fix - Fixed deserializing non-string values in some XML nodes
+- Fix - Fixed converting XML to JSON when json:Array and xmlns:json attributes are used directly on the array's element
+- Fix - Fixed error when attempting to populate values into read-only collection after creating object from non-default constructor
+
+## Links
+
+## [Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)
+
+## [Json.NET 10.0 Release 1 Download - Json.NET source code and assemblies](https://github.com/JamesNK/Newtonsoft.Json/releases/tag/10.0.1)

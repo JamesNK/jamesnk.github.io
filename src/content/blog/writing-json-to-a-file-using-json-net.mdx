@@ -1,0 +1,36 @@
+---
+title: "Writing JSON to a file using Json.NET"
+description: "Writing JSON to a file using Json.NET"
+pubDate: "Feb 14 2009"
+source: "https://james.newtonking.com/archive/2009/02/14/writing-json-to-a-file-using-json-net"
+---
+There are a couple of different ways you can write to a file using [Json.NET](http://james.newtonking.com/projects/json-net.aspx). The first is really simple:
+  
+```csharp
+Person person = GetPerson();
+
+string json = JsonConvert.SerializeObject(person, Formatting.Indented);
+File.WriteAllText(@"c:\person.json", json);
+```
+
+In this C# example we get the string returned from SerializeObject and pass it to [WriteAllText](http://msdn.microsoft.com/en-us/library/system.io.file.writealltext.aspx), a helper method on the very useful [System.IO.File](http://msdn.microsoft.com/en-us/library/system.io.file.aspx) class. The JSON contents of the string is written to the file.
+
+If greater control is required over how the file is written, or the JSON you are writing is large and you don’t want the overhead of having the entire JSON string in memory, a better approach is to use JsonSerializer directly.
+
+```csharp
+Person person = GetPerson();
+
+using (FileStream fs = File.Open(@"c:\person.json", FileMode.CreateNew))
+using (StreamWriter sw = new StreamWriter(fs))
+using (JsonWriter jw = new JsonTextWriter(sw))
+{
+  jw.Formatting = Formatting.Indented;
+
+  JsonSerializer serializer = new JsonSerializer();
+  serializer.Serialize(jw, person);
+}
+```
+
+More code but also more efficient: the JSON is written directly to the file stream. The other bonus to using this approach is that it can be adapted to write to any .NET [Stream](http://msdn.microsoft.com/en-us/library/system.io.stream.aspx): file streams, web response streams, memory streams, etc.
+
+Isn’t [polymorphism](http://stackoverflow.com/questions/210460/try-to-describe-polymorphism-as-easy-as-you-can) cool? 😊

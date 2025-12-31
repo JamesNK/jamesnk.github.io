@@ -1,0 +1,47 @@
+---
+title: "Json.NET 4.5 Release 10 – Portable Class Library on NuGet"
+description: "Json.NET 4.5 Release 10 – Portable Class Library on NuGet"
+pubDate: "Oct 08 2012"
+source: "https://james.newtonking.com/archive/2012/10/07/json-net-4-5-release-10-portable-class-library-on-nuget"
+---
+[Json.NET's](http://james.newtonking.com/projects/json-net.aspx) major new feature this release is the portable class library assembly is available over NuGet. This is made possible by NuGet 2.1 supporting portable class libraries. Read more about NuGet 2.1 [here](http://docs.nuget.org/docs/release-notes/nuget-2.1).
+  
+## Case insensitive JObject GetValue and TryGetValue
+  
+To simplify getting property values without worrying about the property name's case a couple of helper methods have been added to JObject. GetValue and TryGetValue will first attempt to get a property value with the exact case after which it will ignore case and the first matching property will be returned.
+  
+```csharp
+JObject o = JObject.Parse(@"{
+  'name': 'Lower',
+  'NAME': 'Upper'
+}");
+
+string exactMatch = (string)o.GetValue("NAME", StringComparison.OrdinalIgnoreCase);
+// Upper
+
+string ignoreCase = (string)o.GetValue("Name", StringComparison.OrdinalIgnoreCase);
+// Lower
+```
+
+In this example the first call to GetValue with "NAME" exactly matches the second property. The second call to GetValue with "Name" doesn’t exactly match any of the properties so a case insensitive search is made and the first property is returned.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.5 Release 9.
+
+- New feature - Added Portable build to NuGet package
+- New feature - Added GetValue and TryGetValue with StringComparison to JObject
+- Change - Improved duplicate object reference id error message
+- Fix - Fixed error when comparing empty JObjects
+- Fix - Fixed SecAnnotate warnings
+- Fix - Fixed error when comparing DateTime JValue with a DateTimeOffset JValue
+- Fix - Fixed serializer sometimes not using DateParseHandling setting
+- Fix - Fixed error in JsonWriter.WriteToken when writing a DateTimeOffset
+- Fix - Fixed error when serializing emitted classes that have null constructor parameter names
+- Fix - Fixed empty strings not correctly deserializing as null onto nullable properties
+
+## Links
+
+## [Json.NET CodePlex Project](http://json.codeplex.com/)
+
+**[Json.NET 4.5 Release 10 Download](http://json.codeplex.com/releases/view/95877)** - Json.NET source code and assemblies

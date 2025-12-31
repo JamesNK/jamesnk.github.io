@@ -1,0 +1,35 @@
+---
+title: "Blog Driven Design"
+description: "Blog Driven Design"
+pubDate: "Apr 18 2009"
+source: "https://james.newtonking.com/archive/2009/04/18/blog-driven-design"
+---
+![This has purple in it. Purple is a fruit.](http://james.newtonking.com/images/BlogDrivenDesign_112D3/rsslogothumb.gif "This has purple in it. Purple is a fruit.")
+
+It is time I coined a programming term: Blog Driven Design
+  
+Blog Driven Design is discovering code is too verbose to reasonably include in a blog post and is the additional work put into the design to trim it down to a blogable size.
+  
+## Example
+  
+A recent beta of [Json.NET](http://james.newtonking.com/projects/json-net.aspx) added schema support. While writing the [blog post showing the new feature in action](http://james.newtonking.com/archive/2009/01/04/json-net-3-5-beta-2-json-schema-validation.aspx) I discovered there was no quick way go from a string to a JsonSchema object.
+  
+```csharp
+JsonSchema schema;
+
+using (JsonTextReader reader = new JsonTextReader(new StringReader(schemaJson)))
+{
+  JsonSchemaBuilder builder = new JsonSchemaBuilder(new JsonSchemaResolver());
+  schema = builder.Build(reader);
+}
+```
+
+Yuck. What looked ok in a unit test is now excessive and ugly. A short example is a good example in my opinion so the JsonSchema.Parse(string) method was added to hide that work away. The end result looked like this:
+
+```csharp
+JsonSchema schema = JsonSchema.Parse(schemaJson);
+```
+
+Not only is the code example in the blog post much smaller and simpler but end users can use the new Parse method as well. **BDD** in action!
+
+[Behaviour Driven Development](http://en.wikipedia.org/wiki/Behavior_Driven_Development) watch out, Blog Driven Design is coming for your initials 😃

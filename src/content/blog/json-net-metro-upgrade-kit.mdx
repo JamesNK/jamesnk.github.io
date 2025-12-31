@@ -1,0 +1,84 @@
+---
+title: "Json.NET Metro Upgrade Kit"
+description: "Json.NET Metro Upgrade Kit"
+pubDate: "Mar 31 2012"
+source: "https://james.newtonking.com/archive/2012/03/31/json-net-metro-upgrade-kit"
+---
+## Metro Color Conversion
+  
+The Metro UI color scheme looks complex and hard to code for at first but Json.NET has everything under control with its advanced automatic Metro Color Enhancement Suite™.
+  
+Before:
+  
+```csharp
+Color[] colors = new []{ Color.Blue, Color.Red, Color.Yellow, Color.Green, Color.Black, Color.Brown };
+
+string json = JsonConvert.SerializeObject(colors);
+// ["Blue", "Red", "Yellow", "Green", "Black", "Brown"]
+```
+
+![Hey, what’s the matter? Oh, right. My grotesque appearence!](http://james.newtonking.com/images/-Json.NET-METRO-EDITION-_8AA8/image.png "Hey, what’s the matter? Oh, right. My grotesque appearence!")
+
+Yuck! Color is *so* 2011.
+
+Json.NET Metro Enhanced:
+
+```csharp
+Color[] colors = new []{ Color.Blue, Color.Red, Color.Yellow, Color.Green, Color.Black, Color.Brown };
+
+string json = JsonConvert.SerializeObject(colors);
+//["Gray", "Gray", "Gray", "Gray", "Black", "Gray"]
+```
+
+![Call me a killjoy, but I think that because this is not to my taste, no one else should be able to enjoy it.](http://james.newtonking.com/images/-Json.NET-METRO-EDITION-_8AA8/image_3.png "Call me a killjoy, but I think that because this is not to my taste, no one else should be able to enjoy it.")
+
+Now my Metro application will fit right in!
+
+## Metro Text Rendering
+
+The application now looks right but there is someone off about the content. Don’t fear, Json.NET’s Metro Integration automatically upgrades your existing content to be Windows 8 ready.
+
+Before:
+
+```csharp
+string json = JsonConvert.SerializeObject(product);
+//{
+//  "Name": "Apple",
+//  "ExpiryDate": "2012-04-01T00:00:00",
+//  "Price": 3.99,
+//  "Sizes": [ "Small", "Medium", "Large" ]
+//}
+```
+
+Are these words? I can barely even read this!
+
+Json.NET Metro Enhanced:
+
+```csharp
+string json = JsonConvert.SerializeObject(product);
+//{
+//  ":::NAME:::": ":::APPLE:::",
+//  ":::EXPIRYDATE:::": "2012-04-01T00:00:00",
+//  ":::PRICE:::": 3.99,
+//  ":::SIZES:::": [ ":::SMALL:::", ":::MEDIUM:::", ":::LARGE:::" ]
+//}
+```
+
+Oh that’s much better.
+
+## In-place Upgrade Kit
+
+Json.NET Metro Integration will be included in the next release but until then an upgrade kit has been put together. Begin building tomorrow’s next generation UIs today!
+
+https://gist.github.com/2269465
+
+```csharp
+string json = JsonConvert.SerializeObject(value, new JsonSerializerSettings
+{
+  ContractResolver = new MetroPropertyNameResolver(),
+  Converters = { new MetroStringConverter(), new MetroColorConverter() },
+  Formatting = Formatting.Indented
+});
+```
+
+## :::HAPPY CODING!!!!:::

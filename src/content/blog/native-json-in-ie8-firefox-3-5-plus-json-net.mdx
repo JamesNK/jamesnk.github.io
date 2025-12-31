@@ -1,0 +1,83 @@
+---
+title: "Native JSON in IE8, Firefox 3.5 plus Json.NET"
+description: "Native JSON in IE8, Firefox 3.5 plus Json.NET"
+pubDate: "Apr 12 2009"
+source: "https://james.newtonking.com/archive/2009/04/12/native-json-in-ie8-firefox-3-5-plus-json-net"
+---
+![Kent Brockman: &quot;Here's a float saluting the Native Americans, who taught us how to celebrate Thanksgiving.&quot; Leeza Gibbons: &quot;Interesting side note on this float, the papier-mache is composed entirely out of broken treaties.&quot; Kent: &quot;Ha ha ha ha, they're good sports!&quot;](http://james.newtonking.com/Media/Default/images/blog/ie8logo.png "Kent Brockman: &quot;Here's a float saluting the Native Americans, who taught us how to celebrate Thanksgiving.&quot; Leeza Gibbons: &quot;Interesting side note on this float, the papier-mache is composed entirely out of broken treaties.&quot; Kent: &quot;Ha ha ha ha, they're good sports!&quot;")
+
+[Native JSON](http://blogs.msdn.com/ie/archive/2008/09/10/native-json-in-ie8.aspx) is a new feature to IE8 and Firefox 3.5. Built in serialization and deserialization in the browser makes evaling JSON text a thing of the past.
+
+This post looks at how to use native JSON and how it can complement [Json.NET’s](http://james.newtonking.com/projects/json-net.aspx) server side JSON support by parsing and generating JSON on the browser.
+
+## Native JSON API
+
+Using the new native JSON API is pretty simple. To turn JSON into a JavaScript object simply pass a string to JSON.parse:
+
+```csharp
+var jsonText = '{"name":"Frodo","address":"Hobbiton, The Shire"}';
+var person = JSON.parse(jsonText);
+
+alert(person.name);
+// Frodo
+```
+
+And to go from an object back to a JSON string use the interestingly named JSON.stringify function:
+
+```csharp
+var jsonText = JSON.stringify(person);
+// {"name":"Frodo","address":"Hobbiton, The Shire"}
+```
+
+Because native JSON is based upon the popular [json2.js script](http://www.json.org/js.html) you can support old browsers by including that file in your webpage. Browsers that don’t support native JSON will now work while browsers with built in JSON support will automatically use their much faster native implementations.
+
+## Native JSON + Json.NET
+
+Native JSON and Json.NET work almost flawlessly together. The one wrinkle is the usual suspect when it comes to JSON: dates. Fortunately getting native JSON, Json.NET and dates to work together is a two step process.
+
+The first thing we want to do is make Json.NET write dates in the ISO format. [IsoDateTimeConverter](http://james.newtonking.com/archive/2009/02/20/good-date-times-with-json-net.aspx) to the rescue.
+
+```csharp
+Person p = new Person
+            {
+              Name = "Keith",
+              BirthDate = new DateTime(1980, 3, 8),
+              LastModified = new DateTime(2009, 4, 12, 20, 44, 55),
+            };
+
+string jsonText = JsonConvert.SerializeObject(p, new IsoDateTimeConverter());
+// {
+//  "Name": "Keith",
+//  "BirthDate": "1980-03-08T00:00:00",
+//  "LastModified": "2009-04-12T20:44:55"
+// }
+```
+
+Now that we have JSON being generated on the server using Json.NET we want to deserialize it on the client using JSON.parse. Because there is no standard for representing dates in JSON we need to tell the JSON.parse function how to recognise and deserialize a date. Luckily JSON.parse has an optional reviver parameter that we can use to turn [ISO formatted date strings](http://en.wikipedia.org/wiki/ISO_8601) into a JavaScript Date objects.
+
+```csharp
+function isoDateReviver(key, value) {
+    if (typeof value === 'string') {
+        var a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)(?:([\+-])(\d{2})\:(\d{2}))?Z?$/.exec(value);
+        if (a) {
+            var utcMilliseconds = Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
+            return new Date(utcMilliseconds);
+        }
+    }
+    return value;
+}
+
+var person = JSON.parse(jsonText, isoDateReviver);
+
+alert(person.BirthDate.toUTCString());
+// Sat, 8 Mar 1980 00:00:00 UTC
+
+alert(person.LastModified.toUTCString());
+// Sun, 12 Apr 2009 20:44:55 UTC
+```
+
+The reviver function uses a regular expression to tests if a string matches an ISO formatted date. If it does a JavaScript Date object is created and it is inserted into the JavaScript object instead of the string.
+
+## Conclusion
+
+And that’s it. Server generated JSON using Json.NET will now be parsed natively in the browser, dates and all. The other direction, client generated JSON using JSON.stringify then being read by Json.NET doesn’t require any modification. It works by default. Sweet!

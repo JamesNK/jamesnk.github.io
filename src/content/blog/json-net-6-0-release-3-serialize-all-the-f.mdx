@@ -1,0 +1,104 @@
+---
+title: "Json.NET 6.0 Release 3 - Serialize All The F#"
+description: "Json.NET 6.0 Release 3 - Serialize All The F#"
+pubDate: "Apr 30 2014"
+source: "https://james.newtonking.com/archive/2014/04/30/json-net-6-0-release-3-serialize-all-the-f"
+---
+## MOAR F#
+
+[Json.NET 6.0](http://james.newtonking.com/archive/2014/02/01/json-net-6-0-release-1-%E2%80%93-jsonpath-and-f-support) added support for F# discriminated unions - this release adds support for F# collections. F# lists, sequences, sets and maps now serialize and deserialize automatically.
+
+```csharp
+type Movie = {
+    Name : string
+    Year: int
+}
+
+[<EntryPoint>]
+let main argv =
+
+    let movies = [
+        { Name = "Bad Boys"; Year = 1995 };
+        { Name = "Bad Boys 2"; Year = 2003 }
+    ]
+
+    let json = JsonConvert.SerializeObject(movies)
+
+    let deserializedMovies = JsonConvert.DeserializeObject<Movie list>(json)
+
+    deserializedMovies |> List.iter (fun x -> printfn "Name: %s, Year: %d" x.Name x.Year)
+    // Name: Bad Boys, Year: 1995
+    // Name: Bad Boys 2, Year: 2003
+
+    Console.ReadKey() |> ignore
+    0
+```
+
+To all future creators of immutable .NET collections: If your collection of T has a constructor that takes IEnumerable&lt;T&gt; then Json.NET will automatically work when deserializing to your collection, otherwise you're all out of luck.
+
+## Metadata Property Handling
+
+Some Json.NET serializer features like preserving types or references require Json.NET to read and write metadata properties, e.g. $type, $id and $ref. Because of the way Json.NET deserialization works these metadata properties have had to be ordered first in a JSON object. This can cause problems because JSON object properties can't be ordered in JavaScript and some other JSON frameworks.
+
+This release adds a new setting to allow metadata properties to be located anywhere in an object: MetadataPropertyHandling.ReadAhead
+
+```csharp
+string json = @"{
+    'Name': 'James',
+    'Password': 'Password1',
+    '$type': 'MyNamespace.User, MyAssembly'
+}";
+
+object o = JsonConvert.DeserializeObject(json, new JsonSerializerSettings
+{
+    TypeNameHandling = TypeNameHandling.All,
+    // $type no longer needs to be first
+    MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead
+});
+
+User u = (User)o;
+
+Console.WriteLine(u.Name);
+// James
+```
+
+Internally this setting will instruct the serializer to load the entire JSON object into memory. Metadata properties will then be read out of the object, and then deserialization will continue as normal. There is a slight cost in memory usage and speed but if you require a feature that uses metadata properties and can't guarantee JSON object property order then you will find this useful.
+
+## And The Rest
+
+DateFormatString is now used as a fallback when parsing dates during deserialization, lots of bug fixes, and a couple of small but significate performance improvements.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 6.0 Release 2.
+
+- New feature - Added MetadataPropertyHandling
+- New feature - Added support for reading MS format JSON dates to ReadAsDateTime
+- New feature - Added support for serializing F# lists, sets and maps
+- New feature - Added support for XML document type
+- Change - Blank XML elements will be written as an empty string instead of null
+- Change - JValue with a null value will be written as null instead of empty string
+- Change - DateFormatString is now used when reading JSON
+- Fix - Fixed deserializing null values with extension data
+- Fix - Fixed converting certain XML namespaces to JSON
+- Fix - Fixed error with whitespace only JSONPath
+- Fix - Fixed property query path that starts with $
+- Fix - Fixed array query path with open brace after $
+- Fix - Fixed parsing certain JSON with comments into a JObject
+- Fix - Fixed bug where matching JSONPath incorrectly raises an error
+- Fix - Fixed non-public base class properties being used instead of child class properties
+- Fix - Fixed hiding generic properties sometimes not being detected
+- Fix - Fixed potential race condition serializing F# objects
+- Fix - Fixed schema divisible sometimes incorrectly validating to false
+- Fix - Fixed not calling virtual ShouldSerialize methods
+- Fix - Fixed invalid cast with DateParseHandling.DateTimeOffset and IsoDateTimeConverter
+- Fix - Fixed StringEnumConverter thread safety
+- Fix - Fixed using FloatParseHandling.Decimal with XmlNodeConverter
+- Fix - Fixed using DateParseHandling.DateTimeOffset with XmlNodeConverter
+- Fix - Fixed type name handling when a property already has a base type assigned
+
+## Links
+
+[**Json.NET GitHub Project**](https://github.com/JamesNK/Newtonsoft.Json)
+
+[**Json.NET 6.0 Release 3 Download - Json.NET source code and assemblies**](https://json.codeplex.com/releases/view/121470)

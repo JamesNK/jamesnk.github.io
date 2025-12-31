@@ -1,0 +1,36 @@
+---
+title: "Json.NET 4.5 Release 2 – Serializable support and bug fixes"
+description: "Json.NET 4.5 Release 2 – Serializable support and bug fixes"
+pubDate: "Apr 11 2012"
+source: "https://james.newtonking.com/archive/2012/04/11/json-net-4-5-release-2-serializable-support-and-bug-fixes"
+---
+## Serializable Support
+  
+Json.NET now detects types that have the [SerializableAttribute](http://msdn.microsoft.com/en-us/library/system.serializableattribute.aspx) and serializes all the fields on that type, both public and private, and ignores the properties. This is useful when you’re interested in round-tripping the data on a type and don’t care what the JSON looks like.
+  
+If you are serializing types that have the attribute and don’t want the new behaviour, it can either be overridden on a type using the JsonObjectAttribute or disabled globally by setting IgnoreSerializableAttribute on DefaultContractResolver to true.
+  
+**Update:** IgnoreSerializableAttribute is true by default in release 3. If you want it you can still achieve this effect by either setting IgnoreSerializableAttribute to false or adding [JsonObject(MemberSerialization.Fields)] to your class.
+  
+## Bug fixes
+  
+Interesting bug fixes this release include correctly reading JSON from slow streams (e.g. a network stream that is only returning one character at a time), fixing [invalid Unicode surrogate characters](http://blogs.msdn.com/b/shawnste/archive/2005/09/26/474105.aspx), and ignoring property order when comparing two JObjects (JavaScript objects aren’t ordered and so could come back serialized in a different order).
+  
+## Changes
+  
+- New feature - Added support for the SerializableAttribute and serializing a type's internal fields
+- New feature - Added MaxDepth to JsonReader/JsonSerializer/JsonSerializerSettings
+- New feature - Added support for ignoring properties with the NonSerializableAttribute
+- Fix - Fixed deserializing a null string throwing a NullReferenceException
+- Fix - Fixed JsonTextReader incorrectly reading from a slow stream
+- Fix - Fixed CultureInfo not being overridden on JsonSerializerProxy
+- Fix - Fixed full trust security check in .NET 2.0 & .NET 3.5
+- Fix - Fixed XmlNodeConverter not turning all attribute properties into attributes
+- Fix - Fixed comparing JObjects to ignore property order
+- Fix - Fixed reading invalid Unicode surrogate pairs
+
+## Links
+  
+[**Json.NET CodePlex Project**](http://json.codeplex.com/)
+  
+**[Json.NET 4.5 Release 2 Download](http://json.codeplex.com/releases/view/85856)** - Json.NET source code, documentation and binaries

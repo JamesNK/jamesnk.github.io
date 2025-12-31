@@ -1,0 +1,28 @@
+---
+title: "Best. Serializer. Ever."
+description: "Best. Serializer. Ever."
+pubDate: "May 14 2009"
+source: "https://james.newtonking.com/archive/2009/05/14/best-serializer-ever"
+---
+![Last night's 'Itchy and Scratchy Show' was, without a doubt, the worst episode ever. Rest assured, I was on the internet within minutes, registering my disgust throughout the world.](http://james.newtonking.com/Media/Default/images/blog/image-2.png "Last night's 'Itchy and Scratchy Show' was, without a doubt, the worst episode ever. Rest assured, I was on the internet within minutes, registering my disgust throughout the world.")
+
+I have really enjoyed some of the [discussion on the Json.NET CodePlex forum recently](http://json.codeplex.com/Thread/View.aspx?ThreadId=55445). Lots of people have posed interesting scenarios and it has been fun coming up with solutions that makes Json.NET a better tool for everyone.
+
+With practically every request these days being something around serialization I have set a goal: make Json.NET the best serializer for .NET
+
+See that underline? That just happened. No pressure, no diamonds folks.
+
+## Ideas Wanted
+
+I think the JsonSerializer is [most of the way there](http://stackoverflow.com/questions/106599/what-is-the-most-flexible-serialization-for-net-objects-yet-simple-to-implement) already but I know there are places where it could do better.
+
+What I’m most interested in are:
+
+- What it is missing compared the old [XmlSerializer](http://msdn.microsoft.com/en-us/library/system.xml.serialization.xmlserializer.aspx) and new [DataContractSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.datacontractserializer.aspx) (FYI I just added tracking object references)
+- What common scenarios it handles poorly
+- What popular frameworks it has trouble with
+- Anything that is already there but you think is stupid and dumb
+- General ideas or suggestions
+- Useful JsonConverters you might have written that would be worth including for everyone
+
+Most ideas come from you guys (I have no imagination) and all feedback is welcome.

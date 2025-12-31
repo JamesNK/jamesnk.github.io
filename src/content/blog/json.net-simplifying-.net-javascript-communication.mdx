@@ -1,0 +1,110 @@
+---
+title: "Json.NET - Simplifying .NET <-> JavaScript communication"
+description: "Json.NET - Simplifying .NET <-> JavaScript communication"
+pubDate: "Jun 26 2006"
+source: "https://james.newtonking.com/archive/2006/06/26/Json.NET-Simplifying-.NET-JavaScript-communication"
+---
+[JSON](http://www.json.org/) (JavaScript Object Notation) is lightweight data interchange format. In recent times JSON has achieved widespread use due to the ease of which it can be parsed and then the data accessed from within JavaScript compared to [alternatives like XML](http://www.json.org/xml.html).
+
+While many JavaScript libraries exist for converting JSON text to and from a JavaScript object, working with JSON in .NET has been much more problematic. Correctly escaping strings and building up objects when writing JSON text can be difficult and error prone, while parsing values back out of JSON text is harder still.
+
+## Json.NET
+
+Json.NET is a JSON .NET API for simply and safely reading and writing valid JSON text. At the core of Json.NET, similar to the .NET XML APIs, are two classes: JsonReader and JsonWriter. Also like XML in .NET, Json.NET includes a JsonSerializer class.
+
+#### Reading JSON
+
+JsonReader is a fast, forward only, readonly cursor. Like XmlTextReader it works over the top of a TextReader and maximizes performance while minimizing memory use.
+
+The following code is a brief example of how to read a JSON object.
+
+```csharp
+string jsonText = "['JSON!',1,true,{property:'value'}]";
+
+JsonReader reader = new JsonReader(new StringReader(jsonText));
+
+Console.WriteLine("TokenType\t\tValueType\t\tValue");
+
+while (reader.Read())
+{
+    Console.WriteLine(reader.TokenType + "\t\t" + WriteValue(reader.ValueType) + "\t\t" + WriteValue(reader.Value))
+}
+```
+
+Resulting in...
+
+| TokenType | ValueType | Value |
+| --- | --- | --- |
+| StartArray | null | null |
+| String | System.String | JSON! |
+| Integer | System.Int32 | 1 |
+| Boolean | System.Boolean | True |
+| StartObject | null | null |
+| PropertyName | System.String | property |
+| String | System.String | value |
+| EndObject | null | null |
+| EndArray | null | null |
+
+#### Writing JSON
+
+JsonWriter is also forward only, and writes JSON text to a TextWriter. It handles formatting numbers, escaping strings and validating that the object is valid.
+
+The following code is a brief example of how to write a JSON object.
+
+```csharp
+StringWriter sw = new StringWriter();
+JsonWriter writer = new JsonWriter(sw);
+
+writer.WriteStartArray();
+writer.WriteValue("JSON!");
+writer.WriteValue(1);
+writer.WriteValue(true);
+writer.WriteStartObject();
+writer.WritePropertyName("property");
+writer.WriteValue("value");
+writer.WriteEndObject();
+writer.WriteEndArray();
+
+writer.Flush();
+
+string jsonText = sw.GetStringBuilder().ToString();
+
+Console.WriteLine(jsonText);
+// ['JSON!',1,true,{property:'value'}]
+```
+
+Which prints out: `['JSON!',1,true,{property:'value'}]`.
+
+#### Serializing and deserializing JSON and .NET objects
+
+JsonSerializer, similar to XML serialization, provides a hassle free way to automatically convert .NET objects to and from JSON text.
+
+The following code is a brief example of how to serialize and deserialize JSON and .NET objects.
+
+```csharp
+string jsonText = "['JSON!',1,true,{property:'value'}]";
+
+JsonSerializer serializer = new JsonSerializer();
+
+JavaScriptArray jsArray = (JavaScriptArray) serializer.Deserialize(new JsonReader(new StringReader(jsonText)));
+
+Console.WriteLine(jsArray[0]);
+// JSON!
+
+JavaScriptObject jsObject = (JavaScriptObject)jsArray[3];
+
+Console.WriteLine(jsObject["property"]);
+// value
+
+StringWriter sw = new StringWriter();
+
+using (JsonWriter jsonWriter = new JsonWriter(sw))
+{
+    serializer.Serialize(sw, jsArray);
+}
+
+Console.WriteLine(sw.GetStringBuilder().ToString());
+// ['JSON!',1,true,{property:'value'}]
+```
+
+**[Json.NET](http://james.newtonking.com/projects/json-net.aspx)** - Json.NET Homepage

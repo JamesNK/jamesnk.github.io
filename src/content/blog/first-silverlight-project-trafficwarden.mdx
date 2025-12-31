@@ -1,0 +1,59 @@
+---
+title: "First Silverlight Project - TrafficWarden"
+description: "First Silverlight Project - TrafficWarden"
+pubDate: "Jul 03 2007"
+source: "https://james.newtonking.com/archive/2007/07/03/first-silverlight-project-trafficwarden"
+---
+[![trafficwarden](http://www.newtonsoft.com/BlogFiles/jamesnk/WindowsLiveWriter/SilverlightProjectTrafficWarden_D50D/trafficwarden_thumb.png)](http://james.newtonking.com/BlogFiles/jamesnk/WindowsLiveWriter/SilverlightProjectTrafficWarden_D50D/trafficwarden.png) For the past few weeks I've been working on my first Silverlight project, an application called TrafficWarden. Essentially TrafficWarden lets you view and report on traffic information gathered from a router. For example if you want to find out how much bandwidth a local user has used, or see what times of the day have heavy internet usage, TrafficWarden shows you.
+
+I started working on it after buying a [new router](http://en.wikipedia.org/wiki/WRT54G) that supported publishing statistics but found none of the applications available did exactly what I wanted. At the same time [Chris Auld](http://www.syringe.net.nz/), a fellow [Intergenite](http://www.intergen.co.nz/), started an internal Silverlight competition after returning from Mix07. Silverlight with its WPF support seemed like it would be perfect for the UI. Finally the three amigos at [Mindscape](http://www.mindscape.co.nz/) had just started a beta test for their new domain model library - LightSpeed - and I wanted a project that would let me give it a try.
+
+TrafficWarden is comprised of 4 parts: a Windows service, database, web services and a Silverlight front end.
+
+## Windows Service
+
+The traffic information is sent from the router over UDP in the [Netflow](http://en.wikipedia.org/wiki/Netflow) format so I needed a Windows service to capture and save the data. This was the most time consuming area of the application to make. I had never used the .NET sockets functionality before. Also the Netflow packets from the router are sent as raw bytes, which had to be decoded in accordance with the [Netflow V5 spec](http://www.cisco.com/univercd/cc/td/doc/cisintwk/intsolns/netflsol/nfwhite.htm).
+
+The decoded bytes are used to create the LightSpeed domain model representation of the Netflow information, with the majority of the most important information in the FlowRecord class. The FlowRecords are then mapped to an application that caused the traffic using a number of rules before being saved to the database. Despite being in beta at the time, overall I found LightSpeed to be pretty solid. The Mindscape guys were very responsive to posts in their [forum](http://eap.mindscape.net.nz/) and added a number of suggestions I put forward.
+
+## [![ERD](http://www.newtonsoft.com/BlogFiles/jamesnk/WindowsLiveWriter/SilverlightProjectTrafficWarden_D50D/erd_thumb.png)](http://james.newtonking.com/BlogFiles/jamesnk/WindowsLiveWriter/SilverlightProjectTrafficWarden_D50D/erd.png) Database
+
+There isn't much to say here. The database follows LightSpeed's convention over configuration naming standard, but the table and column names are pretty much what I'd normally use anyway as that was no problem.
+
+The only thing I can think of is perhaps the duplicated source and destination columns in the FlowRecord table could be normalized out to a new FlowLocation table. Maybe next version.
+
+## Web services
+
+The 1.1 Alpha added web service support to Silverlight. For TrafficWarden I use web services to pull down the traffic usage information to the Silverlight application for the graph, and for the realtime traffic usage. Currently Silverlight only supports web services in the JSON format so the web services website uses the Microsoft ASP.NET AJAX library. ASP.NET AJAX has a built in JSON serializer, and automatically JSONfies the ASMX web services for you.
+
+Off topic: My [Json.NET](http://www.newtonsoft.com/products/json/) library is being used by [Mono](http://www.mono-project.com/) team in there implementation of ASP.NET AJAX for its JSON serialization and will be used to do this. Pretty cool now that I've seen it in action 😊
+
+## Silverlight
+
+Creating the Silverlight front end was easily the most daunting part of the project for me. I've never done anything with previous versions of WPF/E, WPF or even WinForms! I guess you could call me a child of the Internet. All hail the mighty request/response! 😊
+
+**![Lisa: Look at the &quot;wonders&quot; of the computer age now. Homer: Wonders Lisa? Or blunders? Lisa: I think that was implied by what I said. Homer: Implied... Or implode?](http://james.newtonking.com/images/SilverlightProjectTrafficWarden_D50D/150px-Silverlight_1.png "Lisa: Look at the &quot;wonders&quot; of the computer age now. Homer: Wonders Lisa? Or blunders? Lisa: I think that was implied by what I said. Homer: Implied... Or implode?")**However saying that, apart from some initial trepidation, I found developing with Silverlight to be quite simple. The part of the Silverlight frontend I found the most difficult was doing the pie graph, which I started porting from a Silverlight 1.0 example but essentially had to rewrite. Overall the learning curve definitely isn't as steep or as long as ASP.NET and the XAML markup language makes banging out some shapes and animations quite simple. Unfortunately due to the dynamic nature of what I'm doing with Silverlight I didn't get much of a chance to use XAML and ended up doing a lot of the work in the code behind.
+
+Consuming the JSON web services with Silverlight was a breeze. Just add the web reference using the service's URL and a strongly typed proxy is automatically generated for you to use from Silverlight. The only gotcha with the 1.1 Alpha is that currently only web service calls within the same domain are supported. This wasn't a problem for me but it is something to keep in mind (you can always call to your server and then have it make the cross domain call).
+
+Adding my router's 'realtime' usage (current kilobytes per second and total kilobytes) was an interesting experience. I wanted it to update asynchronously (every 5 seconds) but while attempting to do it on a new thread I quickly found out that a lot of operations, such as modifying the WPF UI or accessing the HTML DOM, must be done on the primary thread. In the end I got it working using the Completed event on the StoryBoard object, which is described [here](http://silverlight.net/forums/p/665/3365.aspx). Microsoft has said that multithreading is something that they are working on so hopefully it should be better in the final version.
+
+Silverlight also has support for [LINQ](http://en.wikipedia.org/wiki/Language_Integrated_Query). I’ve always enjoyed SQL and I’m really excited about being able to do queries within C#. At one point in my Silverlight client I needed to get what fraction of bytes a particular slice was. What would usually take a new class and a number of foreach loops instead took one LINQ query. Cool!
+
+```csharp
+var slices = from u in usages             select new {                      u.Name,                      SliceSize = (double)u.TotalBytes / usages.Sum(uu => uu.TotalBytes)                    };
+```
+
+Finally I was also really impressed with the WPF support and what you can do with it. Adding scaling to the application, so that the Silverlight app resizes as the client’s browser resizes, required just one ScaleTransform and took about 15 minutes. Give resizing it a try, it is quite cool (double click makes the app go full screen).
+
+## Final Words
+
+I’ve learnt a lot on this project and had a lot of fun but TrafficWarden isn’t completely finished just yet. As well as a general clean up of some of the code I’d like to add a login screen for security and add a line graph for showing usage over time.
+
+Overall I’m really impressed with the Silverlight platform. Silverlight 1.1 is still in alpha and definitely has some weak areas, particularly around the built in controls, but Microsoft has said that they’re working on it. Flash better watch out because Silverlight can only get better.
+
+## Source Code & Demo
+
+For a short while you can find a demo of TrafficWarden hosted [here](http://121.73.41.5:81/trafficwarden/client/pie.html).
+
+Source code can be found [here](http://www.newtonsoft.com/downloads/trafficwarden/trafficwarden.zip).

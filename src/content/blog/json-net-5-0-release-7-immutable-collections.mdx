@@ -1,0 +1,91 @@
+---
+title: "Json.NET 5.0 Release 7 – Immutable Collections"
+description: "Json.NET 5.0 Release 7 – Immutable Collections"
+pubDate: "Oct 14 2013"
+source: "https://james.newtonking.com/archive/2013/10/14/json-net-5-0-release-7-immutable-collections"
+---
+## Immutable Collections
+
+The biggest new feature in Json.NET 5.0.7 is support for serializing and deserializing the [offical new .NET Immutable Collections types](http://blogs.msdn.com/b/dotnet/archive/2013/09/25/immutable-collections-ready-for-prime-time.aspx).
+
+```csharp
+string json = @"[
+  'Volibear',
+  'Teemo',
+  'Katarina'
+]";
+
+// deserializing directly to an immutable collection, what sorcery is this?!
+ImmutableList<string> champions = JsonConvert.DeserializeObject<ImmutableList<string>>(json);
+
+Console.WriteLine(champions[0]);
+// Volibear
+```
+
+There is nothing you need to do to make immutable collection and Json.NET work together. Upgrade to Json.NET 5.0 Release 7, add the [immutable collections NuGet package](http://www.nuget.org/packages/Microsoft.Bcl.Immutable) to your project and you can start using immutable collections with Web API, SignalR or directly from Json.NET like the example above.
+
+## Round-trip Extension Data
+
+Extension data is now written when an object is serialized. Reading and writing extension data makes it possible to automatically round-trip all JSON without adding every property to the .NET type you’re deserializing to. Only declare the properties you’re interested in and let extension data do the rest.
+
+```csharp
+public class CustomerInvoice
+{
+  // we're only modifing the tax rate
+  public decimal TaxRate { get; set; }
+
+  // everything else gets stored here
+  [JsonExtensionData]
+  private IDictionary<string, JToken> _additionalData;
+}
+```
+
+```csharp
+string json = @"{
+  'HourlyRate': 150,
+  'Hours': 40,
+  'TaxRate': 0.125
+}";
+
+var invoice = JsonConvert.DeserializeObject<CustomerInvoice>(json);
+
+// increase tax to 15%
+invoice.TaxRate = 0.15m;
+
+string result = JsonConvert.SerializeObject(invoice);
+// {
+//   'TaxRate': 0.15,
+//   'HourlyRate': 150,
+//   'Hours': 40
+// }
+```
+
+Using extension data to round-trip JSON like this also means you don’t need to worry about third-party sources adding additional JSON because it will automatically be preserved when serializing/deserializing. Nifty.
+
+If you don’t want extension data serialized (or deserialized) then disable that functionality by setting WriteData and ReadData properties on ExtensionDataAttribute to false.
+
+## Bug fixes
+
+A couple of bugs crept into Json.NET after the flurry of releases earlier in the year. I have consulted with other developers and the consensus was that bugs are bad so this release fixes all known bugs.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 5.0 Release 6.
+
+- New feature - Added support for Immutable Collections
+- New feature - Added WriteData and ReadData settings to DataExtensionAttribute
+- New feature - Added reference and type name handling support to extension data
+- New feature - Added default value and required support to constructor deserialization
+- Change - Extension data is now written when serializing
+- Fix - Added missing casts to JToken
+- Fix - Fixed parsing large floating point numbers
+- Fix - Fixed not parsing some ISO date timezones
+- Fix - Fixed schema validation of integer value when type was number
+- Fix - Fixed writing of IConvertible values when TypeCode returned was Object
+- Fix - Fixed serializing proxy objects with no default constructor
+
+## Links
+
+[**Json.NET CodePlex Project**](http://json.codeplex.com/)
+
+**[Json.NET 5.0 Release 7 Download](https://json.codeplex.com/releases/view/113423)** - Json.NET source code and assemblies

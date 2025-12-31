@@ -1,0 +1,64 @@
+---
+title: "Implicit Conversions and LINQ to JSON"
+description: "Implicit Conversions and LINQ to JSON"
+pubDate: "Jul 28 2009"
+source: "https://james.newtonking.com/archive/2009/07/28/implicit-conversions-and-linq-to-json"
+---
+I have been doing a lot of work with [Json.NET](http://james.newtonking.com/projects/json-net.aspx) recently and have really been using LINQ to JSON in anger for the first time.
+  
+Pretty quickly I became annoyed with having to constantly wrap .NET primitive objects (int, long, string, DateTime, etc) in JValue whenever they’re added to a JSON object or array.
+  
+```csharp
+JObject moss = new JObject();
+moss["FirstName"] = new JValue("Maurice");
+moss["LastName"] = new JValue("Moss");
+moss["BirthDate"] = new JValue(new DateTime(1977, 12, 30));
+moss["Department"] = new JValue("IT");
+moss["JobTitle"] = new JValue("Support");
+
+Console.WriteLine(moss.ToString());
+//{
+//  "FirstName": "Maurice",
+//  "LastName": "Moss",
+//  "BirthDate": "\/Date(252241200000+1300)\/",
+//  "Department": "IT",
+//  "JobTitle": "Support"
+//}
+```
+
+## Gross. Why?
+
+For all the LINQy goodness I’ve added to Json.NET to work everything has to inherit from a common object: JToken. Container objects (JObject and JArray) inherit from JToken and all their child values must also be JTokens. For that reason JObject implements IDictionary&lt;string, JToken&gt; and JArray implements IList&lt;JToken&gt;.
+
+Because the containers only allow JTokens, basic primitive values need to be wrapped in an object which inherits from JToken: JValue.
+
+Each time we want to set a value on an object or add a value to an array it has to be manually wrapped in a JValue. Ugly!
+
+## Implicit Conversions
+
+The solution is really simple: [implicit conversions](http://msdn.microsoft.com/en-us/library/85w54y0a.aspx). Adding an implicit conversion operator allows .NET to automatically convert from the primitive to JValue without any of the above unpleasantness.
+
+```csharp
+///<summary>
+/// Performs an implicit conversion from <see cref="String"/> to <see cref="JToken"/>.
+///</summary>
+///<param name="value">The value to create a <see cref="JValue"/> from.</param>
+///<returns>The <see cref="JValue"/> initialized with the specified value.</returns>
+public static implicit operator JToken(string value)
+{
+  return new JValue(value);
+}
+```
+
+And here is the new end user experience:
+
+```csharp
+JObject jen = new JObject();
+jen["FirstName"] = "Jen";
+jen["LastName"] = "Barber";
+jen["BirthDate"] = new DateTime(1978, 3, 15);
+jen["Department"] = "IT";
+jen["JobTitle"] = "Manager";
+```
+
+Much better I think you’ll agree. I only wish I had done it earlier 😊

@@ -1,0 +1,65 @@
+---
+title: "Testing if a ContentPlaceHolder is Empty"
+description: "Testing if a ContentPlaceHolder is Empty"
+pubDate: "Apr 12 2006"
+source: "https://james.newtonking.com/archive/2006/04/12/Testing-if-a-ContentPlaceHolder-is-Empty"
+---
+[K. Scott Allen](http://odetocode.com/Blogs/scott/archive/2006/04/12/3271.aspx), one of the [many Scotts](http://del.icio.us/newtonking/Scott%2B.NET) who seem to develop in .NET, has written a comprehensive article called [Master Pages: Tips, Tricks, and Traps](http://odetocode.com/Articles/450.aspx) that looks at the new ASP.NET 2.0 feature. I use a couple of those features myself to handle page titles and descriptions, and I highly recommend it to anyone planning to use master pages in the near feature.One trick that I’ve found useful and that isn't in the article is how to modify master page content depending upon whether a ContentPlaceHolder has any content.For example you might have a ContentPlaceHolder on your master for related pages. To make it easier to later modify your design later you want to put the HTML for the container and title in the master, rather than every individual page.
+
+```csharp
+<div id="divRelatedPages" runat="server">
+    <h3>Related Pages...</h3>
+    <asp:ContentPlaceHolder ID="cphRelatedPages" runat="server" />
+</div>
+```
+
+Unfortunately doing it this way will leave a box and title without anything else on a page that didn’t include any related links. The fix to this problem is testing if the ContentPlaceHolder has any content, hiding the divRelatedPages control and title if it doesn’t.To make this test easy I’ve created an IsControlEmpty method. The code inside it is quite simple. It returns true if the placeholder has no child controls or if it has just one child LiteralControl that contains nothing that whitespace. A blank LiteralControl is what is created when an auto-generated placeholder is left empty.
+
+```csharp
+public static bool IsControlEmpty(Control control)
+{
+    if (control == null)
+        throw new ArgumentNullException("control");
+
+    ControlCollection controls = control.Controls;
+
+    // control has no children
+    if (controls.Count == 0)
+    {
+        return true;
+    }
+    else if (controls.Count == 1)
+    {
+        LiteralControl staticContent = controls[0] as LiteralControl;
+
+        // control only has a literal child which is either empty,
+        // or contains nothing but whitespace
+        if (staticContent != null)
+        {
+            if (string.IsNullOrEmpty(staticContent.Text))
+                return true;
+            else if (StringUtils.IsWhiteSpace(staticContent.Text))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+public static bool IsWhiteSpace(string s)
+{
+    for (int i = 0; i < s.Length; i++)
+    {
+        if (!char.IsWhiteSpace(s[i]))
+            return false;
+    }
+    return true;
+}
+```
+
+Now simply pass the placeholder control to the method and hide divRelatedPages based on the result.
+
+```csharp
+if (ControlUtils.IsControlEmpty(cphRelatedPages))
+    divRelatedPages.Visible = false;
+```

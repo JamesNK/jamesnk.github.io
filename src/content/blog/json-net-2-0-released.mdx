@@ -1,0 +1,71 @@
+---
+title: "Json.NET 2.0 Released"
+description: "Json.NET 2.0 Released"
+pubDate: "May 04 2008"
+source: "https://james.newtonking.com/archive/2008/05/04/json-net-2-0-released"
+---
+[![Public transportation is for jerks and lesbians.](http://james.newtonking.com/images/Json.NET2.0Released_CB79/jsonnet20.jpg "Public transportation is for jerks and lesbians.")](http://james.newtonking.com/images/jsonnet20girls.jpg) The final version of Json.NET 2.0 is now available for download. The notable new feature(?) of this release is Json.NET now includes documentation. I know, I am just as shocked as you are!
+
+[**Json.NET - Quick Starts & API Documentation**](http://james.newtonking.com/projects/json/help/)
+
+Overall I am really proud of how Json.NET 2.0 has turned out. From a usability perspective the new LINQ to JSON API makes manually constructing and reading JSON considerably easier compared to the old JsonReader/JsonWriter approach. The JsonSerializer has also seen big user improvements. New settings and attributes allow a developer to have far greater control over the serialization/deserialization process.
+
+Architecturally I am also pleased with Json.NET 2.0. LINQ to JSON builds on top of the existing Json.NET APIs and there was a lot of reuse between the different Json.NET components: JsonReader/Writer, JsonSerializer and the LINQ to JSON objects. Features that I thought might a lot of time and code to implement turned out to be quite simple when I realised I could reuse a class from somewhere else.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 1.3:
+
+Json.NET 2.0 Final
+
+- New feature - Documentation.chm included in download. Contains complete API documentation and quick start guides to Json.NET.
+
+Json.NET 2.0 Beta 3
+
+- New feature - Added JsonObjectAttribute with ability to opt-in or opt-out members by default.
+- New feature - Added Skip() method to JsonReader.
+- New feature - Added ObjectCreationHandling property to JsonSerializer.
+- Change - LOTS of little fixes and changes to the LINQ to JSON objects.
+- Change - CultureInfo is specified across Json.NET when converting objects to and from text.
+- Change - Improved behaviour of JsonReader.Depth property.
+- Change - GetSerializableMembers on JsonSerializer is now virtual.
+- Fix - Floating point numbers now use ToString("r") to avoid an overflow error when serializing and deserializing a boundary value.
+- Fix - JsonSerializer now correctly serializes and deserializes DBNull.
+- Fix - JsonSerializer no longer errors when skipping a multi-token JSON structure.
+- Fix - Clone a JToken if it already has a parent and is being added as a child to a new token
+
+Json.NET 2.0 Beta 2
+
+- New feature - Added FromObject to JObject, JArray for creating LINQ to JSON objects from regular .NET objects.
+- New feature - Added support for deserializing to an anonymous type with the DeserializeAnonymousType method.
+- New feature - Support for reading, writing and serializing the new DateTimeOffset type.
+- New feature - Added IsoDateTimeConverter class. Converts DateTimes and DateTimeOffsets to and from the ISO 8601 format.
+- New feature - Added JavaScriptDateTimeConverter class. Converts DateTimes and DateTimeOffsets to and from a JavaScript date constructor.
+- New feature - XmlNodeConverter handles serializing and deserializing JavaScript constructors.
+- New feature - Ability to force XmlNodeConverter to write a value in an array. Logic is controlled by an attribute in the XML, json:Array="true".
+- New feature - JsonSerializer supports serializing to and from LINQ to JSON objects.
+- New feature - Added Depth property to JsonReader.
+- New feature - Added JsonTextReader/JsonNodeReader and JsonTextWriter/JsonNodeWriter.
+- Change - More concise LINQ to JSON querying API.
+- Change - JsonReader and JsonWriter are now abstract.
+- Change - Dates are now serialized in a JSON complient manner, similar to ASP.NET's JavaScriptSerializer or WCF's DataContractJsonSerializer.
+- Change - JsonSerializer will serialize null rather than throwing an exception.
+- Change - The WriteTo method on LINQ to JSON objects now support JsonConverters.
+- Fix - JsonTextReader correctly parses NaN, PositiveInfinity and NegativeInfinity constants.
+- Fix - JsonSerializer properly serializes IEnumerable objects.
+- Removed - AspNetAjaxDateTimeConverter. Format is no longer used by ASP.NET AJAX.
+- Removed - JavaScriptObject, JavaScriptArray, JavaScriptConstructor. Replaced by LINQ to JSON objects.
+
+Json.NET 2.0 Beta 1
+
+- New feature - LINQ to JSON!
+- New feature - Ability to specify how JsonSerializer handles null values when serializing/deserializing.
+- New feature - Ability to specify how JsonSerializer handles missing values when deserializing.
+- Change - Improved support for reading and writing JavaScript constructors.
+- Change - A new JsonWriter can now write additional tokens without erroring.
+- Bug fix - JsonSerializer handles deserializing dictionaries where the key isn't a string.
+- Bug fix - JsonReader now correctly parses hex character codes.
+
+[**Json.NET CodePlex Project**](http://www.codeplex.com/json)
+
+[**Json.NET 2.0 Download**](http://www.codeplex.com/Release/ProjectReleases.aspx?ProjectName=Json&amp;ReleaseId=13099) - Json.NET source code, binaries and documentation

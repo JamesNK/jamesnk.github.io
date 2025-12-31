@@ -1,0 +1,72 @@
+---
+title: "Good (Date)Times with Json.NET"
+description: "Good (Date)Times with Json.NET"
+pubDate: "Feb 21 2009"
+source: "https://james.newtonking.com/archive/2009/02/20/good-date-times-with-json-net"
+---
+Latest version of this guide: [**Serializing Dates in JSON**](http://james.newtonking.com/projects/json/help/?topic=html/DatesInJSON.htm)
+
+## ---
+
+I’ve said it before, I’ll say it again: Dates in JSON are hard.
+
+The problem comes from the [JSON spec](http://www.ietf.org/rfc/rfc4627.txt) itself, there is no literal syntax for dates in JSON. The spec has objects, arrays, strings, integers and floats, but it defines no standard for what a date looks like.
+
+The default format used by [Json.NET](http://james.newtonking.com/projects/json-net.aspx) for dates is the same one used by Microsoft: "\/Date(1198908717056)\/". You can read more about it [here](http://weblogs.asp.net/bleroy/archive/2008/01/18/dates-and-json.aspx).
+
+## JsonConverters
+
+With no standard for dates in JSON, the number of possible different formats when interoping with other systems is endless. Fortunately Json.NET has a solution to deal with reading and writing custom dates: JsonConverters. A JsonConverter is used to override how a type is serialized.
+
+```csharp
+public class LogEntry
+{
+  public string Details { get; set; }
+  public DateTime LogDate { get; set; }
+}
+
+[Test]
+public void WriteJsonDates()
+{
+  LogEntry entry = new LogEntry
+  {
+    LogDate = new DateTime(2009, 2, 15, 0, 0, 0, DateTimeKind.Utc),
+    Details = "Application started."
+  };
+
+  string defaultJson = JsonConvert.SerializeObject(entry);
+  // {"Details":"Application started.","LogDate":"\/Date(1234656000000)\/"}
+
+  string javascriptJson = JsonConvert.SerializeObject(entry, new JavaScriptDateTimeConverter());
+  // {"Details":"Application started.","LogDate":new Date(1234656000000)}
+
+  string isoJson = JsonConvert.SerializeObject(entry, new IsoDateTimeConverter());
+  // {"Details":"Application started.","LogDate":"2009-02-15T00:00:00Z"}
+}
+```
+
+Simply pass the JsonConverter you wish to use to the Json.NET serializer.
+
+## JavaScriptDateTimeConverter
+
+The JavaScriptDateTimeConverter class is one of the two DateTime JsonConverters that come with Json.NET. This converter serializes a DateTime as a [JavaScript Date object](https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Date).
+
+```csharp
+new Date(1234656000000)
+```
+
+Technically this is invalid JSON according to the spec but all browsers, and some JSON frameworks including Json.NET, support it. 
+
+## IsoDateTimeConverter
+
+IsoDateTimeConverter seralizes a DateTime to an [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) formatted string.
+
+```csharp
+"2009-02-15T00:00:00Z"
+```
+
+The IsoDateTimeConverter class has a property, DateTimeFormat, to further customize the formatted string.
+
+One final thing to note is all date values returned by Json.NET are in [UTC time](http://en.wikipedia.org/wiki/Utc).
+
+JSON makes working with dates harder than it needs to be but with a little work it is a problem that is easily solved. Good times.

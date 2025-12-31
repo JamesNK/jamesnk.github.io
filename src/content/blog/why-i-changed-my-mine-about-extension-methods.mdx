@@ -1,0 +1,59 @@
+---
+title: "Why I changed my mind about Extension Methods"
+description: "Why I changed my mind about Extension Methods"
+pubDate: "Feb 03 2008"
+source: "https://james.newtonking.com/archive/2008/02/03/why-i-changed-my-mine-about-extension-methods"
+---
+My initial impression of extension methods was that they would lead to confusing code.
+ 
+I imagined other developers picking up a project that used extension methods and being confused as to why ToCapitalCase() was being called on a string or wondering where AddRange(IEnumerable&lt;T&gt;) on that collection came from. Wouldn't it just be better to keep ToCapitalCase and AddRange as they currently are on helper classes?
+ 
+What changed my mind was actually using extension methods in anger myself. Using them firsthand I saw how extension methods could be used to improve both reading and writing C# code.
+ 
+## More readable
+ 
+The nested nature of traditional static methods makes them counter-intuitive to read: You're essentially reading back to front. The static method call that comes first is actually what gets executed last.
+ 
+Say you wanted to get some nicely formatted XML from a file for logging purposes:
+ 
+```csharp
+string xml = XmlUtils.FormatXml(FileUtils.ReadAllText(PackageUtils.GetRelationshipFile(packageDirectory)));
+Logger.Log(xml);
+```
+
+Now compare the same code using extension methods:
+
+```csharp
+string xml = packageDirectory.GetRelationshipFile().ReadAllText().FormatXml();
+```
+
+The extension method version is much easier to comprehend compared to the first. It reads more like English.
+
+## More intuitive to write
+
+Like extension methods are more intuitive to read, they are also more intuitive to write. You are no longer writing methods backwards in the order that they are called.
+
+Often when using static methods I find myself jumping back and forth. I am halfway through a statement when I realize that I want to use a static method with the current variable.
+
+Using the XML example above, being the non-omniscient scatter brain that I am, I probably wouldn't think to format the XML so it is nicely indented until I had the XML text. To format using a static method I would have to jump back to the beginning of the statement and add XmlUtils.FormatXml(...). With extension methods it would just be another method call onto the end of the statement.
+
+## More discoverable
+
+"How are extension methods more discoverable than regular methods? What happens if they are in another namespace" you may be thinking. It is true that when compared with instance methods, extension methods come out worst off, but I believe that the comparison is flawed. Extension methods aren't for classes and frameworks which you are able to extend yourself, but for those which you can't.
+
+![Jimbo: 'Hey Simpson, cool belt. Wanna trade?' Bart: 'Errr, no, cause yours is just a piece of extension cord...' Kearney: 'He's ragging on your cord, man...' Jimbo: 'Get him!'](http://james.newtonking.com/images/WhyIchangedmymineaboutExtensionMethods_D7DD/image.png "Jimbo: 'Hey Simpson, cool belt. Wanna trade?' Bart: 'Errr, no, cause yours is just a piece of extension cord...' Kearney: 'He's ragging on your cord, man...' Jimbo: 'Get him!'")
+
+The better comparison is with traditional static methods. Once the required using statement is added, extension methods gain the upper hand with their superior intellisense support. Rather than a developer having to hunt through static helper objects trying to find whether the method he/she wants to use exists, the possible methods are displayed immediately in the member dropdown.
+
+## Conclusion
+
+Extension methods are a lot like operator overloading. It is true that both have the potential to create a confusing mess when abused, they also both have real usability benefits when applied correctly, making code easier to write and easier to read.
+
+Use extension methods, but use them wisely 😊
+
+Here are some good examples of extension methods in the wild:
+
+- [Using extension methods with a data reader](http://blog.jemm.net/2008/02/01/using-extension-methods-with-a-data-reader/)
+- [Using extension methods for enum ToString](http://blogs.msdn.com/abhinaba/archive/2005/10/21/483337.aspx)
+- [Extension methods: Copy all files in a directory (recursive)](http://www.liensberger.it/web/blog/?p=55)
+- [ASP.Net MVC Framework leads you to extension method heaven](http://richardbushnell.net/index.php/2007/12/12/aspnet-mvc-framework-made-public/)

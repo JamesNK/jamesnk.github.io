@@ -1,0 +1,65 @@
+---
+title: "Json.NET 4.5 Release 5 – JsonProperty enhancements"
+description: "Json.NET 4.5 Release 5 – JsonProperty enhancements"
+pubDate: "May 08 2012"
+source: "https://james.newtonking.com/archive/2012/05/08/json-net-4-5-release-5-jsonproperty-enhancements"
+---
+## JsonProperty enhancements
+
+JsonPropertyAttribute now has options on it to customize a property’s collection items. When ItemConverter, ItemIsReference, ItemTypeNameHandling or ItemReferenceLoopHandling is set on JsonProperty and the property’s type is a collection then those settings will be applied to every collection item.
+
+```csharp
+public class Event
+{
+  public string EventName { get; set; }
+  public string Venue { get; set; }
+
+  [JsonProperty(ItemConverterType = typeof(JavaScriptDateTimeConverter))]
+  public IList<DateTime> Performances { get; set; }
+}
+```
+
+Usage:
+
+```csharp
+Event e = new Event
+  {
+    EventName = "Blackadder III",
+    Venue = "Gryphon Theatre",
+    Performances = new List<DateTime>
+      {
+        DateTime.Parse("8 Tue May 2012, 6:30pm"),
+        DateTime.Parse("9 Wed May 2012, 6:30pm"),
+        DateTime.Parse("10 Thu May 2012, 8:00pm")
+      }
+  };
+
+string json = JsonConvert.SerializeObject(e, Formatting.Indented);
+//{
+//  "EventName": "Blackadder III",
+//  "Venue": "Gryphon Theatre",
+//  "Performances": [
+//    new Date(1336458600000),
+//    new Date(1336545000000),
+//    new Date(1336636800000)
+//  ]
+//}
+```
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.5 Release 4.
+
+- New feature - Added ItemIsReference, ItemReferenceLoopHandling, ItemTypeNameHandling, ItemConverterType to JsonPropertyAttribute
+- New feature - Added ItemRequired to JsonObjectAttribute
+- New feature - Added Path to JsonWriterException
+- Change - Improved deserializer call stack memory usage
+- Change - Moved the PDB files out of the NuGet package into a symbols package
+- Fix - Fixed infinite loop from an input error when reading an array and error handling is enabled
+- Fix - Fixed a base object error not being handled when deserializing
+
+## Links
+
+## [Json.NET CodePlex Project](http://json.codeplex.com/)
+
+**[Json.NET 4.5 Release 5 Download](http://json.codeplex.com/releases/view/87440)** - Json.NET source code, documentation and binaries

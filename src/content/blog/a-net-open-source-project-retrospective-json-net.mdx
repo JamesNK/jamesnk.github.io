@@ -1,0 +1,91 @@
+---
+title: "A .NET Open Source Project Retrospective: Json.NET"
+description: "A .NET Open Source Project Retrospective: Json.NET"
+pubDate: "Feb 02 2009"
+source: "https://james.newtonking.com/archive/2009/02/02/a-net-open-source-project-retrospective-json-net"
+---
+![This is the greatest case of false advertising I&rsquo;ve seen since I sued the movie &quot;The Never Ending Story.&quot;](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/jsonxmlbutton.png "This is the greatest case of false advertising I&rsquo;ve seen since I sued the movie &quot;The Never Ending Story.&quot;")
+
+I have always enjoyed the [video game post-mortem articles on Gamesutra](http://www.gamasutra.com/php-bin/article_display.php?category=5). Written by developers for developers, they reflect on how the project went, what they learnt and what they would do differently. Hearing peoples thoughts on what they have created is very interesting to me (I \**love\** DVD commentries) and have never seen the same done for an open source project.
+
+This post on [Json.NET](http://james.newtonking.com/projects/json-net.aspx), a retrospective rather than a post-mortem since Json.NET is still alive, follows the same format as Gamesutra: What went right and what went wrong and lessons I have learnt along the way.
+
+## Background
+
+Json.NET grew out of projects I was working on in late 2005 involving JavaScript, AJAX and .NET. At the time there were no libraries for working with [JSON](http://json.org/) in .NET so I began to grow my own.
+
+This is the first open source project I publically released and the most popular with over 50,000 downloads.
+
+## What Went Right?
+
+1. .NET
+
+The whole purpose was to write a JSON library for .NET, so there was never a choice of which platform to use. However in saying that, .NET has been great to work with. The base class library and the C# programming language are well thought out and are (mostly) a joy to work with. The .NET framework has gotten better with every new release.
+
+The .NET tools stack I use with Json.NET likewise provides an excellent experience. Visual Studio when combined with [NUnit](http://www.nunit.org/), [TestDriven.NET](http://www.testdriven.net/) and [VisualSVN](http://www.visualsvn.com/) allows for rapid testing and development. Coding, compiling, testing, debugging and manage source control all within the IDE is a great boon for productivity.
+
+2. Incremental releases
+
+I like the quote ‘incremental improvement is better than delayed perfection’. The [1.0 release of Json.NET](http://james.newtonking.com/archive/2006/06/26/Json.NET-_2D00_-Simplifying-.NET-_3C002D003E00_-JavaScript-communication.aspx) came from just a couple of weekends of effort and after a flurry of releases to fix the initial bugs, a new major version of Json.NET has been released approximately every 6 months.
+
+While not every feature I wanted was in version 1.0, users soon gave feedback on what they wanted most and I went from there. I haven’t been overly precious about maintaining 100% compatibility between releases but the core behaviour of Json.NET: reading, writing and serializing between .NET and JSON has remained unchanged since day one. New features like LINQ to JSON have slotted in side by side with existing classes.
+
+3. User driven design
+
+![Last night&rsquo;s &quot;Itchy and Scratchy Show&quot; was, without a doubt, the worst episode *ever.* Rest assured, I was on the Internet within minutes, registering my disgust throughout the world.](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/oldcomputer.jpg "Last night&rsquo;s &quot;Itchy and Scratchy Show&quot; was, without a doubt, the worst episode *ever.* Rest assured, I was on the Internet within minutes, registering my disgust throughout the world.")Confession time: I have not used JSON in anger on a project in years. Almost every change, bug fix and new feature since Json.NET 1.0 has come from user feedback.
+
+Although it sounds like a negative, I think it turned out to be a great way to develop. The end result is a focus on what users want most rather than relying on your own experiences.
+
+I think a danger to keep in mind with this approach is that user feature requests are generally very specific and will only address one persons need. Make sure you take care to take a step back and look at their intent and then create a solution that works for everyone.
+
+4. Unit Testing
+
+Json.NET, back in 2005, was the first project I used unit testing on and it has been a great success (although the test project is a bit of a mess…). Good unit testing [coverage](http://www.ncover.com/) over the entire project has meant I could make wholesale changes to the internal workings of Json.NET to support a new feature while having a good level of security that I wasn’t breaking what was already there.
+
+Each time a bug is reported I have a grown into a pattern where I recreate the bug in a unit test, assert that it is broken, fix the bug and then assert that it is fixed. It is a good way to get coverage of all those edge cases you never thought of.
+
+5. CodePlex
+
+![How do you like that, it's also illegal to put squirrels down your pants for the purpose of gambling. ](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/codeplexlogo_thumb.jpg "How do you like that, it's also illegal to put squirrels down your pants for the purpose of gambling. ")CodePlex is an open source project hosting website from Microsoft. Overall I have found it a great place to host releases, source control and discussion forums for Json.NET. These days it also has good Subversion support and it provides all kinds of [interesting statistics](http://www.codeplex.com/Json/stats).
+
+Probably the thing I like most about using a site like CodePlex is that it makes source code public and easy to download in a zip file. When I deal with a bug and check in the updated files I can straight away tell a user that fixed source code is available and [a link to where they can download it](http://www.codeplex.com/Json/SourceControl/ListDownloadableCommits.aspx).
+
+## What Went Wrong?
+
+![I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/help.jpg "I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.")
+
+1. Poor documentation
+
+A well designed API and XML intellisense documentation isn’t enough for the average user. Until Json.NET 2.0 was released, which included CHM documentation, a lot of questions were asked about how to achieve very basic tasks.
+
+When it comes to documentation, it is hard to ever have too much. I think getting started guides and high level overviews of a feature are especially useful to users.
+
+2. No central knowledge base 
+
+Json.NET suffers from having too many places to search if you are looking for information… old and new blog posts, a project page, a forum on CodePlex and the CHM documentation. Not everyone is a Google ninja and expecting users to search out a reply you made to someone else asking the same question a couple of years ago is asking a lot.
+
+Directing users to one place to look or ask for help is key. In future I might look to move a lot of Json.NET’s documentation to CodePlex and use its wiki functionality.
+
+## Conclusion
+
+I’m really happy with how [Json.NET](http://james.newtonking.com/projects/json-net.aspx) has gone as a project. JSON’s popularity in programming has grown markedly over the last 3 years and Json.NET’s has grown with it. I look forward to what new possibilities .NET 4.0 might bring.
+
+## Stats
+
+Numer of developers: 1
+
+Budget: $0
+
+Development Time: 2 1/2 years (and counting)
+
+Initial Release Date: June 2006
+
+Platform: .NET, Silverlight, Compact Framework
+
+Software: Visual Studio, NUnit, TestDriven.NET, VisualSVN, TortoiseSVN, Sandcastle
+
+Size of Project:
+
+Files: 180
+
+Lines of code (including tests): 21,000

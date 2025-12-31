@@ -1,0 +1,106 @@
+---
+title: "Json.NET 4.0 Release 4 – Bug fixes"
+description: "Json.NET 4.0 Release 4 – Bug fixes"
+pubDate: "Nov 19 2011"
+source: "https://james.newtonking.com/archive/2011/11/19/json-net-4-0-release-4-bug-fixes"
+---
+This release contains bug fixes and some minor changes.
+  
+## Custom type names with TypeNameHandling
+  
+*Note that support for custom type names was added in a previous Json.NET release.*
+  
+One commonly asked for feature is the ability to customize the value of the $type property when using TypeNameHandling. Fortunately new in .NET 4 is the virtual [SerializationBinder.BindToName](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.serializationbinder.bindtoname.aspx) method that translates a Type to a custom string.
+  
+To customize the $type property in Json.NET just create a class that inherits from SerializationBinder and override the BindToName and the BindToType methods with your custom naming logic. The example SerializationBinder example below serializes types to just their name without any namespace or assembly information, those details are passed into the binder itself via a constructor parameter and used during deserialization.
+  
+```csharp
+public class TypeNameSerializationBinder : SerializationBinder
+{
+  public string TypeFormat { get; private set; }
+
+  public TypeNameSerializationBinder(string typeFormat)
+  {
+    TypeFormat = typeFormat;
+  }
+
+  public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
+  {
+    assemblyName = null;
+    typeName = serializedType.Name;
+  }
+
+  public override Type BindToType(string assemblyName, string typeName)
+  {
+    string resolvedTypeName = string.Format(TypeFormat, typeName);
+
+    return Type.GetType(resolvedTypeName, true);
+  }
+}
+```
+
+The simplest way to use a custom serialization binder is with JsonConvert and JsonSerializerSettings.
+
+```csharp
+TypeNameSerializationBinder binder = new TypeNameSerializationBinder("YourAppNamespace.{0}, YourAppAssembly");
+
+IList<object> values = new List<object>
+  {
+    new Customer
+      {
+        Name = "Caroline Customer"
+      },
+    new Purchase
+      {
+        ProductName = "Elbow Grease",
+        Price = 5.99m,
+        Quantity = 1
+      }
+  };
+
+string json = JsonConvert.SerializeObject(values, Formatting.Indented, new JsonSerializerSettings
+{
+  TypeNameHandling = TypeNameHandling.Auto,
+  Binder = binder
+});
+
+//[
+//  {
+//    "$type": "Customer",
+//    "Name": "Caroline Customer"
+//  },
+//  {
+//    "$type": "Purchase",
+//    "ProductName": "Elbow Grease",
+//    "Price": 5.99,
+//    "Quantity": 1
+//  }
+//]
+```
+
+To deserialize just reuse the custom SerializationBinder with DeserializeObject.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.0 Release 3.
+
+- Change - JsonTextReader.Culture is now CultureInfo.InvariantCulture by default
+- Change - KeyValurPairConverter no longer depends on the order of the key and value properties
+- Change - Time zone conversions now use new TimeZoneInfo instead of TimeZone
+- Fix - Fixed boolean values sometimes being capitalized when converting to XML
+- Fix - Fixed error when deserializing ConcurrentDictionary
+- Fix - Fixed serializing some Uris returning the incorrect value
+- Fix - Fixed occasional error when converting non-long integer properties to XML
+- Fix - Fixed deserializing byte arrays with type name information
+- Fix - Fixed flag enum items not being correctly camel cased
+- Fix - Fixed JsonValidatingReader validating the first array item twice
+- Fix - Fixed JsonSchema not correctly validating integers as a subset of decimal
+- Fix - Fixed bad BSON when writing long strings of complex UTF8 characters
+- Fix - Fixed error not being raised for additional content in JSON string for JArray.Parse and JObject.Parse
+- Fix - Fixed DataTableConverter including nulls with NullValueHandling.Ignore
+
+## Links
+
+## [Json.NET CodePlex Project](http://json.codeplex.com/)
+
+**[Json.NET 4.0 Release 4 Download](http://json.codeplex.com/releases/view/77129)** - Json.NET source code, documentation and binaries

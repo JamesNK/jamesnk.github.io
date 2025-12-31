@@ -1,0 +1,96 @@
+---
+title: "Json.NET 3.5 Release 5 – .NET 2.0 Support, Error Handling & Databinding"
+description: "Json.NET 3.5 Release 5 – .NET 2.0 Support, Error Handling & Databinding"
+pubDate: "Oct 11 2009"
+source: "https://james.newtonking.com/archive/2009/10/10/json-net-3-5-release-5-net-2-0-support-error-handling-amp-databinding"
+---
+## .NET 2.0 Support
+
+Json.NET now has .NET 2.0 support! The great thing about 2.0 support is Json.NET 1.3.1 can finally be retired. Going on 2 years old now, 1.3.1 is chock full of [bugs](http://json.codeplex.com/WorkItem/View.aspx?WorkItemId=10422) that I have fastidiously ignored. Upgrade recommended!
+
+If you’re interested in the details I have previously blogged about adding .NET 2.0 support to Json.NET [here](http://james.newtonking.com/archive/2009/08/02/net-2-0-support-added-to-json-net.aspx).
+
+## Error Handling
+
+Json.NET now has an Error event on the JsonSerializer and an OnErrorAttribute for handling serialization errors. When an error occurs you can access the exception, see details about the object and member the error occurred on and choose between setting the error as handled and letting it be thrown to your application.
+
+```csharp
+List<string> errors = new List<string>();
+
+List<DateTime> c = JsonConvert.DeserializeObject<List<DateTime>>(@"[
+  ""2009-09-09T00:00:00Z"",
+  ""I am not a date and will error!"",
+  [
+    1
+  ],
+  ""1977-02-20T00:00:00Z"",
+  null,
+  ""2000-12-01T00:00:00Z""
+]",
+  new JsonSerializerSettings
+    {
+      Error = delegate(object sender, ErrorEventArgs args)
+        {
+          errors.Add(args.ErrorContext.Error.Message);
+          args.ErrorContext.Handled = true;
+        },
+      Converters = { new IsoDateTimeConverter() }
+    });
+
+// 2009-09-09T00:00:00Z
+// 1977-02-20T00:00:00Z
+// 2000-12-01T00:00:00Z
+
+// The string was not recognized as a valid DateTime. There is a unknown word starting at index 0.
+// Unexpected token parsing date. Expected String, got StartArray.
+// Cannot convert null value to System.DateTime.
+```
+
+In this example we are deserializing a JSON array to a collection of DateTimes. On the JsonSerializerSettings a handler has been assigned to the Error event which will log the error message and mark the error as handled.
+
+The result of deserializing the JSON is three successfully deserialized dates and three error messages: one for the badly formatted string, "I am not a date and will error!", one for the nested JSON array and one for the null value since the list doesn't allow nullable DateTimes. The event handler has logged these messages and Json.NET has continued on deserializing the JSON because the errors were marked as handled.
+
+Find more documentation about error handling [here](http://james.newtonking.com/projects/json/help/SerializationErrorHandling.html).
+
+## DataBinding
+
+Lots of small additions have been made to LINQ to JSON to enable easy databinding.
+
+- Added type descriptor objects under the Newtonsoft.Json.Linq.ComponentModel namespace
+- Added ITypedList and IBindingList implementations to JContainer
+- Added INotifyPropertyChanging and INotifyPropertyChanged implementations to JObject
+
+As someone who is traditionally a web programmer it has been really interesting looking into the world of WPF databinding in more detail.
+
+## Release vs Beta
+
+Finally one a minor detail the eagle eyed might have already noticed: from now on Json.NET updates are going to be called Releases rather than Betas.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 3.5 Beta 4.
+
+- New feature - Added .NET 2.0 support
+- New feature - Added serialization error handling via Error event on JsonSerializer and OnErrorAttribute
+- New feature - Added implicit conversions from primitive values to JValue
+- New feature - Added type descriptor objects to support LINQ to JSON databinding
+- New feature - Added ITypedList and IBindingList to JContainer
+- New feature - Added INotifyPropertyChanging and INotifyPropertyChanged to JObject
+- New feature - Added ConstructorHandling to allow object creation using non-public default constructors
+- New feature - Added roundtrip ADO.NET Entities serialization and deserialization
+- New feature - Added set indexer to JToken
+- Change - IsRequired now accepts null properties
+- Change - JsonSerializer now creates JObject/JArray when deserializing complex JSON to an object type
+- Change - Empty string to be deserialized as null for nullable types
+- Change - CloneNode on JToken renamed to CloneToken
+- Change - JProperty constructor that doesn't take a value made internal
+- Fix - Schema generation with negative enum values
+- Fix - Exception when loading JObject with multiple properties of the same name. Last property will be used
+- Fix - Exception when deserializing null value to List&lt;Nullable&lt;T&gt;&gt;
+- Fix - Generic type deserialization with type name tracking enabled
+
+## Links
+
+[**Json.NET CodePlex Project**](http://json.codeplex.com/)
+
+[**Json.NET 3.5 Release 5 Download**](http://json.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=34269) - Json.NET source code, documentation and binaries

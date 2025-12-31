@@ -1,0 +1,92 @@
+---
+title: "Json.NET 4.0 Release 2 – NuGet 1.2 and Dynamic"
+description: "Json.NET 4.0 Release 2 – NuGet 1.2 and Dynamic"
+pubDate: "Apr 22 2011"
+source: "https://james.newtonking.com/archive/2011/04/21/json-net-4-0-release-2-nuget-1-2-and-dynamic"
+---
+This release builds on two areas introduced in Json.NET 4.0: NuGet and .NET 4 dynamic support.
+  
+## NuGet 1.2
+  
+![I understand. Let us celebrate our agreement with the adding of chocolate to milk. ](http://james.newtonking.com/images/Json.NET-4.0-Release-2_A6FE/contribGraphic_thumb.png "I understand. Let us celebrate our agreement with the adding of chocolate to milk. ")[NuGet](http://www.nuget.org/) is fast becoming the preferred way to install libraries in .NET. NuGet 1.2 was recently released and among other improvements it adds support for the Windows Phone.
+  
+Json.NET 4.0 Release 2 has been updated to support NuGet 1.2 and Windows Phone - there is nothing you need to do, it should just work. Windows Phone brings Json.NET’s NuGet support up to 7 different frameworks:
+  
+- .NET 4
+- .NET 4 Client Profile
+- .NET 3.5
+- .NET 3.5 Client Profile
+- .NET 2
+- Silverlight 4
+- Windows Phone
+
+## Dynamic Improvements
+  
+Feedback on the initial release of dynamic support in Json.NET 4.0 was that values didn’t behave as expected. Concatenating two integers would throw an exception for example - less than ideal.
+  
+Release 2 adds support for common value operations: comparing, adding, subtracting, multiplying, dividing, incrementing and decrementing all now work like they should.
+  
+```csharp
+dynamic product = new JObject();
+product.ProductName = "Elbow Grease";
+product.Enabled = true;
+product.Price = 4.90m;
+product.StockCount = 9000;
+product.StockValue = 44100;
+
+// All Elbow Grease must go sale!
+// 50% off price
+
+product.Price = product.Price / 2;
+product.StockValue = product.StockCount * product.Price;
+product.ProductName = product.ProductName + " (SALE)";
+
+string json = product.ToString();
+// {
+//   "ProductName": "Elbow Grease (SALE)",
+//   "Enabled": true,
+//   "Price": 2.45,
+//   "StockCount": 9000,
+//   "StockValue": 22050.0
+// }
+```
+
+## And More
+
+Like always many smaller features has been added ([EnumMemberAttribute](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.enummemberattribute.aspx) serializer support for example) and bugs have been fixed.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.0 Release 1.
+
+- New feature - Added commonly used primitive value operations to dynamic JValue
+- New feature - Added IComparable to JValue
+- New feature - Added JsonConstructorAttribute to explicitly define which constructor to use during deserialization
+- New feature - Added IFormattable to JValue
+- New feature - Added Load and Parse helper methods to JToken
+- New feature - Added ExpandoObjectConverter that deserializes to primitive values rather than LINQ to JSON objects for ExpandObjects
+- New feature - Added EnumMemberAttribute support to StringEnumConverter
+- New feature - Added CloseInput/CloseOutput to JsonReader/JsonWriter to control whether the underlying stream is closed. Default to true
+- Change - JValue ToString now calls ToString on the internal value
+- Change - NuGet spec file includes client profiles
+- Change - BsonReader/BsonWriter close the underlying stream by default when closed
+- Change - CamelCasePropertyNamesContractResolver updates dictionary and dynamic property names
+- Fix - DefaultValueHandling no longer includes a property when the default value is the same value but a different type
+- Fix - Objects created with paramatized constructors fixed to not set properties that aren't in JSON
+- Fix - Fixed comments in JSON sometimes causing errors when deserializing
+- Fix - Error when reflecting over type that has multiple index properties inherited fixed
+- Fix - Error when reusing JsonSerializer with preserve references enabled fixed
+- Fix - Poor error message when dynamic type cannot be created during deserialization fixed
+- Fix - Error when setting a null value on a dynamic type during deserialization fixed
+- Fix - JsonTextReader.ReadAsDecimal not attempting to convert string values to decimal fixed
+- Fix - Duplicate type name within an assembly error fixed
+- Fix - Deserializing a DataTable property fixed
+- Fix - Code emit error when deserializing interfaces in certain situations fixed
+- Fix - Performance issues when deserializing with partial type names fixed
+- Fix - Deserializing some decimal values on classes with non-default constructors fixed
+
+## Links
+
+## [Json.NET CodePlex Project](http://json.codeplex.com/)
+
+**[Json.NET 4.0 Release 2 Download](http://json.codeplex.com/releases/view/64935)** - Json.NET source code, documentation and binaries

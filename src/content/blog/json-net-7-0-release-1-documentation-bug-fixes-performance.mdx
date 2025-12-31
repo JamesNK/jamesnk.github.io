@@ -1,0 +1,78 @@
+---
+title: "Json.NET 7.0 Release 1 - Documentation, bug fixes, performance"
+description: "Json.NET 7.0 Release 1 - Documentation, bug fixes, performance"
+pubDate: "Jun 22 2015"
+source: "https://james.newtonking.com/archive/2015/06/22/json-net-7-0-release-1-documentation-bug-fixes-performance"
+---
+## Documentation
+
+The biggest improvements in Json.NET 7.0 have been to [user documentation](http://www.newtonsoft.com/json/help/html/Introduction.htm). The old documentation design with its 2003 era HTML (iframes + inline JavaScript) has been replaced with a lightweight, fast to load design.
+
+Old and Busted (left) vs New Hotness (right):
+
+[![It takes two to lie: one to lie and one to listen](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_thumb_4.png "It takes two to lie: one to lie and one to listen")](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_11.png)   [![It's Patty who chose a life of celibacy. Selma had celibacy thrust upon her](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_thumb_5.png "It's Patty who chose a life of celibacy. Selma had celibacy thrust upon her")](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_13.png)
+
+It has been a couple of years since the docs were properly updated. New features added since then like extension data, annotations and JSONPath now have documentation and code samples. The new code samples brings the [total up to 116](http://www.newtonsoft.com/json/help/html/Samples.htm)!
+
+Finally the documentation has been professionally proofread. My most embarrassing grammatical errors have been fixed.
+
+## NuGet Logo
+
+Json.NET has a NuGet logo. Check it:
+
+![Kill my boss? Do I dare live out the American dream?](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_16.png "Kill my boss? Do I dare live out the American dream?")
+
+## DiscriminatedUnionConverter performance improvements
+
+Json.NET’s F# discriminated union support has been rewritten. Serializing very large collections of large discriminated unions was noticeably slow. The [new implementation](https://github.com/JamesNK/Newtonsoft.Json/commit/95e04ba96e1c1ce40bcaab5c93544f37f9abf2e2#diff-cb3fb9511e571c94735be121f80b6fe5) caches reflection and type data, and significantly improves performance.
+
+![What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_19.png "What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.")
+
+That’s a 3200% improvement. If you’re using F# then you don’t need to do anything other than update Json.NET.
+
+## And everything else
+
+Json.NET 7.0 includes 30 changes from 6 months of user feature requests and bug reports.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 6.0 Release 8.
+
+- New feature - DiscriminatedUnionConverter performance improvements
+- New feature - Added JsonRequiredAttribute
+- New feature - Added JsonSerializerSettings.ReferenceResolverProvider property
+- New feature - Added DefaultContractResolver.ResolveDictionaryKey
+- New feature - Added JsonDictionaryContract.DictionaryKeyResolver
+- New feature - Added support for reading GUID strings as bytes in JsonTextReader
+- New feature - Added EqualityComparer to JsonSerializer
+- Change - Changed reading GUIDs as bytes to only support 00000000-0000-0000-0000-000000000000 format
+- Change - Renamed aspnetcore50 target to dnxcore50
+- Change - Marked JsonSchema as obsolete
+- Change - Marked DefaultContractResolver(bool) as obsolete
+- Change - Marked JsonSerializerSettings.ReferenceResolver as obsolete
+- Change - Marked JsonDictionaryContract.PropertyNameResolver as obsolete
+- Fix - Fixed deserializing empty strings in Hashtables
+- Fix - Fixed incorrect JTokenReader.Path in certain situations
+- Fix - Fixed error when serializing certain objects in medium trust
+- Fix - Fixed deserializing large nullable UInt64 values
+- Fix - Fixed writing large UInt64 JValues
+- Fix - Fixed converting unmatched namespace prefixes in JSON to XML
+- Fix - Fixed IsoDateTimeConverter on DateTime properties with DateTimeFormatHandling.DateTimeOffset
+- Fix - Fixed preserving object references with read only properties
+- Fix - Fixed error when deserializing large JSON integers to XML
+- Fix - Fixed serializing extension data properties with no setter
+- Fix - Fixed serializing discriminated unions with type name or reference tracking enabled
+- Fix - Fixed DataTableConverter not using JsonSerializer settings
+- Fix - Fixed resolving properties from nested interfaces
+- Fix - Fixed deserializing classes derived from ConcurrentDictionary
+- Fix - Fixed passing default values to constructors
+- Fix - Fixed serializing root references from JsonConverters
+- Fix - Fixed empty strings coerced to null not erroring with Required.Always
+- Fix - Fixed invalid Required.Always error with constructor property name casing
+- Fix - Fixed empty string coerce check with Required.Always and constructor
+
+## Links
+
+## [Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)
+
+## [Json.NET 7.0 Release 1 Download - Json.NET source code and assemblies](https://github.com/JamesNK/Newtonsoft.Json/releases/tag/7.0.1)

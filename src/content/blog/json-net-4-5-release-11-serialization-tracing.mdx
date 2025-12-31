@@ -1,0 +1,72 @@
+---
+title: "Json.NET 4.5 Release 11 - Serialization Tracing"
+description: "Json.NET 4.5 Release 11 - Serialization Tracing"
+pubDate: "Nov 20 2012"
+source: "https://james.newtonking.com/archive/2012/11/20/json-net-4-5-release-11-serialization-tracing"
+---
+## Serialization Tracing
+  
+The major new feature this release is serialization tracing. Using the ITraceWriter interface you can log and debug what is happening inside the Json.NET serializer when serializing and deserializing JSON.
+  
+```csharp
+Staff staff = new Staff();
+staff.Name = "Arnie Admin";
+staff.Roles = new List<string> { "Administrator" };
+staff.StartDate = DateTime.Now;
+
+ITraceWriter traceWriter = new MemoryTraceWriter();
+
+JsonConvert.SerializeObject(
+  staff,
+  new JsonSerializerSettings { TraceWriter = traceWriter, Converters = { new JavaScriptDateTimeConverter() } });
+
+Console.WriteLine(traceWriter);
+// 2012-11-11T12:08:42.761 Info Started serializing Newtonsoft.Json.Tests.Serialization.Staff. Path ''.
+// 2012-11-11T12:08:42.785 Info Started serializing System.DateTime with converter Newtonsoft.Json.Converters.JavaScriptDateTimeConverter. Path 'StartDate'.
+// 2012-11-11T12:08:42.791 Info Finished serializing System.DateTime with converter Newtonsoft.Json.Converters.JavaScriptDateTimeConverter. Path 'StartDate'.
+// 2012-11-11T12:08:42.797 Info Started serializing System.Collections.Generic.List`1[System.String]. Path 'Roles'.
+// 2012-11-11T12:08:42.798 Info Finished serializing System.Collections.Generic.List`1[System.String]. Path 'Roles'.
+// 2012-11-11T12:08:42.799 Info Finished serializing Newtonsoft.Json.Tests.Serialization.Staff. Path ''.
+```
+
+Json.NET has two implementations of ITraceWriter: MemoryTraceWriter which keeps messages in memory for simple debugging like the example above, and DiagnosticsTraceWriter which writes messages to any System.Diagnostics.TraceListeners your application is using.
+
+To write messages using your existing logging framework implement a custom version of ITraceWriter.
+
+Read more about trace writing here: [**Debugging with Serialization Tracing**](http://james.newtonking.com/projects/json/help/html/SerializationTracing.htm)
+
+## JSON String Escaping
+
+By default Json.NET only escapes control characters like new line when serializing text. New in this release is the StringEscapeHandling property on JsonTextWriter. Using StringEscapeHandling you can choose to escape HTML characters (&lt;, &gt;, &, ', ") or escape all non-ASCII characters.
+
+## JToken.ToObject Performance
+
+The LINQ to JSON JToken class has a ToObject method on it for converting the JSON token to a .NET type. In previous versions of Json.NET this method always used the JsonSerializer behind the scenes to do the conversion which was unnecessary for converting simple types like strings, numbers, booleans, dates, etc.
+
+Json.NET 4.5 Release 11 now checks whether the object being converted to is a simple type and if so it skips using the JsonSerializer. The end result is ToObject is now 400% faster for most types.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 4.5 Release 10.
+
+- New feature - Added ITraceWriter, MemoryTraceWriter, DiagnosticsTraceWriter
+- New feature - Added StringEscapeHandling with options to escape HTML and non-ASCII characters
+- New feature - Added non-generic JToken.ToObject methods
+- New feature - Deserialize ISet&lt;T&gt; properties as HashSet&lt;T&gt;
+- New feature - Added implicit conversions for Uri, TimeSpan, Guid
+- New feature - Missing byte, char, Guid, TimeSpan and Uri explicit conversion operators added to JToken
+- New feature - Special case so Version type is correctly deserialized
+- Change - Silverlight and Windows Phone assemblies in NuGet are strong named again
+- Change - Improved CamelCasePropertyNamesContractResolver camel casing property names
+- Change - Explicit JValue conversions are more flexible when converting values
+- Fix - Fixed QuoteChar not being used when writing DateTimes, TimeSpans, Uris and Guids
+- Fix - Fixed JValue constructors for Uri, TimeSpan, Guid assigning incorrect JTokenType
+- Fix - Fixed ReferenceLoopHandling not being used when serializing ISerializable and dynamic values
+- Fix - Fixed potential null reference error when getting attributes
+- Fix - Fixed .NET 2.0 build incorrectly referencing DateTimeOffset
+
+## Links
+
+## [Json.NET CodePlex Project](http://json.codeplex.com/)
+
+**[Json.NET 4.5 Release 11 Download](http://json.codeplex.com/releases/view/97986)** - Json.NET source code and assemblies

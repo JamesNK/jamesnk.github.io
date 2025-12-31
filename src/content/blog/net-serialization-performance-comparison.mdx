@@ -1,0 +1,35 @@
+---
+title: ".NET Serialization Performance Comparison"
+description: ".NET Serialization Performance Comparison"
+pubDate: "Jan 02 2010"
+source: "https://james.newtonking.com/archive/2010/01/01/net-serialization-performance-comparison"
+---
+Read more about optimizing Json.NET performance here: [**Json.NET performance**](http://james.newtonking.com/projects/json/help/?topic=html/Performance.htm)
+
+---
+
+A lot of work around performance went into the [latest release of Json.NET](http://james.newtonking.com/archive/2009/12/26/json-net-3-5-release-6-binary-json-bson-support.aspx), with big improvements in both serializing and deserializing over the previous version.
+
+I can happily say that Json.NET is now faster than both the [JavaScriptSerializer](http://msdn.microsoft.com/en-us/library/system.web.script.serialization.javascriptserializer.aspx) and the WCF [DataContractJsonSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx) over all scenarios.
+
+![Chalmers: &quot;Seymour, you're fired.&quot; Skinner: &quot;Did you just call me a liar?&quot; Chalmers: &quot;No, I said you were fired.&quot; Skinner: &quot;Oh, that's much worse.&quot;](http://james.newtonking.com/Media/Default/images/blog/json356jsonperformance_thumb.png "Chalmers: &quot;Seymour, you're fired.&quot; Skinner: &quot;Did you just call me a liar?&quot; Chalmers: &quot;No, I said you were fired.&quot; Skinner: &quot;Oh, that's much worse.&quot;")
+
+## Other .NET Serializers
+
+The latest performance improvements now puts Json.NET on the same level as the XML based [DataContractSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.datacontractserializer.aspx) which is pretty remarkable.
+
+Also worth noting is Json.NET over binary (BSON) is considerably faster than the .NET [BinaryFormatter](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatters.binary.binaryformatter.aspx).
+
+![Australian man: &quot;You call that a knife? This is a knife!&quot; Bart: &quot;That's not a knife. That's a spoon.&quot; Australian man: &quot;All right, all right, you win. Heh. I see you've played knifey-spooney before.&quot;](http://james.newtonking.com/Media/Default/images/blog/json356otherperformance.png "Australian man: &quot;You call that a knife? This is a knife!&quot; Bart: &quot;That's not a knife. That's a spoon.&quot; Australian man: &quot;All right, all right, you win. Heh. I see you've played knifey-spooney before.&quot;")
+
+## Serialization Result Data Size
+
+Finally one of the benefits of JSON is its smaller size when compared to equivalent XML. The output of Json.NET is less than half the size of the XML that DataContractSerializer produces (strings have been encoded to UTF8 bytes).
+
+In this test the BSON result is marginally smaller than the JSON result. BSON really shines when serializing byte data (i.e. images, movies, files, etc) where its output will come in at least 30% smaller over JSON because there is no base64 encoding of byte data.
+
+![Some men hunt for sport, others hunt for food. The only thing I'm hunting for... is an outfit that looks good. See my vest, see my vest, made from real gorilla chest. See this sweater? There's no better, than authentic Irish Setter. See this hat? 'Twas my cat. My evening wear vampire bat. These white slippers are albino, african endangered rhino. Grizzle-bear underwear, turtle's necks I've got my share. Beret of poodle on my noodle it shall rest. Try my red robin suit. It comes one breast or two. See my vest, see my vest. See my vest!! Like my loafers? Former gophers. It was that or skin my chauffeurs. But a greyhound-fur tuxedo would be best. So, let's prepare these dogs. (Old Woman) Kill two for matching clogs! See my vest... See my vest! Oh please, won't you see my vest!!](http://james.newtonking.com/Media/Default/images/blog/json356size.png "Some men hunt for sport, others hunt for food. The only thing I'm hunting for... is an outfit that looks good. See my vest, see my vest, made from real gorilla chest. See this sweater? There's no better, than authentic Irish Setter. See this hat? 'Twas my cat. My evening wear vampire bat. These white slippers are albino, african endangered rhino. Grizzle-bear underwear, turtle's necks I've got my share. Beret of poodle on my noodle it shall rest. Try my red robin suit. It comes one breast or two. See my vest, see my vest. See my vest!! Like my loafers? Former gophers. It was that or skin my chauffeurs. But a greyhound-fur tuxedo would be best. So, let's prepare these dogs. (Old Woman)
+
+Kill two for matching clogs! See my vest... See my vest! Oh please, won't you see my vest!!")
+
+You can find the latest version of Json.NET, including source code with the performance tests, [**here**](http://json.codeplex.com/Release/ProjectReleases.aspx).

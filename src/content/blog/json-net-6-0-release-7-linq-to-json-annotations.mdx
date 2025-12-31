@@ -1,0 +1,58 @@
+---
+title: "Json.NET 6.0 Release 7 - LINQ to JSON Annotations"
+description: "Json.NET 6.0 Release 7 - LINQ to JSON Annotations"
+pubDate: "Dec 23 2014"
+source: "https://james.newtonking.com/archive/2014/12/23/json-net-6-0-release-7-linq-to-json-annotations"
+---
+## Annotations
+ 
+This release of Json.NET adds annotations to LINQ to JSON. Annotations allow you to associate arbitrary objects with LINQ to JSON JObjects, JArrays and JValues.
+ 
+Annotations aren’t part of the JSON specification; they aren’t read from JSON or written to JSON. Annotations are for use within an application.
+ 
+```csharp
+JObject o = JObject.Parse(@"{
+    'name': 'Bill G',
+    'age': 58,
+    'country': 'United States',
+    'employer': 'Microsoft'
+}");
+
+o.AddAnnotation(new HashSet<string>());
+o.PropertyChanged += (sender, args) => o.Annotation<HashSet<string>>().Add(args.PropertyName);
+
+o["age"] = 59;
+o["employer"] = "Bill & Melinda Gates Foundation";
+
+HashSet<string> changedProperties = o.Annotation<HashSet<string>>();
+// age
+// employer
+```
+
+In this example we use annotations to track changes to a JObject. First a set of strings for is associated with a JObject using annotations. The PropertyChanged event is then used to add a property name to the set whenever its value is changed. The JObject’s changed properties are now easily accessible anywhere in your application from the JObject.
+
+**Changes** 
+
+Here is a complete list of what has changed since Json.NET 6.0 Release 6. 
+
+- New feature - Added Annotations to LINQ to JSON
+- New feature - Added DescendantsAndSelf method to JObject and JArray
+- New feature - Added AncestorsAndSelf method to JToken
+- New feature - Added support for tracking references in ISerializable objects
+- New feature - Added CurrentToken to JTokenReader
+- New feature - Added CurrentToken to JTokenWriter
+- New feature - Added WriteToken(JsonToken, object) to JsonWriter
+- Fix - Fixed deserializing null values onto JObject and JArray properties
+- Fix - Fixed error when extension data bag doesn't inherit from Dictionary&lt;TKey, TValue&gt;
+- Fix - Fixed deserializing complex values inside multi-dimensional arrays
+- Fix - Fixed serialization settings not being used when deserializing F# unions
+- Fix - Fixed MetadataTypeAttribute not being found on some platforms
+- Fix - Fixed line breaks in exception messages to use Environment.NewLine
+- Fix - Fixed deserializing certain XElements with comments
+- Fix - Fixed casting JValues with a negative value to a nullable SByte
+
+**Links** 
+
+**[Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)** 
+
+## [Json.NET 6.0 Release 7 Download - Json.NET source code and assemblies](https://json.codeplex.com/releases/view/431967)

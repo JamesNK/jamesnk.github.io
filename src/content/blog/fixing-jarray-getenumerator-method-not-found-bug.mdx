@@ -1,0 +1,36 @@
+---
+title: "Fixing JArray.GetEnumerator() Method Not Found Bug"
+description: "Fixing JArray.GetEnumerator() Method Not Found Bug"
+pubDate: "Nov 29 2013"
+source: "https://james.newtonking.com/archive/2013/11/29/fixing-jarray-getenumerator-method-not-found-bug"
+---
+Getting this method not found error requires a rare combination of factors. If you haven’t seen it then feel free to ignore this blog post. **** 
+
+## tl;dr; just tell me how to fix it
+
+If you’re an end user and you get this error then make sure the version of Json.NET your application is loading is 5.0.8. If you have 5.0.8 in your \bin directory and you still get this error then check the GAC as well and update it if necessary.
+
+If you’re a package author and a user reports getting this error from your code then downgrade the version of Json.NET your package is using to 5.0.4, recompile and release a new version of your package. If you can’t downgrade then another option is to add an IEnumerable&lt;JToken&gt; cast to the erroring foreach loop.
+
+```csharp
+foreach (JToken item in (IEnumerable<JToken>)array)
+{
+  // stuff
+}
+```
+
+Another option is to change the foreach loop to a for loop.
+
+## The Cause
+
+In Json.NET 5.0.5 I changed JArray.GetEnumerator’s visibility from interface explicit to public. The side effect of GetEnumerator being public is the C# compiler will no longer add a IEnumerable&lt;JToken&gt; cast to foreach loops. The cast is required when GetEnumerator is interface explicit and is only accessible when the object is cast to IEnumerable&lt;JToken&gt;.
+
+The error then occurs when an application or package that has a foreach loop over a JArray and is compiled with a public GetEnumerator is run using an older version of Json.NET, possible out of the GAC, where GetEnumerator is not public. Because there is no cast to IEnumerable&lt;JToken&gt; then .NET can’t find the GetEnumerator method and an exception is thrown.
+
+## Json.NET 6.0 Long Term Fix
+
+Rather than have this bug keep popping up for users I’m going to change JArray.GetEnumerator’s visibility back to interface explicit - the visibility it had in Json.NET 5.0.4 and earlier. Because this is a binary breaking change I’m going to increase Json.NET’s version number to 6.0.
+
+**Update**: I have left GetEnumerator as public and updated Json.NET's assembly version number to 6.0.0.0 instead.
+
+Sorry about this bug. It has sprung up because of a rare combination of factors and unfortunately Json.NET meets all of them.

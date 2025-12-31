@@ -1,0 +1,101 @@
+---
+title: "LINQ to XML over large documents"
+description: "LINQ to XML over large documents"
+pubDate: "Dec 11 2007"
+source: "https://james.newtonking.com/archive/2007/12/11/linq-to-xml-over-large-documents"
+---
+[![Me fail English? That&rsquo;s unpossible!](http://james.newtonking.com/BlogFiles/LINQtoXMLoverlargedocuments_DEDC/LINQArchitecture_thumb.png "Me fail English? That&rsquo;s unpossible!")](http://james.newtonking.com/BlogFiles/LINQtoXMLoverlargedocuments_DEDC/LINQArchitecture.png)I have been parsing [WordprocessingML OOXML](http://en.wikipedia.org/wiki/Office_Open_XML) over the past week using LINQ to XML and it has been a great learning experience. LINQ to XML is a clean break from the somewhat antiquated DOM that we all know and tolerate, and the new API provides many improvements over the DOM based XmlDocument.
+ 
+Probably the most talked about change is the functional approach that [LINQ to XML](http://www.hookedonlinq.com/LINQtoXML5MinuteOverview.ashx) encourages. Building a document and querying data can often be accomplished in a single statement compared to the sprawling imperative code that XmlDocument would require.
+ 
+A less visible and less talked about improvement in LINQ to XML is its ability to work with large documents. DOM is [notorious](http://www.dotnet247.com/247reference/msgs/56/284992.aspx) for the amount of memory it consumes when loading large amounts of XML. A typical solution in the past was to use the memory efficient XmlReader object but XmlReader is forward only and frankly a pain in the butt to use in nontrivial situations.
+ 
+## LINQ to XML memory usage and XElement streaming
+ 
+LINQ to XML brings two notable improvements to working with large documents. The first is a reduction in the amount of memory required. LINQ to XML stores XML documents in memory more efficiently than DOM.
+ 
+The second improvement is LINQ to XML’s ability to combine the document approach the XmlReader approach. Using the static method XNode.ReadFrom, which takes an XmlReader and will return a XNode object of the reader’s current position, we can create XNode elements one by one, and work on them as needed. You still aren’t loading the entire document into memory but you get the ease of use of working with a document. The best of both worlds! Let’s see an example...
+ 
+## Example: Streaming LINQ to XML over OOXML
+ 
+WordprocessingML is split into about a dozen separate files, each of which is quite small and can easily be loaded in their entirety in an XDocument. The exception is the main document file. This file stores the content of document and has the potential to grow from just a few kilobytes for Hello World to 100MB+ in the case of a document with 10,000 pages. Obviously we want to avoid loading a huge document like this if we can help it. This example compares the code that loads the entire document at once and the code which loads it one piece at a time.
+ 
+## Before:
+ 
+```csharp
+public void LoadMainDocument(TextReader mainDocumentReader)
+{
+  if (mainDocumentReader == null)
+    throw new ArgumentNullException("mainDocumentReader");
+
+  XDocument mainDocument = XDocument.Load(mainDocumentReader);
+
+  XNamespace ns = Document.Main;
+
+  XElement bodyElement = mainDocument.Root.Element(ns + "body");
+
+  List<Content> content = DocumentContent.Create(this, bodyElement.Elements());
+
+  SectionProperties finalSectionProperties = new SectionProperties(this, bodyElement.Element(ns + "sectPr"));
+
+  // divide content up into sections
+  _sections.AddRange(CreateSections(content, finalSectionProperties));
+}
+```
+
+Here you can see the entire document being loaded into an XDocument with XDocument.Load(mainDocumentReader). The problem is of course that document could potentially be quite large and cause an OutOfMemoryException. XNode.ReadFrom to the rescue...
+
+## After:
+
+```csharp
+public void LoadMainDocument(TextReader mainDocumentReader)
+{
+  if (mainDocumentReader == null)
+    throw new ArgumentNullException("mainDocumentReader");
+
+  XNamespace ns = Document.WordprocessingML;
+
+  List<Content> content = null;
+  SectionProperties finalSectionProperties = null;
+
+  using (XmlReader reader = XmlReader.Create(mainDocumentReader))
+  {
+    while (reader.Read())
+    {
+      // move to body content
+      if (reader.LocalName == "body" && reader.NodeType == XmlNodeType.Element)
+      {
+        content = DocumentContent.Create(this, GetChildContentElements(reader));
+
+        if (reader.LocalName != "sectPr")
+          throw new Exception("Final section properties element expected.");
+
+        finalSectionProperties = new SectionProperties(this, (XElement)XElement.ReadFrom(reader));
+      }
+    }
+  }
+
+  // divide content up into sections
+  _sections.AddRange(CreateSections(content, finalSectionProperties));
+}
+
+private IEnumerable<XElement> GetChildContentElements(XmlReader reader)
+{
+  // move to first child
+  reader.Read();
+
+  while (true)
+  {
+    // skip whitespace between elements
+    reader.MoveToContent();
+
+    // break on end document section
+    if (reader.LocalName == "sectPr")
+      yield break;
+
+    yield return (XElement)XElement.ReadFrom(reader);
+  }
+}
+```
+
+Now rather than loading the entire document into an XDocument, XElements are created from the XmlReader as needed. Each one can be used and queried before falling out of scope and being made available for garbage collection, avoiding the danger of running out of memory. Even though this is quite different to what we were doing previously, no code outside of this method needed to be modified!

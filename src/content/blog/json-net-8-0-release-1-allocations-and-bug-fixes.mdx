@@ -1,0 +1,108 @@
+---
+title: "Json.NET 8.0 Release 1 - Allocations and bug fixes"
+description: "Json.NET 8.0 Release 1 - Allocations and bug fixes"
+pubDate: "Dec 29 2015"
+source: "https://james.newtonking.com/archive/2015/12/20/json-net-8-0-release-1-allocations-and-bug-fixes"
+---
+## Memory, Allocations and Performance
+
+There is a big push across the .NET eco-system on performance. In modern .NET apps one of the biggest culprits of poor performance is allocating too many objects. The more objects and memory you allocate, the more the garbage collector needs to clean up. Best case garbage collection will slow your application; worst cause the app will halt execution until GC is finished. GC is a great way to kill pages per second on the server and frames per second on the client.
+
+To reduce allocations and memory usage when serializing Json.NET 8.0 adds a new IArrayPool interface. Json.NET is already very lean when it comes to allocations, working with raw characters on array buffers instead of allocated strings, but those buffers can easily grow large, and a new buffer is created each time JSON is read or written. IArrayPool allows array buffers to be reused, similar to connection pooling with a database, or thread pooling in .NET.
+
+```csharp
+public class JsonArrayPool : IArrayPool<char>
+{
+    public static readonly JsonArrayPool Instance = new JsonArrayPool();
+
+    public char[] Rent(int minimumLength)
+    {
+        // get char array from System.Buffers shared pool
+        return ArrayPool<char>.Shared.Rent(minimumLength);
+    }
+
+    public void Return(char[] array)
+    {
+        // return char array to System.Buffers shared pool
+        ArrayPool<char>.Shared.Return(array);
+    }
+}
+```
+
+The example implemention above uses the upcoming [System.Buffers](https://github.com/dotnet/corefx/tree/master/src/System.Buffers) package to manage pooling. Using the array pool just involves setting a property on JsonTextReader/JsonTextWriter.
+
+```csharp
+IList<int> value;
+
+JsonSerializer serializer = new JsonSerializer();
+using (JsonTextReader reader = new JsonTextReader(new StringReader(@"[1,2,3,4]")))
+{
+    // reader will get buffer from array pool
+    reader.ArrayPool = JsonArrayPool.Instance;
+
+    value = serializer.Deserialize<IList<int>>(reader);
+}
+```
+
+IArrayPool is a somewhat experimental feature. Unless you have extreme performance requirements or your own object pooling system already in-place you can wait until a default pool is automatically included with Json.NET.
+
+## JArray and Comments
+
+Previously when loading JSON that contained comments into JArrays the comment would be added as an item in the JArray. This would be a common cause of errors: most developers would expect a commented out value in a JArray to disappear, instead it becomes a comment token, and an error would be thrown if the app looped over the array, casting its values.
+
+In Json.NET 8.0 comments are ignored by default. If you want the old behaviour then set CommentHandling.Load on JsonLoadSettings.
+
+## Bug Fixes. Bug Fixes Everywhere.
+
+There are two dozen minor bug fixes in Json.NET 8.0, ranging from fixes serializing DataSets and XML (brave souls still use them), to serializing F# discriminated unions in UWP applications.
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 7.0 Release 1.
+
+- New feature - Added IArrayPool and a setting on JsonTextReader and JsonTextWriter
+- New feature - Added JsonReader.ReadAsDouble
+- New feature - Added JsonLoadSettings and CommentHandling to control loading comments in LINQ to JSON
+- New feature - Added JsonLoadSettings.LineInfoHandling
+- New feature - Added support for JsonConstructorAttribute on list and dictionary collections
+- New feature - Added support for deserializing string to Version
+- New feature - Added ShouldDeserialize to JsonProperty
+- New feature - Added Required.DisallowNull
+- New feature - Added support for converting JSON to XML with invalid XML name chracters
+- New feature - Improved case-insensitive deserialization performance
+- New feature - Improved date parsing performance
+- Change - Changed ReadAsDateTime, ReadAsDateTimeOffset, ReadAsBytes, ReadAsString, ReadAsInt32 on JsonReader from abstract to virtual
+- Change - Changed parsing JArrays to not include comments by default
+- Change - Changed JTokenWriter to use the last property instead of erroring when there are duplicate property names
+- Change - Changed Uri JValues to use OriginalString when written to JSON
+- Change - Changed DateTimeOffset JValues to return TypeCode.Object from IConvertible.GetTypeCode()
+- Fix - Fixed converting JSON metadata array value to XML
+- Fix - Fixed not including line information with some XML conversion errors
+- Fix - Fixed error when writing certain JSON with escaped characters
+- Fix - Fixed PopulateObject error when JSON starts with a comment
+- Fix - Fixed incorrect IJsonLineInfo line position after the first line
+- Fix - Fixed JSONPath when querying against Uri, Guid and Date values
+- Fix - Fixed JsonReader.Path when the path is escaped
+- Fix - Fixed writing JRaw twice when a TraceWriter is set
+- Fix - Fixed getting the wrong value when reading certain large integers
+- Fix - Fixed deserializing DataSet with a null DataTable
+- Fix - Fixed deserializing a null DataSet
+- Fix - Fixed error when serializing F# discriminated unions in Windows Store apps
+- Fix - Fixed error serializing some types when there are conflicting interface properties
+- Fix - Fixed error when settings ReferenceResolver is set to null
+- Fix - Fixed DateTimeZoneHandling not being used when writing DateTime dictionary keys
+- Fix - Fixed bug when converting an integer JValue to a nullable enum
+- Fix - Fixed converting null string JValue to XML
+- Fix - Fixed Mono generic class private field serialization bug
+- Fix - Fixed error when deserializing ignored property with mismatched type
+- Fix - Fixed deserializing to a type when setting JToken extension data
+- Fix - Fixed setting default values onto properties already set in constructor
+- Fix - Fixed casting dynamic JValue to JToken
+- Fix - Fixed serializing non-zero based arrays
+- Fix - Fixed reading 24 hour midnight ISO dates
+
+## Links
+
+## [Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)
+
+## [Json.NET 8.0 Release 1 Download - Json.NET source code and assemblies](https://github.com/JamesNK/Newtonsoft.Json/releases/tag/8.0.1)

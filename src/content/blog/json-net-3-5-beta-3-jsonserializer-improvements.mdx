@@ -1,0 +1,92 @@
+---
+title: "Json.NET 3.5 Beta 3 – JsonSerializer improvements"
+description: "Json.NET 3.5 Beta 3 – JsonSerializer improvements"
+pubDate: "Mar 21 2009"
+source: "https://james.newtonking.com/archive/2009/03/21/json-net-3-5-beta-3-jsonserializer-improvements"
+---
+![Homer: &quot;Aw, twenty dollars! I wanted a peanut!&quot; Homer's Brain: &quot;Twenty dollars can buy many peanuts!&quot; Homer: &quot;Explain how!&quot; Homer's Brain: &quot;Money can be exchanged for goods and services!&quot; Homer: &quot;Woo-hoo!&quot;](http://james.newtonking.com/images/Json.NE.5Beta3JsonSerializerimprovements_D7BF/CamelFace.png "Homer: &quot;Aw, twenty dollars! I wanted a peanut!&quot; Homer's Brain: &quot;Twenty dollars can buy many peanuts!&quot; Homer: &quot;Explain how!&quot; Homer's Brain: &quot;Money can be exchanged for goods and services!&quot; Homer: &quot;Woo-hoo!&quot;")
+
+> 
+> 
+> An oldie but a goodie Your favourite song, and mine Ladies and gentlemen Json.NET!
+> 
+
+## JsonSerializer Improvements
+
+This release is a rollup of the various changes since beta 2. The majority of the changes are enhancements to the way [Json.NET](http://james.newtonking.com/projects/json-net.aspx) serializes and deserializes JSON.
+
+The most notable enhancement is the addition of IMappingResolver, previously blogged about here: [**Thoughts on improving JsonSerializer: IMappingResolver?**](http://james.newtonking.com/archive/2009/02/28/thoughts-on-improving-jsonserializer-imappingresolver.aspx)
+
+The IMappingResolver interface provides a way to globally customize how the JsonSerializer works, without any modification to your objects. I should note that the the JsonProperty attribute is still fully supported and is a great way to customize a single property. IMappingResolver is an addition and any existing Json.NET code will continue to work flawlessly.
+
+## DefaultMappingResolver
+
+Two implementations of IMappingResolver are included in this release of Json.NET. DefaultMappingResolver is fairly self explanatory. I have tried to structure it in a way that provides many avenues of extensibility. Most of the methods on the class are protected and virtual.
+
+## CamelCaseMappingResolver
+
+CamelCaseMappingResolver is the second implementation. This class inherits from DefaultMappingResolver and simply overrides the JSON property name to be [camelcase](http://en.wikipedia.org/wiki/CamelCase).
+
+```csharp
+Product product = new Product
+                    {
+                      ExpiryDate = new DateTime(2010, 12, 20, 18, 1, 0, DateTimeKind.Utc),
+                      Name = "Widget",
+                      Price = 9.99m,
+                      Sizes = new[] {"Small", "Medium", "Large"}
+                    };
+
+string json =
+  JsonConvert.SerializeObject(
+    product,
+    Formatting.Indented,
+    new JsonSerializerSettings { MappingResolver = new CamelCaseMappingResolver() }
+  );
+
+//{
+//  "name": "Widget",
+//  "expiryDate": "\/Date(1292868060000)\/",
+//  "price": 9.99,
+//  "sizes": [
+//    "Small",
+//    "Medium",
+//    "Large"
+//  ]
+//}
+```
+
+Note that camelcased property names in the serialized JSON.
+
+CamelCaseMappingResolver is just one example of what can be achieve using IMappingResolver. Off the top of my head some other examples could be modifying the JsonSerializer to serialize private fields, or adding additional properties to a serialized JSON object like the .NET type name.
+
+Overall I’m really happy with the way IMappingResolver has turned out. I think it provides a great halfway point between using attributes to control serializing an object, and writing a custom JsonConverter.
+
+> 
+> 
+> Simple things should be simple. Complex things should be possible. -[Alan Kay](http://en.wikiquote.org/wiki/Alan_Kay)
+> 
+
+## Changes
+
+Here is a complete list of what has changed since Json.NET 3.5 Beta 2.
+
+- New feature - Added IMappingResolver interface and DefaultMappingResolver class. IMappingResolver property added to JsonSerializer, JsonSerializerSettings, JsonSchemaGenerator
+- New feature - Added CamelCaseMappingResolver
+- New feature - Added DeserializeNode overload to JsonConvert that allows a root element to be added to the XML
+- New feature - Added support for deserializing to IEnumerable&lt;T&gt;, ICollection&lt;T&gt;, IList&lt;T&gt; and IDictionary&lt;TKey, TValue&gt; members
+- New feature - Deserializer will now populate an object’s members with unused values after creating an object from a non-default constructor
+- New feature - Deserializer now attempts a case insensitive match to a member if the exact case match fails
+- New feature - Added a ToString(Formatting, JsonConverters[]) overload to JToken
+- New feature - Added AddAfterSelf, AddBeforeSelf methods to JToken
+- Change - JsonSerializer now ignores missing members by default
+- Fix - Made the error message when attempting to deserialize to an interface or abstract class clearer
+- Fix - Fixed the whitespace issues when writing a raw JValue token
+- Fix - XmlNodeConverter now handles nested arrays when converting JSON to XML
+- Fix - Ensure JavaScriptDateTimeConverter converts nullable DateTime members
+- Fix - Fix possible thread safety issues by adding double check locking to static reflection cache
+
+## Links
+
+[**Json.NET CodePlex Project**](http://json.codeplex.com/)
+
+[**Json.NET 3.5 Beta 3 Download**](http://json.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=25040) - Json.NET source code, documentation and binaries

@@ -1,0 +1,128 @@
+---
+title: "Json.NET 2.0 Beta 2"
+description: "Json.NET 2.0 Beta 2"
+pubDate: "Mar 02 2008"
+source: "https://james.newtonking.com/archive/2008/03/02/json-net-2-0-beta-2"
+---
+I am really happy with how Json.NET 2.0 and LINQ to JSON is turning out. This release offers big improvements both in the syntax for writing JSON and querying JSON. I have also finally put in some real effort into fixing up some the niggling issues from previous versions of Json.NET.
+
+## Creating JSON Improvements
+
+One of the suggestions I received from the first 2.0 beta was creating JSON objects from anonymous objects.
+
+With LINQ to JSON it is now possible to do this:
+
+```csharp
+JObject o = JObject.FromObject(new
+{
+  channel = new
+  {
+    title = "James Newton-King",
+    link = "http://james.newtonking.com",
+    description = "James Newton-King's blog.",
+    item =
+        from p in posts
+        orderby p.Title
+        select new
+        {
+          title = p.Title,
+          description = p.Description,
+          link = p.Link,
+          category = p.Categories
+        }
+  }
+});
+```
+
+Pretty neat. Using regular .NET objects is also possible.
+
+The way it works is FromObject is just a wrapper over the JsonSerializer class and reuses its logic. The difference compared to regular serialization is that the serializer is writing to a JsonTokenWriter instead of a JsonTextWriter. These classes are both new in this release and inherit from the now abstract JsonWriter.
+
+I think it is really cool the way LINQ to JSON, JsonWriter and JsonSerializer dovetail together here. Once JsonWriter had been split apart and I could plug in different JsonWriters into JsonSerializer depending upon what output I wanted, adding this feature took no time at all 😊
+
+## Querying JSON Improvements
+
+I felt the querying API in beta 1 was too wordy and explicit. Beta 2's is more concise and it should hopefully be easier to use.
+
+Before:
+
+```csharp
+var categories =
+  from c in rss.PropertyValue<JObject>("channel")
+              .PropertyValue<JArray>("item")
+              .Children<JObject>()
+              .PropertyValues<JArray>("category")
+              .Children<string>()
+  group c by c into g
+  orderby g.Count() descending
+  select new { Category = g.Key, Count = g.Count() };
+```
+
+After:
+
+```csharp
+var categories =
+  from c in rss["channel"]["item"].Children()["category"].Values<string>()
+  group c by c into g
+  orderby g.Count() descending
+  select new { Category = g.Key, Count = g.Count() };
+```
+
+I am still putting some thought into this area but I think it is a definite improvement.
+
+## Deserializing Anonymous Types
+
+It is now possible to deserialize directly to an anonymous type with the new DeserializeAnonymousType method. A new method was required because the only way I found to get access to type information about an anonymous type is to have is as an argument.
+
+```csharp
+public static T DeserializeAnonymousType<T>(string value, T anonymousTypeObject)
+{
+  return DeserializeObject<T>(value);
+}
+```
+
+If there is a better way let me know!
+
+## Dates
+
+Dates in JSON are hard.
+
+The first issue is that there is no literal syntax for dates in the [JSON spec](http://www.ietf.org/rfc/rfc4627.txt?number=4627). You either have to [invent your own](http://weblogs.asp.net/bleroy/archive/2008/01/18/dates-and-json.aspx) or break from the spec and use the JavaScript Date constructor, e.g. new Date(976918263055).
+
+Historically Json.NET defaulted to using the JS Date constructor but in this release the default format has changed to using the [approach taken by Microsoft](http://weblogs.asp.net/bleroy/archive/2008/01/18/dates-and-json.aspx). The "\/Date(1198908717056+1200)\/" format is conformant with the JSON spec, allows timezone information to be included with the DateTime and will make Json.NET more compatible with Microsoft's JSON APIs. Developers that want to continue to use the JavaScript Date constructor format of Json.NET 1.x, a JavaScriptDateTimeConverter has been added.
+
+The second issue with dates in JSON (and also in .NET it turns out!) are timezones. I have never written an application that needed to worry about timezones before and I have learn't a lot of the past couple of days 😊
+
+Previously Json.NET was returning local ticks when it really should have been using UTC ticks. That has now been corrected.
+
+Other miscellaneous Date changes in this release are another new date converter, IsoDateTimeConverter, which reads to and from the ISO 8601 standard (1997-07-16T19:20:30+01:00) and support for reading, writing and serializing the new DateTimeOffset struct.
+
+## Changes
+
+All changes since the last release:
+
+- New feature - Added FromObject to JObject, JArray for creating LINQ to JSON objects from regular .NET objects.
+- New feature - Added support for deserializing to an anonymous type with the DeserializeAnonymousType method.
+- New feature - Support for reading, writing and serializing the new DateTimeOffset type.
+- New feature - Added IsoDateTimeConverter class. Converts DateTimes and DateTimeOffsets to and from the ISO 8601 format.
+- New feature - Added JavaScriptDateTimeConverter class. Converts DateTimes and DateTimeOffsets to and from a JavaScript date constructor.
+- New feature - XmlNodeConverter handles serializing and deserializing JavaScript constructors.
+- New feature - Ability to force XmlNodeConverter to write a value in an array. Logic is controlled by an attribute in the XML, json:Array="true".
+- New feature - JsonSerializer supports serializing to and from LINQ to JSON objects.
+- New feature - Added Depth property to JsonReader.
+- New feature - Added JsonTextReader/JsonNodeReader and JsonTextWriter/JsonNodeWriter.
+- Change - More concise LINQ to JSON querying API.
+- Change - JsonReader and JsonWriter are now abstract.
+- Change - Dates are now serialized in a JSON complient manner, similar to ASP.NET's JavaScriptSerializer or WCF's DataContractJsonSerializer.
+- Change - JsonSerializer will serialize null rather than throwing an exception.
+- Change - The WriteTo method on LINQ to JSON objects now support JsonConverters.
+- Fix - JsonTextReader correctly parses NaN, PositiveInfinity and NegativeInfinity constants.
+- Fix - JsonSerializer properly serializes IEnumerable objects.
+- Removed - AspNetAjaxDateTimeConverter. Format is no longer used by ASP.NET AJAX.
+- Removed - JavaScriptObject, JavaScriptArray, JavaScriptConstructor. Replaced by LINQ to JSON objects.
+
+[**Json.NET CodePlex Project**](http://www.codeplex.com/json)
+
+[**Json.NET 2.0 Beta 2 Download**](http://www.codeplex.com/Release/ProjectReleases.aspx?ProjectName=Json&amp;ReleaseId=11231) - Json.NET source code and binaries
+
+![My Homer is not a communist. He may be a liar, a pig, an idiot, a communist, but he is not a porn star.](http://james.newtonking.com/Media/Default/images/blog/reflectJson.NET2.0BETA.png "My Homer is not a communist. He may be a liar, a pig, an idiot, a communist, but he is not a porn star.")
