@@ -1,0 +1,138 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Page not found - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>404 - Page not found</h1>
+			<p id="redirect-message" style="display: none;">Redirecting...</p>
+			<p id="not-found-message">
+				The page you're looking for doesn't exist.
+				<a href="/">Go back home</a>.
+			</p>
+		</main>
+		<Footer />
+
+		<!-- GitHub Pages doesn't support server side redirects so we use client side redirects. Not great for SEO but it's the best we can do -->
+        <!-- This 404 page handles redirects for old URLs -->
+        <script is:inline>
+			(function() {
+				const path = window.location.pathname;
+				const search = window.location.search;
+				
+				// Static redirects map
+				const staticRedirects = {
+					'/json/help/html': 'http://www.newtonsoft.com/json/help/html/Introduction.htm',
+					'/json/help/index.aspx': 'http://www.newtonsoft.com/json/help/html/Introduction.htm',
+					'/json/help': 'http://www.newtonsoft.com/json/help/html/Introduction.htm',
+					'/json/help/': 'http://www.newtonsoft.com/json/help/html/Introduction.htm',
+					'/jsonschema/help/html': 'http://www.newtonsoft.com/jsonschema/help/html/Introduction.htm',
+					'/jsonschema/help': 'http://www.newtonsoft.com/jsonschema/help/html/Introduction.htm',
+					
+					'/json/help/ContractResolver.html': 'http://www.newtonsoft.com/json/help/html/ContractResolver.htm',
+					'/json/help/ConvertingJSONandXML.html': 'http://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm',
+					'/json/help/CustomCreationConverter.html': 'http://www.newtonsoft.com/json/help/html/CustomCreationConverter.htm',
+					'/json/help/DatesInJSON.html': 'http://www.newtonsoft.com/json/help/html/DatesInJSON.htm',
+					'/json/help/Introduction.html': 'http://www.newtonsoft.com/json/help/html/Introduction.htm',
+					'/json/help/LINQtoJSON.html': 'http://www.newtonsoft.com/json/help/html/LINQtoJSON.htm',
+					'/json/help/PreserveObjectReferences.html': 'http://www.newtonsoft.com/json/help/html/PreserveObjectReferences.htm',
+					'/json/help/ReadingWritingJSON.html': 'http://www.newtonsoft.com/json/help/html/ReadingWritingJSON.htm',
+					'/json/help/ReducingSerializedJSONSize.html': 'http://www.newtonsoft.com/json/help/html/ReducingSerializedJSONSize.htm',
+					'/json/help/SelectToken.html': 'http://www.newtonsoft.com/json/help/html/SelectToken.htm',
+					'/json/help/SerializationAttributes.html': 'http://www.newtonsoft.com/json/help/html/SerializationAttributes.htm',
+					'/json/help/SerializationCallbacks.html': 'http://www.newtonsoft.com/json/help/html/SerializationCallbacks.htm',
+					'/json/help/SerializationErrorHandling.html': 'http://www.newtonsoft.com/json/help/html/SerializationErrorHandling.htm',
+					'/json/help/SerializationGuide.html': 'http://www.newtonsoft.com/json/help/html/SerializationGuide.htm',
+					'/json/help/SerializationSettings.html': 'http://www.newtonsoft.com/json/help/html/SerializationSettings.htm',
+					'/json/help/SerializingCollections.html': 'http://www.newtonsoft.com/json/help/html/SerializingCollections.htm',
+					'/json/help/SerializingJSON.html': 'http://www.newtonsoft.com/json/help/html/SerializingJSON.htm',
+					'/json/help/SerializingJSONFragments.html': 'http://www.newtonsoft.com/json/help/html/SerializingJSONFragments.htm',
+					
+					'/pages/json-net.aspx': 'http://www.newtonsoft.com/json',
+					'/projects/json-net.aspx': 'http://www.newtonsoft.com/json',
+					'/projects/json/help': 'http://www.newtonsoft.com/json/help/Introduction.html',
+					'/projects/json/help/': 'http://www.newtonsoft.com/json/help/html/Introduction.htm',
+					'/projects/json/schema.aspx': 'http://www.newtonsoft.com/jsonschema',
+					
+					'/bio/': '/bio',
+					'/archive.aspx': '/',
+					'/default.aspx': '/',
+					'/about.aspx': '/bio',
+				};
+
+				// Check static redirects first
+				if (staticRedirects[path]) {
+					redirect(staticRedirects[path]);
+					return;
+				}
+
+				// Pattern-based redirects
+				let match;
+
+				// json/help/index.html?topic=html/AllMembers_*
+				if (/^\/json\/help\/(index\.html)?$/.test(path)) {
+					const params = new URLSearchParams(search);
+					const topic = params.get('topic');
+					if (topic) {
+						match = topic.match(/^html\/AllMembers_(.*)/);
+						if (match) {
+							redirect('http://www.newtonsoft.com/json/help/html/' + match[1]);
+							return;
+						}
+						// json/help/index.html?topic=*
+						redirect('http://www.newtonsoft.com/json/help/' + topic);
+						return;
+					}
+				}
+
+				// projects/json/help/* -> newtonsoft.com/json/help/*
+				match = path.match(/^\/projects\/json\/help\/(.+)/);
+				if (match) {
+					redirect('http://www.newtonsoft.com/json/help/' + match[1]);
+					return;
+				}
+
+				// Remove .aspx from blog posts: /archive/YYYY/MM/DD/*.aspx -> /archive/YYYY/MM/DD/*
+				match = path.match(/^\/archive\/(\d+)\/(\d+)\/(\d+)\/(.*)\.aspx$/);
+				if (match) {
+					redirect('/archive/' + match[1] + '/' + match[2] + '/' + match[3] + '/' + match[4]);
+					return;
+				}
+
+				// Remove .aspx from blog archive: /archive/YYYY/MM.aspx -> /archive/YYYY/MM
+				match = path.match(/^\/archive\/(\d+)\/(\d+)\.aspx$/);
+				if (match) {
+					redirect('/archive/' + match[1] + '/' + match[2]);
+					return;
+				}
+
+				// json/* catch-all (must be after more specific json rules)
+				match = path.match(/^\/json(.*)/);
+				if (match) {
+					redirect('http://www.newtonsoft.com/json' + match[1]);
+					return;
+				}
+
+				// No redirect found - show 404 message
+				document.getElementById('not-found-message').style.display = 'block';
+
+				function redirect(url) {
+					const msg = document.getElementById('redirect-message');
+					msg.innerHTML = 'Redirecting to <a href="' + url + '">' + url + '</a>...';
+					msg.style.display = 'block';
+					document.getElementById('not-found-message').style.display = 'none';
+					window.location.replace(url);
+				}
+			})();
+		</script>
+	</body>
+</html>
