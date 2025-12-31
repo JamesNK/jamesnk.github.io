@@ -8,9 +8,15 @@ export async function GET(context) {
 		title: SITE_TITLE,
 		description: SITE_DESCRIPTION,
 		site: context.site,
-		items: posts.map((post) => ({
-			...post.data,
-			link: `/archive/${post.id}/`,
-		})),
+		items: posts.map((post) => {
+			const date = post.data.pubDate;
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			return {
+				...post.data,
+				link: `/archive/${year}/${month}/${day}/${post.id}/`,
+			};
+		}),
 	});
 }

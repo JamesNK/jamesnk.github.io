@@ -92,9 +92,14 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
+						posts.map((post) => {
+							const date = post.data.pubDate;
+							const year = date.getFullYear();
+							const month = String(date.getMonth() + 1).padStart(2, '0');
+							const day = String(date.getDate()).padStart(2, '0');
+							return (
 							<li>
-								<a href={`/archive/${post.id}/`}>
+								<a href={`/archive/${year}/${month}/${day}/${post.id}/`}>
 									{post.data.heroImage && (
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}
@@ -104,8 +109,7 @@ const posts = (await getCollection('blog')).sort(
 									</p>
 								</a>
 							</li>
-						))
-					}
+						)})}
 				</ul>
 			</section>
 		</main>
