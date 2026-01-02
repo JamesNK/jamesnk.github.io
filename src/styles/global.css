@@ -5,7 +5,7 @@
  */
 
 :root {
-	--accent: #2337ff;
+	--accent: #0066CC;
 	--accent-dark: #000d8a;
 	--black: 15, 18, 25;
 	--gray: 96, 115, 159;
@@ -127,6 +127,12 @@ blockquote {
 hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-light));
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
 }
 @media (max-width: 720px) {
 	body {

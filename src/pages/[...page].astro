@@ -37,13 +37,6 @@ const postsWithContent = await Promise.all(
 			max-width: calc(100% - 2em);
 			margin: 0 auto;
 		}
-		.pagination a {
-			color: rgb(var(--accent));
-			text-decoration: none;
-		}
-		.pagination a:hover {
-			text-decoration: underline;
-		}
 	</style>
 	{
 		postsWithContent.map(({ post, Content, url }) => (

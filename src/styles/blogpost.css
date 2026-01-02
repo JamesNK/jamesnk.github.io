@@ -26,7 +26,6 @@ article .title h1 {
 }
 article .title h1 a {
 	color: inherit;
-	text-decoration: none;
 }
 article .title h1 a:hover {
 	color: rgb(var(--accent));
