@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 
@@ -10,13 +9,10 @@ interface Props {
 }
 
 const { post, url, showDate = true } = Astro.props;
-const { title, pubDate, updatedDate, heroImage } = post;
+const { title, pubDate, updatedDate } = post;
 ---
 
 <article>
-	<div class="hero-image">
-		{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-	</div>
 	<div class="prose">
 		<div class="title">
 			{showDate && (
