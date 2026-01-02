@@ -1,12 +1,14 @@
 ---
 title: "Rename JavaScriptConvert?"
-description: "Rename JavaScriptConvert?"
+description: "Consider the proposal to rename Json.NET's JavaScriptConvert class to JsonConvert for better API consistency and discoverability through intellisense."
 pubDate: "Nov 30 2008"
 source: "https://james.newtonking.com/archive/2008/11/30/rename-javascriptconvert"
 ---
-![Max Power, he&#39;s the man who&#39;s name you&#39;d love to touch! But you mustn&#39;t touch!](http://james.newtonking.com/images/RenameJavaScriptConvert_118BC/jsonnetfindreplace2.png "Max Power, he&#39;s the man who&#39;s name you&#39;d love to touch! But you mustn&#39;t touch!")I am considering renaming the JavaScriptConvert class to JsonConvert.
+![Max Power, he&#39;s the man who&#39;s name you&#39;d love to touch! But you mustn&#39;t touch!](../../assets/blog/rename-javascriptconvert/jsonnetfindreplace2.png "Max Power, he&#39;s the man who&#39;s name you&#39;d love to touch! But you mustn&#39;t touch!")
+
+I am considering renaming the JavaScriptConvert class to JsonConvert.
   
-When [Json.NET](http://james.newtonking.com/projects/json-net.aspx) was first released it contained a number of data classes that were prefixed with JavaScript... JavaScriptObject, JavaScriptArray, JavaScriptConstructor. JavaScriptConvert was used to convert the data objects from text and back again. In 2.0 these classes were removed and replaced by the LINQ to JSON API: JObject, JArray, etc, but JavaScriptConvert remained.
+When [Json.NET](http://www.newtonsoft.com/json) was first released it contained a number of data classes that were prefixed with JavaScript... JavaScriptObject, JavaScriptArray, JavaScriptConstructor. JavaScriptConvert was used to convert the data objects from text and back again. In 2.0 these classes were removed and replaced by the LINQ to JSON API: JObject, JArray, etc, but JavaScriptConvert remained.
   
 The current state of the nation is that just about every Json.NET class is prefixed with Json (JsonReader, JsonWriter, JsonSerializer) except JavaScriptConvert, a situation which I think is somewhat confusing and gets in the way of learning and discovering the Json.NET API through intellisense.
   

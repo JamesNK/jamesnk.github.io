@@ -1,10 +1,10 @@
 ---
 title: "Speeding up ASP.NET with the Runtime Page Optimizer"
-description: "Speeding up ASP.NET with the Runtime Page Optimizer"
+description: "Dramatically improve ASP.NET website performance using the Runtime Page Optimizer HttpModule, which automatically combines resources, compresses content, and optimizes caching."
 pubDate: "Oct 19 2008"
 source: "https://james.newtonking.com/archive/2008/10/19/speeding-up-asp-net-with-the-runtime-page-optimizer"
 ---
-![I am sick of running away. Did 'brave heart' run away? Did 'payback' run away?](http://james.newtonking.com/images/SpeedupthewebwithRuntimePageOptimizer_AA6A/rpo_brand_smaller_white_bg.png "I am sick of running away. Did 'brave heart' run away? Did 'payback' run away?")
+![I am sick of running away. Did 'brave heart' run away? Did 'payback' run away?](../../assets/blog/speeding-up-asp-net-with-the-runtime-page-optimizer/rpo_brand_smaller_white_bg.png "I am sick of running away. Did 'brave heart' run away? Did 'payback' run away?")
 
 Earlier this year I worked on an exciting product called the [Runtime Page Optimizer](http://www.getrpo.com) (RPO). Originally written by the guys at [ActionThis](http://www.actionthis.com/) to solve their website’s performance issues, I had the opportunity to develop it with them and help turn the RPO into a product that works on any ASP.NET website.
   
@@ -14,7 +14,9 @@ At its heart the RPO is a [HttpModule](http://msdn.microsoft.com/en-us/library/s
   
 ## What RPO optimizes
   
-![A gun is not a weapon Marge, it's a tool. Like a butcher knife, or a harpoon, or... or an alligator.](http://james.newtonking.com/images/SpeedupthewebwithRuntimePageOptimizer_AA6A/beforegraph.gif "A gun is not a weapon Marge, it's a tool. Like a butcher knife, or a harpoon, or... or an alligator.")The RPO does three things to speed up a web page:
+![A gun is not a weapon Marge, it's a tool. Like a butcher knife, or a harpoon, or... or an alligator.](../../assets/blog/speeding-up-asp-net-with-the-runtime-page-optimizer/beforegraph.gif "A gun is not a weapon Marge, it's a tool. Like a butcher knife, or a harpoon, or... or an alligator.")
+
+The RPO does three things to speed up a web page:
   
 - **Reduces HTTP requests**  Reducing the number of resources on a page often produces the most dramatic improvement in performance. A modest sized web page can still take a significant amount of time to load if it contains many stylesheets, scripts and image files.       The reason for this is most of the time spent waiting for a web page to load is not for large files to download but from [HTTP requests bouncing between the browser and the server](http://yuiblog.com/blog/2006/11/28/performance-research-part-1/). The RPO fixes this by intelligently combining CSS and JavaScript text files together and merging images through [CSS spriting](http://websiteoptimization.com/speed/tweak/css-sprites/). Fewer resources means less time wasted from HTTP requests and faster page loads.
 
@@ -22,7 +24,9 @@ At its heart the RPO is a [HttpModule](http://msdn.microsoft.com/en-us/library/s
 
 - **Caching**       The RPO ensures all static content has the correct HTTP headers to be cached on a user’s browser. This further decreases "warm" page load times and saves even more bandwidth. When resources change on the server, the client-side cache is automatically refreshed.
 
-## ![If you really want something in life you have to work for it. Now quiet, they're about to announce the lottery numbers.](http://james.newtonking.com/images/SpeedupthewebwithRuntimePageOptimizer_AA6A/aftergraph.gif "If you really want something in life you have to work for it. Now quiet, they're about to announce the lottery numbers.")Other stuff
+![If you really want something in life you have to work for it. Now quiet, they're about to announce the lottery numbers.](../../assets/blog/speeding-up-asp-net-with-the-runtime-page-optimizer/aftergraph.gif "If you really want something in life you have to work for it. Now quiet, they're about to announce the lottery numbers.")
+
+## Other stuff
 
 - Every site is different so the RPO has [extensive configuration options](http://www.getrpo.com/Product/HowItWorks/) to customize it to best optimize your ASP.NET application. RPO has been used on ASP.NET AJAX, MVC, SharePoint, CRM, EpiServer and DotNetNuke websites.
 - Lots of thought has been put into performance. The RPO caches all combined content and supports load balancing. Once combined content has been cached the only thing that happens at runtime is lightweight parsing of HTML, which is darn quick. I know because I wrote it that way 😊

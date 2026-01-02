@@ -1,10 +1,10 @@
 ---
 title: "Json.NET 3.5 Beta 3 – JsonSerializer improvements"
-description: "Json.NET 3.5 Beta 3 – JsonSerializer improvements"
+description: "Customize JSON property names globally using IMappingResolver and CamelCaseMappingResolver in Json.NET 3.5 Beta 3 without modifying your object classes."
 pubDate: "Mar 21 2009"
 source: "https://james.newtonking.com/archive/2009/03/21/json-net-3-5-beta-3-jsonserializer-improvements"
 ---
-![Homer: &quot;Aw, twenty dollars! I wanted a peanut!&quot; Homer's Brain: &quot;Twenty dollars can buy many peanuts!&quot; Homer: &quot;Explain how!&quot; Homer's Brain: &quot;Money can be exchanged for goods and services!&quot; Homer: &quot;Woo-hoo!&quot;](http://james.newtonking.com/images/Json.NE.5Beta3JsonSerializerimprovements_D7BF/CamelFace.png "Homer: &quot;Aw, twenty dollars! I wanted a peanut!&quot; Homer's Brain: &quot;Twenty dollars can buy many peanuts!&quot; Homer: &quot;Explain how!&quot; Homer's Brain: &quot;Money can be exchanged for goods and services!&quot; Homer: &quot;Woo-hoo!&quot;")
+![Homer: &quot;Aw, twenty dollars! I wanted a peanut!&quot; Homer's Brain: &quot;Twenty dollars can buy many peanuts!&quot; Homer: &quot;Explain how!&quot; Homer's Brain: &quot;Money can be exchanged for goods and services!&quot; Homer: &quot;Woo-hoo!&quot;](../../assets/blog/json-net-3-5-beta-3-jsonserializer-improvements/CamelFace.png "Homer: &quot;Aw, twenty dollars! I wanted a peanut!&quot; Homer's Brain: &quot;Twenty dollars can buy many peanuts!&quot; Homer: &quot;Explain how!&quot; Homer's Brain: &quot;Money can be exchanged for goods and services!&quot; Homer: &quot;Woo-hoo!&quot;")
 
 > 
 > 
@@ -13,9 +13,9 @@ source: "https://james.newtonking.com/archive/2009/03/21/json-net-3-5-beta-3-jso
 
 ## JsonSerializer Improvements
 
-This release is a rollup of the various changes since beta 2. The majority of the changes are enhancements to the way [Json.NET](http://james.newtonking.com/projects/json-net.aspx) serializes and deserializes JSON.
+This release is a rollup of the various changes since beta 2. The majority of the changes are enhancements to the way [Json.NET](http://www.newtonsoft.com/json) serializes and deserializes JSON.
 
-The most notable enhancement is the addition of IMappingResolver, previously blogged about here: [**Thoughts on improving JsonSerializer: IMappingResolver?**](http://james.newtonking.com/archive/2009/02/28/thoughts-on-improving-jsonserializer-imappingresolver.aspx)
+The most notable enhancement is the addition of IMappingResolver, previously blogged about here: [**Thoughts on improving JsonSerializer: IMappingResolver?**](/archive/2009/02/28/thoughts-on-improving-jsonserializer-imappingresolver)
 
 The IMappingResolver interface provides a way to globally customize how the JsonSerializer works, without any modification to your objects. I should note that the the JsonProperty attribute is still fully supported and is a great way to customize a single property. IMappingResolver is an addition and any existing Json.NET code will continue to work flawlessly.
 

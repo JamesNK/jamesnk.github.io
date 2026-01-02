@@ -1,6 +1,6 @@
 ---
 title: "Json.NET 6.0 Release 6 - ASP.NET CoreCLR Support, Memory Usage Optimizations"
-description: "Json.NET 6.0 Release 6 - ASP.NET CoreCLR Support, Memory Usage Optimizations"
+description: "Run Json.NET on the new ASP.NET CoreCLR and benefit from 35% reduced memory allocations during deserialization for better garbage collection performance."
 pubDate: "Oct 24 2014"
 source: "https://james.newtonking.com/archive/2014/10/24/json-net-6-0-release-6-asp-net-coreclr-support-memory-usage-optimizations"
 ---
@@ -23,17 +23,17 @@ Json.NET has always been memory efficient, streaming the reading and writing lar
  
 The before memory timeline when deserializing a 5 megabyte JSON file:
  
-![I have asked you nicely not to mangle my merchandise. You leave me no choice but to ask you nicely again.](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-6.0-.NET-CoreCLR-support-memory_142FF/image_5.png "I have asked you nicely not to mangle my merchandise. You leave me no choice but to ask you nicely again.")
+![I have asked you nicely not to mangle my merchandise. You leave me no choice but to ask you nicely again.](../../assets/blog/json-net-6-0-release-6-asp-net-coreclr-support-memory-usage-optimizations/image_5.png "I have asked you nicely not to mangle my merchandise. You leave me no choice but to ask you nicely again.")
 
 And the after timeline:
  
-![I've gotten word that a child is using his imagination... and I've come to put a stop to it](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-6.0-.NET-CoreCLR-support-memory_142FF/image_6.png "I've gotten word that a child is using his imagination... and I've come to put a stop to it")
+![I've gotten word that a child is using his imagination... and I've come to put a stop to it](../../assets/blog/json-net-6-0-release-6-asp-net-coreclr-support-memory-usage-optimizations/image_6.png "I've gotten word that a child is using his imagination... and I've come to put a stop to it")
 
 Grey is unmanaged memory, blue is the Gen0 heap, red is Gen1, green is Gen2 and the profiler used is [dotMemory](https://www.jetbrains.com/dotmemory/).
  
 For comparison, here is what JavaScriptSerializer looks like doing the same work:
  
-![All my life I've been an obese man trapped inside a fat man's body.](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-6.0-.NET-CoreCLR-support-memory_142FF/image_12.png "All my life I've been an obese man trapped inside a fat man's body.")
+![All my life I've been an obese man trapped inside a fat man's body.](../../assets/blog/json-net-6-0-release-6-asp-net-coreclr-support-memory-usage-optimizations/image_12.png "All my life I've been an obese man trapped inside a fat man's body.")
 
 JavaScriptSerializer only works with strings so the purple here is a 5 megabyte string being loaded into the [large object heap](http://msdn.microsoft.com/en-us/magazine/cc534993.aspx). After the latest optimizations Json.NET allocates 8 times less memory than JavaScriptSerializer.
  

@@ -1,10 +1,10 @@
 ---
 title: "Good (Date)Times with Json.NET"
-description: "Good (Date)Times with Json.NET"
+description: "Master JSON date serialization in Json.NET using built-in JsonConverters like IsoDateTimeConverter and JavaScriptDateTimeConverter to handle various date formats."
 pubDate: "Feb 21 2009"
 source: "https://james.newtonking.com/archive/2009/02/20/good-date-times-with-json-net"
 ---
-Latest version of this guide: [**Serializing Dates in JSON**](http://james.newtonking.com/projects/json/help/?topic=html/DatesInJSON.htm)
+Latest version of this guide: [**Serializing Dates in JSON**](http://www.newtonsoft.com/json/help/html/Introduction.htm?topic=html/Performance.htm)
 
 ## ---
 
@@ -12,7 +12,7 @@ I’ve said it before, I’ll say it again: Dates in JSON are hard.
 
 The problem comes from the [JSON spec](http://www.ietf.org/rfc/rfc4627.txt) itself, there is no literal syntax for dates in JSON. The spec has objects, arrays, strings, integers and floats, but it defines no standard for what a date looks like.
 
-The default format used by [Json.NET](http://james.newtonking.com/projects/json-net.aspx) for dates is the same one used by Microsoft: "\/Date(1198908717056)\/". You can read more about it [here](http://weblogs.asp.net/bleroy/archive/2008/01/18/dates-and-json.aspx).
+The default format used by [Json.NET](http://www.newtonsoft.com/json) for dates is the same one used by Microsoft: "\/Date(1198908717056)\/". You can read more about it [here](http://weblogs.asp.net/bleroy/archive/2008/01/18/dates-and-json.aspx).
 
 ## JsonConverters
 

@@ -1,30 +1,19 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Layout from '../layouts/Layout.astro';
+import { SITE_TITLE } from '../consts';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={`Page not found - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>404 - Page not found</h1>
-			<p id="redirect-message" style="display: none;">Redirecting...</p>
-			<p id="not-found-message">
-				The page you're looking for doesn't exist.
-				<a href="/">Go back home</a>.
-			</p>
-		</main>
-		<Footer />
+<Layout title={`Page not found - ${SITE_TITLE}`}>
+	<h1>404 - Page not found</h1>
+	<p id="redirect-message" style="display: none;">Redirecting...</p>
+	<p id="not-found-message">
+		The page you're looking for doesn't exist.
+		<a href="/">Go back home</a>.
+	</p>
 
-		<!-- GitHub Pages doesn't support server side redirects so we use client side redirects. Not great for SEO but it's the best we can do -->
-        <!-- This 404 page handles redirects for old URLs -->
-        <script is:inline>
+	<!-- GitHub Pages doesn't support server side redirects so we use client side redirects. Not great for SEO but it's the best we can do -->
+	<!-- This 404 page handles redirects for old URLs -->
+	<script is:inline slot="footer-scripts">
 			(function() {
 				const path = window.location.pathname;
 				const search = window.location.search;
@@ -134,5 +123,4 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 				}
 			})();
 		</script>
-	</body>
-</html>
+</Layout>

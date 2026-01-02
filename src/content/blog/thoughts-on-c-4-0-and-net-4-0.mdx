@@ -1,16 +1,18 @@
 ---
 title: "Thoughts on C# 4.0 and .NET 4.0"
-description: "Thoughts on C# 4.0 and .NET 4.0"
+description: "Explore the exciting new features coming in C# 4.0 and .NET 4.0 including dynamic lookup, covariance and contravariance, Code Contracts, and Parallel Extensions."
 pubDate: "Nov 09 2008"
 source: "https://james.newtonking.com/archive/2008/11/09/thoughts-on-c-4-0-and-net-4-0"
 ---
-## ![I have purchased the Springfield YMCA. I plan to tear it down and turn the land into a nature preserve. There, I will hunt the deadliest game of all... man!](http://james.newtonking.com/images/ThoughtsonC4.0and.NET4.0_C063/PDC_logo.png "I have purchased the Springfield YMCA. I plan to tear it down and turn the land into a nature preserve. There, I will hunt the deadliest game of all... man!")C# 4.0 Dynamic Lookup
+![I have purchased the Springfield YMCA. I plan to tear it down and turn the land into a nature preserve. There, I will hunt the deadliest game of all... man!](../../assets/blog/thoughts-on-c-4-0-and-net-4-0/PDC_logo.png "I have purchased the Springfield YMCA. I plan to tear it down and turn the land into a nature preserve. There, I will hunt the deadliest game of all... man!")
+
+## C# 4.0 Dynamic Lookup
   
 I really like the way the C# team tackled bring [dynamic programming](http://blogs.msdn.com/samng/archive/2008/10/29/dynamic-in-c.aspx) to the language. C# is a static language but it is good to see that the C# team is pragmatic enough to realise that will always be situations where you don’t have type information at compile time.
   
 With C# 4.0 rather than having to bust out ugly System.Reflection operations to interact with unknown objects, the new dynamic lookup hides any ugliness away from the developer. Statically typing an object as dynamic is a great solution as it lets you treat a specific object, which you don’t have type knowledge of, as you want with regular property and method calls while still keeping static typing throughout the rest of your application. I think this is a much better solution than the [dynamic block](http://blogs.msdn.com/charlie/archive/2008/01/25/future-focus.aspx) discussed in the past.
   
-Dynamic lookup also opens up some new interesting paradigms by offering the [IDynamicObject](http://stackoverflow.com/questions/245975/how-do-you-implement-c4s-idynamicobject-interface) interface to developers. The first thing I thought of when I saw it was Dynamic [LINQ to JSON](http://james.newtonking.com/projects/json-net.aspx). I’m sure uses will come out of it that no one ever considered 😊
+Dynamic lookup also opens up some new interesting paradigms by offering the [IDynamicObject](http://stackoverflow.com/questions/245975/how-do-you-implement-c4s-idynamicobject-interface) interface to developers. The first thing I thought of when I saw it was Dynamic [LINQ to JSON](http://www.newtonsoft.com/json). I’m sure uses will come out of it that no one ever considered 😊
   
 ## C# 4.0 Covariance and Contravariance
   

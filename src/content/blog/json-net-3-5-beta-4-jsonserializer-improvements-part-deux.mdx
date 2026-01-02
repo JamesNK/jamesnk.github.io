@@ -1,25 +1,27 @@
 ---
 title: "Json.NET 3.5 Beta 4 – JsonSerializer Improvements Part Deux"
-description: "Json.NET 3.5 Beta 4 – JsonSerializer Improvements Part Deux"
+description: "Preserve object references during serialization with Json.NET 3.5 Beta 4 to handle circular references and maintain object identity across JSON round-trips."
 pubDate: "Jul 06 2009"
 source: "https://james.newtonking.com/archive/2009/07/06/json-net-3-5-beta-4-jsonserializer-improvements-part-deux"
 ---
-1. ![Alice in Wonderland? Must be a rip off of Alice in Underpants](http://james.newtonking.com/Media/Default/images/blog/image-1.png "Alice in Wonderland? Must be a rip off of Alice in Underpants") Best. Serializer. Ever.
+1. ![Alice in Wonderland? Must be a rip off of Alice in Underpants](../../assets/blog/json-net-3-5-beta-4-jsonserializer-improvements-part-deux/image-1.png "Alice in Wonderland? Must be a rip off of Alice in Underpants")
+
+   Best. Serializer. Ever.
 2. [???](http://en.wikipedia.org/wiki/Gnomes_%28South_Park%29)
 3. Profit!
 
 ## JsonSerializer Improvements Part Deux
 
-A huge amount has changed in the [Json.NET](http://james.newtonking.com/projects/json-net.aspx) serializer since beta 3. As well as a general refactor (the JsonSerializer.cs file was pushing 1000 lines last release), tons and tons of new features have been added.
+A huge amount has changed in the [Json.NET](http://www.newtonsoft.com/json) serializer since beta 3. As well as a general refactor (the JsonSerializer.cs file was pushing 1000 lines last release), tons and tons of new features have been added.
 
-New to the serializer is reference tracking, type tracking, serialization callback events, [MetadataTypeAttribute](http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations.metadatatypeattribute.aspx) support for when working with code generation, additional property level control over serialization settings, a BinaryConverter to convert byte arrays, a StringEnumConverter to convert enum values to their string name, a Populate method for populating JSON values onto an existing object, additional programmatic control over serialization via the IReferenceResolver interface (it replaces [IMappingResolver](http://james.newtonking.com/archive/2009/02/28/thoughts-on-improving-jsonserializer-imappingresolver.aspx)), and much more…
+New to the serializer is reference tracking, type tracking, serialization callback events, [MetadataTypeAttribute](http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations.metadatatypeattribute.aspx) support for when working with code generation, additional property level control over serialization settings, a BinaryConverter to convert byte arrays, a StringEnumConverter to convert enum values to their string name, a Populate method for populating JSON values onto an existing object, additional programmatic control over serialization via the IReferenceResolver interface (it replaces [IMappingResolver](/archive/2009/02/28/thoughts-on-improving-jsonserializer-imappingresolver)), and much more…
 
-There is too much to cover in one blog post so I’m going to split everything up over a couple of weeks. If you’re really eager for the inside scoop then check out the [Json.NET help](http://james.newtonking.com/projects/json/help/).
+There is too much to cover in one blog post so I’m going to split everything up over a couple of weeks. If you’re really eager for the inside scoop then check out the [Json.NET help](http://www.newtonsoft.com/json/help/html/Introduction.htm?topic=html/Performance.htm).
 
-- [Preserving Object References](http://james.newtonking.com/projects/json/help/PreserveObjectReferences.html)
-- [Serialization Callbacks](http://james.newtonking.com/projects/json/help/SerializationCallbacks.html)
-- [CustomCreationConverter](http://james.newtonking.com/projects/json/help/CustomCreationConverter.html)
-- [Contract Resolvers](http://james.newtonking.com/projects/json/help/ContractResolver.html)
+- [Preserving Object References](http://www.newtonsoft.com/json/help/PreserveObjectReferences.html)
+- [Serialization Callbacks](http://www.newtonsoft.com/json/help/SerializationCallbacks.html)
+- [CustomCreationConverter](http://www.newtonsoft.com/json/help/CustomCreationConverter.html)
+- [Contract Resolvers](http://www.newtonsoft.com/json/help/ContractResolver.html)
 
 I’m going to be adding more as I go. The first topic to be covered is my favourite new feature, one that very few serializers support and no JSON serializers anywhere as far as I know: Object reference tracking
 
@@ -114,7 +116,7 @@ public class EmployeeReference
 
 ## IReferenceResolver
 
-To customize how references are generated and resolved the [IReferenceResolver](http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_Serialization_IReferenceResolver.htm) interface is available to inherit from and use with the JsonSerializer.
+To customize how references are generated and resolved the [IReferenceResolver](http://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_Serialization_IReferenceResolver.htm) interface is available to inherit from and use with the JsonSerializer.
 
 ## Changes
 

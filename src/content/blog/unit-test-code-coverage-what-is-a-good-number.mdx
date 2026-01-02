@@ -1,6 +1,6 @@
 ---
 title: "Unit Test Code Coverage - What Is A Good Number?"
-description: "Unit Test Code Coverage - What Is A Good Number?"
+description: "Understand why chasing 100% code coverage is counterproductive and learn to focus instead on testing use cases, boundary values, and cross-checking results within the time available."
 pubDate: "Jun 14 2008"
 source: "https://james.newtonking.com/archive/2008/06/14/unit-test-code-coverage-what-is-a-good-number"
 ---
@@ -12,9 +12,9 @@ I also disagree.
 
 I'm a strong believer in unit testing. I have used unit testing in almost every project I have been involved in for a couple of years now and each time I find I get more and more value from using them.
 
-My experience with code coverage tools is more limited. I first started looking at [NCover](http://www.ncover.com/) and code coverage after coming across an NCover article written its creator. The article used [Json.NET](http://james.newtonking.com/projects/json-net.aspx), my own open source project, as the example! (if that doesn't prompt you to look at something nothing will 😃)
+My experience with code coverage tools is more limited. I first started looking at [NCover](http://www.ncover.com/) and code coverage after coming across an NCover article written its creator. The article used [Json.NET](http://www.newtonsoft.com/json), my own open source project, as the example! (if that doesn't prompt you to look at something nothing will 😃)
 
- [![I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.](http://james.newtonking.com/Media/Default/images/blog/jsoncodeproject.png "I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.")](http://www.codeproject.com/KB/showcase/NCover_Basics.aspx)
+ [![I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.](../../assets/blog/unit-test-code-coverage-what-is-a-good-number/jsoncodeproject.png "I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.")](http://www.codeproject.com/KB/showcase/NCover_Basics.aspx)
 
 Near the end of the development cycle of Json.NET 2.0 NCover was of huge help identifying which methods and sections of code didn't have any tests running over them. Without NCover many of the bugs I found from eventually unit testing that code would still be in Json.NET.
 
@@ -34,4 +34,4 @@ So what is a good number? If you have written tests the cover the possible uses 
 
 Json.NET's was 85%
 
-![The results are in: for Sideshow Bob, one hundred percent; and for Joe Quimby, one percent. And we remind you there is a one percent margin of error.](http://james.newtonking.com/Media/Default/images/blog/jsoncoverage.png "The results are in: for Sideshow Bob, one hundred percent; and for Joe Quimby, one percent. And we remind you there is a one percent margin of error.")
+![The results are in: for Sideshow Bob, one hundred percent; and for Joe Quimby, one percent. And we remind you there is a one percent margin of error.](../../assets/blog/unit-test-code-coverage-what-is-a-good-number/jsoncoverage.png "The results are in: for Sideshow Bob, one hundred percent; and for Joe Quimby, one percent. And we remind you there is a one percent margin of error.")

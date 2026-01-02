@@ -1,10 +1,12 @@
 ---
 title: "Google Analytics Downtime Solutions"
-description: "Google Analytics Downtime Solutions"
+description: "Protect your website from Google Analytics outages by placing scripts at the page bottom and implementing defensive JavaScript techniques to prevent page loading failures."
 pubDate: "Mar 09 2006"
 source: "https://james.newtonking.com/archive/2006/03/10/Google-Analytics-Downtime-Solutions"
 ---
-![](http://james.newtonking.com/Media/Default/images/blog/analytics.jpg)[Google Analytics](http://www.google.com/analytics/) was down for a few hours today. While it is not unusual for an ASP service to have downtime, Google Analytics works by you including a link to their Javascript file on your website and while the website was down today that file was also unavailable. Anyone who linked to the file in the page header will have found that their websites were not loading. This is because no page content is displayed until all header files have been downloaded. This is a big deal if your business is based around the internet. [Some website owners](http://software.gurock.com/postings/google-analytics-is-down/) have decided to remove the service entirely because of todays incident.
+![](../../assets/blog/google-analytics-downtime-solutions/analytics.jpg)
+
+[Google Analytics](http://www.google.com/analytics/) was down for a few hours today. While it is not unusual for an ASP service to have downtime, Google Analytics works by you including a link to their Javascript file on your website and while the website was down today that file was also unavailable. Anyone who linked to the file in the page header will have found that their websites were not loading. This is because no page content is displayed until all header files have been downloaded. This is a big deal if your business is based around the internet. [Some website owners](http://software.gurock.com/postings/google-analytics-is-down/) have decided to remove the service entirely because of todays incident.
 
 The simple fix to this is to include the script tag with the link to http://www.google-analytics.com/urchin.js at the bottom of webpage, which Google now recommends doing. If the Google Analytics website goes down, and the file is unavailable, the page will continue to display normally.
 

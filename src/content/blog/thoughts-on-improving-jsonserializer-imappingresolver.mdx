@@ -1,10 +1,10 @@
 ---
 title: "Thoughts on improving JsonSerializer. IMappingResolver?"
-description: "Thoughts on improving JsonSerializer. IMappingResolver?"
+description: "Review a proposed IMappingResolver interface design for Json.NET that gives developers flexible control over how .NET class members map to JSON properties including naming conventions and member visibility."
 pubDate: "Mar 01 2009"
 source: "https://james.newtonking.com/archive/2009/02/28/thoughts-on-improving-jsonserializer-imappingresolver"
 ---
-![Carl: &quot;According to the map, the cabin should be right here.&quot; Lenny: &quot;Hey, maybe there is no cabin. Maybe it&#39;s one of them metaphorical things.&quot; Carl: &quot;Oh yeah, yeah... Like maybe the cabin is the place inside each of us, created by our goodwill and teamwork.&quot; Lenny: &quot;Oh! ... Nah, they said there would be sandwiches.&quot;](http://james.newtonking.com/images/ThoughtsonimprovingJson.IMappingResolver_1157B/mapping.png "Carl: &quot;According to the map, the cabin should be right here.&quot; Lenny: &quot;Hey, maybe there is no cabin. Maybe it&#39;s one of them metaphorical things.&quot; Carl: &quot;Oh yeah, yeah... Like maybe the cabin is the place inside each of us, created by our goodwill and teamwork.&quot; Lenny: &quot;Oh! ... Nah, they said there would be sandwiches.&quot;")
+![Carl: &quot;According to the map, the cabin should be right here.&quot; Lenny: &quot;Hey, maybe there is no cabin. Maybe it&#39;s one of them metaphorical things.&quot; Carl: &quot;Oh yeah, yeah... Like maybe the cabin is the place inside each of us, created by our goodwill and teamwork.&quot; Lenny: &quot;Oh! ... Nah, they said there would be sandwiches.&quot;](../../assets/blog/thoughts-on-improving-jsonserializer-imappingresolver/mapping.png "Carl: &quot;According to the map, the cabin should be right here.&quot; Lenny: &quot;Hey, maybe there is no cabin. Maybe it&#39;s one of them metaphorical things.&quot; Carl: &quot;Oh yeah, yeah... Like maybe the cabin is the place inside each of us, created by our goodwill and teamwork.&quot; Lenny: &quot;Oh! ... Nah, they said there would be sandwiches.&quot;")
 
 JsonSerializer is pretty darn flexible. It has a half dozen options on the class to customize how an object is serialized, attributes for more fine grained control and finally JsonConverters if you need to do something completely different. 
   

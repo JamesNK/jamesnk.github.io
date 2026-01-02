@@ -1,6 +1,6 @@
 ---
 title: "Json.NET 3.5 Release 6 – Binary JSON (BSON) support"
-description: "Json.NET 3.5 Release 6 – Binary JSON (BSON) support"
+description: "Serialize to compact BSON format for faster performance and smaller payloads, query JSON with SelectToken paths, and serialize DataSets automatically in Json.NET 3.5 Release 6."
 pubDate: "Dec 27 2009"
 source: "https://james.newtonking.com/archive/2009/12/26/json-net-3-5-release-6-binary-json-bson-support"
 ---
@@ -101,7 +101,7 @@ DataSet deserializedDs = JsonConvert.DeserializeObject<DataSet>(json, new IsoDat
 
 ## LINQ to JSON SelectToken
 
-[SelectToken](http://james.newtonking.com/projects/json/help/html/M_Newtonsoft_Json_Linq_JToken_SelectToken.htm) provides a method to query LINQ to JSON using a single string path to a desired JToken. SelectToken is handy for dynamic queries easy because the entire query is defined in a string.
+[SelectToken](http://www.newtonsoft.com/json/help/html/M_Newtonsoft_Json_Linq_JToken_SelectToken.htm) provides a method to query LINQ to JSON using a single string path to a desired JToken. SelectToken is handy for dynamic queries easy because the entire query is defined in a string.
 
 ```csharp
 string name = (string)o.SelectToken("Manufacturers[0].Name");
@@ -192,6 +192,6 @@ Here is a complete list of what has changed since Json.NET 3.5 Release 5.
 
 ## Links
 
-## [Json.NET CodePlex Project](http://json.codeplex.com/)
+**[Json.NET CodePlex Project](http://json.codeplex.com/)**
 
 **[Json.NET 3.5 Release 6 Download](http://json.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=37810)** - Json.NET source code, documentation and binaries

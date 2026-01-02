@@ -1,10 +1,10 @@
 ---
 title: "LINQ to XML over large documents"
-description: "LINQ to XML over large documents"
+description: "Learn how to efficiently process large XML documents in LINQ to XML by combining XmlReader streaming with XElement.ReadFrom to avoid memory issues while maintaining ease of use."
 pubDate: "Dec 11 2007"
 source: "https://james.newtonking.com/archive/2007/12/11/linq-to-xml-over-large-documents"
 ---
-[![Me fail English? That&rsquo;s unpossible!](http://james.newtonking.com/BlogFiles/LINQtoXMLoverlargedocuments_DEDC/LINQArchitecture_thumb.png "Me fail English? That&rsquo;s unpossible!")](http://james.newtonking.com/BlogFiles/LINQtoXMLoverlargedocuments_DEDC/LINQArchitecture.png)I have been parsing [WordprocessingML OOXML](http://en.wikipedia.org/wiki/Office_Open_XML) over the past week using LINQ to XML and it has been a great learning experience. LINQ to XML is a clean break from the somewhat antiquated DOM that we all know and tolerate, and the new API provides many improvements over the DOM based XmlDocument.
+[![Me fail English? That&rsquo;s unpossible!](../../assets/blog/linq-to-xml-over-large-documents/LINQArchitecture_thumb.png "Me fail English? That&rsquo;s unpossible!")](../../assets/blog/linq-to-xml-over-large-documents/LINQArchitecture.png)I have been parsing [WordprocessingML OOXML](http://en.wikipedia.org/wiki/Office_Open_XML) over the past week using LINQ to XML and it has been a great learning experience. LINQ to XML is a clean break from the somewhat antiquated DOM that we all know and tolerate, and the new API provides many improvements over the DOM based XmlDocument.
  
 Probably the most talked about change is the functional approach that [LINQ to XML](http://www.hookedonlinq.com/LINQtoXML5MinuteOverview.ashx) encourages. Building a document and querying data can often be accomplished in a single statement compared to the sprawling imperative code that XmlDocument would require.
  

@@ -1,0 +1,62 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Layout from '../../../layouts/Layout.astro';
+import { SITE_TITLE } from '../../../consts';
+
+export const getStaticPaths = (async () => {
+	const posts = await getCollection('blog');
+	
+	// Group posts by year
+	const postsByYear = posts.reduce((acc, post) => {
+		const year = post.data.pubDate.getFullYear();
+		if (!acc[year]) acc[year] = [];
+		acc[year].push(post);
+		return acc;
+	}, {} as Record<number, typeof posts>);
+	
+	return Object.entries(postsByYear).map(([year, yearPosts]) => ({
+		params: { year },
+		props: { 
+			year: parseInt(year),
+			posts: yearPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+		},
+	}));
+}) satisfies GetStaticPaths;
+
+const { year, posts } = Astro.props;
+
+function getPostUrl(post: typeof posts[0]) {
+	const date = post.data.pubDate;
+	const y = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	return `/archive/${y}/${month}/${day}/${post.id}/`;
+}
+---
+
+<Layout title={`${year} Archive - ${SITE_TITLE}`}>
+	<div class="archive archive-year">
+		<div class="back-link">
+			<a href="/archive/">&lt; All years</a>
+		</div>
+		<h1>{year}</h1>
+		<ul>
+			{posts.map((post) => (
+				<li>
+					<div class="post-title">
+						<a href={getPostUrl(post)}>{post.data.title}</a>
+					</div>
+					<div class="post-date">
+						<FormattedDate date={post.data.pubDate} />
+					</div>
+					{post.data.description && (
+						<div class="post-description">{post.data.description}</div>
+					)}
+				</li>
+			))}
+		</ul>
+	</div>
+</Layout>
+</html>

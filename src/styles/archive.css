@@ -1,0 +1,60 @@
+/* Archive page styles */
+.archive ul {
+	list-style: none;
+	padding: 0;
+}
+.archive li {
+	margin-bottom: 1em;
+	padding-bottom: 1em;
+	border-bottom: 1px solid rgb(var(--gray-light));
+}
+.archive li:last-child {
+	border-bottom: none;
+	padding-bottom: 0;
+}
+.archive a {
+	text-decoration: none;
+}
+.archive a:hover {
+	text-decoration: underline;
+}
+
+/* Archive index (year list) */
+.archive-index li a {
+	color: rgb(var(--accent));
+	font-size: 1.25em;
+    font-family: sans-serif;
+}
+.archive-index .count {
+	color: rgb(var(--gray));
+	font-size: 0.9em;
+}
+
+/* Archive year (post list) */
+.archive-year .back-link {
+	margin-bottom: 1em;
+}
+.archive-year .back-link a {
+	color: rgb(var(--accent));
+}
+.archive-year .post-title {
+	font-size: 1.25em;
+    font-family: sans-serif;
+}
+.archive-year .post-title a {
+	color: rgb(var(--black));
+}
+.archive-year .post-title a:hover {
+	color: rgb(var(--accent));
+}
+.archive-year .post-date {
+	color: rgb(var(--gray));
+	font-size: 0.9em;
+    font-family: sans-serif;
+}
+.archive-year .post-description {
+	color: rgb(var(--gray-dark));
+	font-size: 0.9em;
+	margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}

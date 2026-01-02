@@ -1,10 +1,10 @@
 ---
 title: "Writing JSON to a file using Json.NET"
-description: "Writing JSON to a file using Json.NET"
+description: "Learn two approaches to write JSON to files using Json.NET: a simple method using SerializeObject with File.WriteAllText, and a more efficient streaming approach using JsonSerializer directly for large JSON data."
 pubDate: "Feb 14 2009"
 source: "https://james.newtonking.com/archive/2009/02/14/writing-json-to-a-file-using-json-net"
 ---
-There are a couple of different ways you can write to a file using [Json.NET](http://james.newtonking.com/projects/json-net.aspx). The first is really simple:
+There are a couple of different ways you can write to a file using [Json.NET](http://www.newtonsoft.com/json). The first is really simple:
   
 ```csharp
 Person person = GetPerson();

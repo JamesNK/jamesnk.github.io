@@ -1,6 +1,6 @@
 ---
 title: "Json.NET 3.5 Release 7 – Biggest Release Ever Edition"
-description: "Json.NET 3.5 Release 7 – Biggest Release Ever Edition"
+description: "Boost BSON writing performance, conditionally serialize properties with ShouldSerialize methods, and benefit from ISerializable support in Json.NET 3.5 Release 7."
 pubDate: "Apr 17 2010"
 source: "https://james.newtonking.com/archive/2010/04/16/json-net-3-5-release-7-bson-binary-json-part-deux"
 ---
@@ -8,8 +8,8 @@ source: "https://james.newtonking.com/archive/2010/04/16/json-net-3-5-release-7-
   
 [BSON](http://bsonspec.org/) performance has improved markedly in R7. Deserializing is as fast as it was before (i.e. ridiculously fast) but writing BSON has gotten a big boost when writing large complex objects. Using an extreme example this benchmark compares the previous release with the new BSON serializer:
   
-![All right, all right, you win. Heh. I see you&#39;ve played knifey-spooney before.](http://james.newtonking.com/images/Json.NET.5Release7BSONBinaryJSONPartDeux_E9CA/jsonbsonperformance.png "All right, all right, you win. Heh. I see you&#39;ve played knifey-spooney before.")
-
+![All right, all right, you win. Heh. I see you&#39;ve played knifey-spooney before.](../../assets/blog/json-net-3-5-release-7-bson-binary-json-part-deux/jsonbsonperformance.png "All right, all right, you win. Heh. I see you&#39;ve played knifey-spooney before.") 
+  
 ## ShouldSerialize
   
 Did you know that the good old [XmlSerializer](http://msdn.microsoft.com/en-us/library/system.xml.serialization.xmlserializer.aspx) had support for conditionally deciding what to serialize through [ShouldSerialize](http://msdn.microsoft.com/en-us/library/53b8022e%28VS.71%29.aspx) methods? Me neither.
@@ -56,7 +56,7 @@ string json = JsonConvert.SerializeObject(new []{ joe, mike }, Formatting.Indent
 
 ## Build Scripts
 
-[![Oh, it&#39;s no use. I&#39;m never going to find that tree. This whole raid was as useless as that yellow, lemon-shaped rock over there. Wait a minute...there&#39;s a lemon behind that rock!](http://james.newtonking.com/images/Json.NET.5Release7BSONBinaryJSONPartDeux_E9CA/psake.png "Oh, it&#39;s no use. I&#39;m never going to find that tree. This whole raid was as useless as that yellow, lemon-shaped rock over there. Wait a minute...there&#39;s a lemon behind that rock!")](http://code.google.com/p/psake/)Now include with the Json.NET source code are the build scripts used to compile and package Json.NET. A couple of months ago I switched from a clunky old batch script I had been using to Powershell and [psake](http://code.google.com/p/psake/). Compared to past solutions I’ve written using NAnt I’m very happy with the results. XML be gone!
+[![Oh, it&#39;s no use. I&#39;m never going to find that tree. This whole raid was as useless as that yellow, lemon-shaped rock over there. Wait a minute...there&#39;s a lemon behind that rock!](../../assets/blog/json-net-3-5-release-7-bson-binary-json-part-deux/psake.png "Oh, it&#39;s no use. I&#39;m never going to find that tree. This whole raid was as useless as that yellow, lemon-shaped rock over there. Wait a minute...there&#39;s a lemon behind that rock!")](http://code.google.com/p/psake/)Now include with the Json.NET source code are the build scripts used to compile and package Json.NET. A couple of months ago I switched from a clunky old batch script I had been using to Powershell and [psake](http://code.google.com/p/psake/). Compared to past solutions I’ve written using NAnt I’m very happy with the results. XML be gone!
 
 ## And More
 

@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { SITE_TITLE } from '../../consts';
+
+const posts = await getCollection('blog');
+
+// Group posts by year and count
+const yearCounts = posts.reduce((acc, post) => {
+	const year = post.data.pubDate.getFullYear();
+	acc[year] = (acc[year] || 0) + 1;
+	return acc;
+}, {} as Record<number, number>);
+
+// Sort years descending
+const years = Object.entries(yearCounts)
+	.map(([year, count]) => ({ year: parseInt(year), count }))
+	.sort((a, b) => b.year - a.year);
+---
+
+<Layout title={`Archive - ${SITE_TITLE}`}>
+	<div class="archive archive-index">
+		<h1>Archive</h1>
+		<ul>
+			{years.map(({ year, count }) => (
+				<li>
+					<a href={`/archive/${year}/`}>{year}</a>
+					<span class="count">({count} {count === 1 ? 'post' : 'posts'})</span>
+				</li>
+			))}
+		</ul>
+	</div>
+</Layout>

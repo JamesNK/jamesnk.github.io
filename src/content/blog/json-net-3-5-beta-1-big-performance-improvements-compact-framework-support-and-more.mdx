@@ -1,6 +1,6 @@
 ---
 title: "Json.NET 3.5 Beta 1 – Big performance improvements, Compact Framework support and more"
-description: "Json.NET 3.5 Beta 1 – Big performance improvements, Compact Framework support and more"
+description: "Achieve 400% faster serialization performance with Json.NET 3.5 Beta 1, now supporting Compact Framework and offering new DefaultValueHandling options."
 pubDate: "Oct 27 2008"
 source: "https://james.newtonking.com/archive/2008/10/27/json-net-3-5-beta-1-big-performance-improvements-compact-framework-support-and-more"
 ---
@@ -12,14 +12,14 @@ Json.NET 3.5 includes a build for the [Compact Framework 3.5](http://msdn.micros
   
 ## Performance Improvements
   
-A lot of features have been added to [Json.NET](http://james.newtonking.com/projects/json-net.aspx) over the past couple of years and it has been a long time since I had done any performance tuning.
+A lot of features have been added to [Json.NET](http://www.newtonsoft.com/json) over the past couple of years and it has been a long time since I had done any performance tuning.
   
 I busted out a profiler and found some big gains in the JsonSerializer by doing some basic caching of type data. I managed to eek out a 400% increase in performance. Not bad for 20 minutes work.
   
 Below is a comparison of Json.NET 3.0, Json.NET 3.5 Beta 1, the WCF [DataContractJsonSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx) and the [JavaScriptSerializer](http://msdn.microsoft.com/en-us/library/system.web.script.serialization.javascriptserializer.aspx). The code for the results is in the PerformanceTests class and is over 5000 iterations.
   
-![Okay Marge, its your child against my child. The winner will be showered with praise. The loser will be taunted and booed until my throat is sore.](http://james.newtonking.com/images/Jso.5Beta1BigperformanceimprovementsComp_10449/jsonnetperformance_thumb.png "Okay Marge, its your child against my child. The winner will be showered with praise. The loser will be taunted and booed until my throat is sore.")
-
+![Okay Marge, its your child against my child. The winner will be showered with praise. The loser will be taunted and booed until my throat is sore.](../../assets/blog/json-net-3-5-beta-1-big-performance-improvements-compact-framework-support-and-more/jsonnetperformance_thumb.png "Okay Marge, its your child against my child. The winner will be showered with praise. The loser will be taunted and booed until my throat is sore.") 
+  
 ## JsonSerializerSettings
   
 There are a lot of settings on JsonSerializer but only a few of them are exposed through the JavaScriptConvert.SerializeObject/DeserializeObject helper methods. To make those options available through the easy to use helper methods I have added the JsonSerializerSettings class along with overloads using it to the helper methods.

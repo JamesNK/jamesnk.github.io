@@ -1,0 +1,64 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BlogPostContent from '../components/BlogPostContent.astro';
+import Layout from '../layouts/Layout.astro';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const posts = (await getCollection('blog')).sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	);
+	return paginate(posts, { pageSize: 4 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+
+const postsWithContent = await Promise.all(
+	page.data.map(async (post) => {
+		const { Content } = await render(post);
+		const date = post.data.pubDate;
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		const url = `/archive/${year}/${month}/${day}/${post.id}/`;
+		return { post, Content, url };
+	})
+);
+---
+
+<Layout>
+	<style slot="head">
+		.pagination {
+			display: flex;
+			justify-content: center;
+			gap: 2rem;
+			padding: 2rem;
+			width: 720px;
+			max-width: calc(100% - 2em);
+			margin: 0 auto;
+		}
+		.pagination a {
+			color: rgb(var(--accent));
+			text-decoration: none;
+		}
+		.pagination a:hover {
+			text-decoration: underline;
+		}
+	</style>
+	{
+		postsWithContent.map(({ post, Content, url }) => (
+			<BlogPostContent post={post.data} url={url}>
+				<Content />
+			</BlogPostContent>
+		))
+	}
+	<nav class="pagination">
+		{page.url.prev && (
+			<a href={page.url.prev}>&lt; Newer entries</a>
+		)}
+		{page.url.next && (
+			<a href={page.url.next}>Older entries &gt;</a>
+		)}
+	</nav>
+</Layout>
+</html>

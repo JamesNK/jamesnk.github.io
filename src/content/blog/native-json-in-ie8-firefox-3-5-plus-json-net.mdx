@@ -1,14 +1,14 @@
 ---
 title: "Native JSON in IE8, Firefox 3.5 plus Json.NET"
-description: "Native JSON in IE8, Firefox 3.5 plus Json.NET"
+description: "Learn how to use native JSON parsing in IE8 and Firefox 3.5 together with Json.NET's IsoDateTimeConverter to properly handle date serialization between server and browser."
 pubDate: "Apr 12 2009"
 source: "https://james.newtonking.com/archive/2009/04/12/native-json-in-ie8-firefox-3-5-plus-json-net"
 ---
-![Kent Brockman: &quot;Here's a float saluting the Native Americans, who taught us how to celebrate Thanksgiving.&quot; Leeza Gibbons: &quot;Interesting side note on this float, the papier-mache is composed entirely out of broken treaties.&quot; Kent: &quot;Ha ha ha ha, they're good sports!&quot;](http://james.newtonking.com/Media/Default/images/blog/ie8logo.png "Kent Brockman: &quot;Here's a float saluting the Native Americans, who taught us how to celebrate Thanksgiving.&quot; Leeza Gibbons: &quot;Interesting side note on this float, the papier-mache is composed entirely out of broken treaties.&quot; Kent: &quot;Ha ha ha ha, they're good sports!&quot;")
+![Kent Brockman: &quot;Here's a float saluting the Native Americans, who taught us how to celebrate Thanksgiving.&quot; Leeza Gibbons: &quot;Interesting side note on this float, the papier-mache is composed entirely out of broken treaties.&quot; Kent: &quot;Ha ha ha ha, they're good sports!&quot;](../../assets/blog/native-json-in-ie8-firefox-3-5-plus-json-net/ie8logo.png "Kent Brockman: &quot;Here's a float saluting the Native Americans, who taught us how to celebrate Thanksgiving.&quot; Leeza Gibbons: &quot;Interesting side note on this float, the papier-mache is composed entirely out of broken treaties.&quot; Kent: &quot;Ha ha ha ha, they're good sports!&quot;")
 
 [Native JSON](http://blogs.msdn.com/ie/archive/2008/09/10/native-json-in-ie8.aspx) is a new feature to IE8 and Firefox 3.5. Built in serialization and deserialization in the browser makes evaling JSON text a thing of the past.
 
-This post looks at how to use native JSON and how it can complement [Json.NET’s](http://james.newtonking.com/projects/json-net.aspx) server side JSON support by parsing and generating JSON on the browser.
+This post looks at how to use native JSON and how it can complement [Json.NET’s](http://www.newtonsoft.com/json) server side JSON support by parsing and generating JSON on the browser.
 
 ## Native JSON API
 
@@ -35,7 +35,7 @@ Because native JSON is based upon the popular [json2.js script](http://www.json.
 
 Native JSON and Json.NET work almost flawlessly together. The one wrinkle is the usual suspect when it comes to JSON: dates. Fortunately getting native JSON, Json.NET and dates to work together is a two step process.
 
-The first thing we want to do is make Json.NET write dates in the ISO format. [IsoDateTimeConverter](http://james.newtonking.com/archive/2009/02/20/good-date-times-with-json-net.aspx) to the rescue.
+The first thing we want to do is make Json.NET write dates in the ISO format. [IsoDateTimeConverter](/archive/2009/02/20/good-date-times-with-json-net) to the rescue.
 
 ```csharp
 Person p = new Person

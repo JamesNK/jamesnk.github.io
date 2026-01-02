@@ -1,6 +1,6 @@
 ---
 title: ".NET 2.0 support added to Json.NET"
-description: ".NET 2.0 support added to Json.NET"
+description: "Enable LINQ functionality in .NET 2.0 applications using LINQBridge and learn how Json.NET now supports running on the .NET 2.0 framework."
 pubDate: "Aug 02 2009"
 source: "https://james.newtonking.com/archive/2009/08/02/net-2-0-support-added-to-json-net"
 ---
@@ -8,7 +8,7 @@ source: "https://james.newtonking.com/archive/2009/08/02/net-2-0-support-added-t
 > “There are those who said this day would never come. What are they to say now?” - [Prophet of Truth](http://halo.wikia.com/wiki/Prophet_of_Truth), Halo 2
 >  
 
-As of the latest source code commit, [Json.NET 3.5](http://james.newtonking.com/projects/json-net.aspx) supports running on the .NET 2.0 framework. Yes you read that right all you dot-net-two-point-oh-ers, next release expect a hot, hot *Newtonsoft.Json.Net20.dll* coming your way.
+As of the latest source code commit, [Json.NET 3.5](http://www.newtonsoft.com/json) supports running on the .NET 2.0 framework. Yes you read that right all you dot-net-two-point-oh-ers, next release expect a hot, hot *Newtonsoft.Json.Net20.dll* coming your way.
   
 ## LINQ enabling a .NET 2.0 application
   
@@ -18,7 +18,7 @@ The main barrier to getting Json.NET running on .NET was LINQ - both usages inte
   
 The first thing you will need is VS2008 - it has the syntax support for extension methods and lambda expressions. VS2008 also has the ability to target a project against a specific version of the .NET framework. By setting the target framework to .NET 2.0 Visual Studio will remove all the assemblies from that project that have been added post 2.0 such as WCF, WPF, LINQ to SQL, LINQ to XML, etc.
   
-![You can&#39;t seriously want to ban alcohol! It tastes great, makes women appear more attractive and makes a person virtually invulnerable to criticism!](http://james.newtonking.com/images/NET2.0supportaddedtoJson.NET_37C/jsonnet20projectsettings.png "You can&#39;t seriously want to ban alcohol! It tastes great, makes women appear more attractive and makes a person virtually invulnerable to criticism!")
+![You can&#39;t seriously want to ban alcohol! It tastes great, makes women appear more attractive and makes a person virtually invulnerable to criticism!](../../assets/blog/net-2-0-support-added-to-json-net/jsonnet20projectsettings.png "You can&#39;t seriously want to ban alcohol! It tastes great, makes women appear more attractive and makes a person virtually invulnerable to criticism!")
 
 2. Reference LINQBridge
   
@@ -26,13 +26,13 @@ Although VS2008 projects targeting .NET 2.0 still support extension methods and 
   
 The solution is [LINQBridge](http://www.albahari.com/nutshell/linqbridge.aspx), an open source reimplementation of the LINQ classes and assembly methods. LINQBridge looks and acts exactly the same as LINQ in .NET 3.5, right down to the *System.Linq* namespace. Just add a reference to LINQBridge.dll to the project and you’re done. Enjoy LINQ in your .NET 2.0 application!
   
-![I&#39;m meek...but I could stand to be meeker.](http://james.newtonking.com/images/NET2.0supportaddedtoJson.NET_37C/jsonnet20linqbridgereference.png "I&#39;m meek...but I could stand to be meeker.")
+![I&#39;m meek...but I could stand to be meeker.](../../assets/blog/net-2-0-support-added-to-json-net/jsonnet20linqbridgereference.png "I&#39;m meek...but I could stand to be meeker.")
 
 3. Preprocessor #if tests - Optional
   
 This step is only necessary if you’re targeting multiple framework versions using multiple projects. The [preprocessor](http://msdn.microsoft.com/en-us/library/4y6tbswk.aspx) lets you enable and disable portions of code based on conditional compilation symbols defined in a project. The Newtonsoft.Json.Net20 project defines the NET20 symbol and is used to disable portions of code that deal with functionality not available in .NET 2.0.
   
-![Hi, I&#39;m Troy McClure. You may remember me from such nature films as &quot;Earwigs, ewwww&quot; and &quot;Man vs. Nature: The Road to Victory&quot;](http://james.newtonking.com/images/NET2.0supportaddedtoJson.NET_37C/jsonnet20preprocessor.png "Hi, I&#39;m Troy McClure. You may remember me from such nature films as &quot;Earwigs, ewwww&quot; and &quot;Man vs. Nature: The Road to Victory&quot;")
+![Hi, I&#39;m Troy McClure. You may remember me from such nature films as &quot;Earwigs, ewwww&quot; and &quot;Man vs. Nature: The Road to Victory&quot;](../../assets/blog/net-2-0-support-added-to-json-net/jsonnet20preprocessor.png "Hi, I&#39;m Troy McClure. You may remember me from such nature films as &quot;Earwigs, ewwww&quot; and &quot;Man vs. Nature: The Road to Victory&quot;")
 
 4. Merge LINQBridge.dll into your application - Optional
   

@@ -1,6 +1,6 @@
 ---
 title: "Json.NET 7.0 Release 1 - Documentation, bug fixes, performance"
-description: "Json.NET 7.0 Release 1 - Documentation, bug fixes, performance"
+description: "Explore the redesigned Json.NET documentation with 116 code samples, and benefit from 3200% faster F# discriminated union serialization performance."
 pubDate: "Jun 22 2015"
 source: "https://james.newtonking.com/archive/2015/06/22/json-net-7-0-release-1-documentation-bug-fixes-performance"
 ---
@@ -10,7 +10,7 @@ The biggest improvements in Json.NET 7.0 have been to [user documentation](http:
 
 Old and Busted (left) vs New Hotness (right):
 
-[![It takes two to lie: one to lie and one to listen](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_thumb_4.png "It takes two to lie: one to lie and one to listen")](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_11.png)   [![It's Patty who chose a life of celibacy. Selma had celibacy thrust upon her](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_thumb_5.png "It's Patty who chose a life of celibacy. Selma had celibacy thrust upon her")](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_13.png)
+[![It takes two to lie: one to lie and one to listen](../../assets/blog/json-net-7-0-release-1-documentation-bug-fixes-performance/image_thumb_4.png "It takes two to lie: one to lie and one to listen")](../../assets/blog/json-net-7-0-release-1-documentation-bug-fixes-performance/image_11.png)   [![It's Patty who chose a life of celibacy. Selma had celibacy thrust upon her](../../assets/blog/json-net-7-0-release-1-documentation-bug-fixes-performance/image_thumb_5.png "It's Patty who chose a life of celibacy. Selma had celibacy thrust upon her")](../../assets/blog/json-net-7-0-release-1-documentation-bug-fixes-performance/image_13.png)
 
 It has been a couple of years since the docs were properly updated. New features added since then like extension data, annotations and JSONPath now have documentation and code samples. The new code samples brings the [total up to 116](http://www.newtonsoft.com/json/help/html/Samples.htm)!
 
@@ -20,13 +20,13 @@ Finally the documentation has been professionally proofread. My most embarrassin
 
 Json.NET has a NuGet logo. Check it:
 
-![Kill my boss? Do I dare live out the American dream?](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_16.png "Kill my boss? Do I dare live out the American dream?")
+![Kill my boss? Do I dare live out the American dream?](../../assets/blog/json-net-7-0-release-1-documentation-bug-fixes-performance/image_16.png "Kill my boss? Do I dare live out the American dream?")
 
 ## DiscriminatedUnionConverter performance improvements
 
 Json.NET’s F# discriminated union support has been rewritten. Serializing very large collections of large discriminated unions was noticeably slow. The [new implementation](https://github.com/JamesNK/Newtonsoft.Json/commit/95e04ba96e1c1ce40bcaab5c93544f37f9abf2e2#diff-cb3fb9511e571c94735be121f80b6fe5) caches reflection and type data, and significantly improves performance.
 
-![What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.](http://james.newtonking.com/Media/Default/Windows-Live-Writer/Json.NET-7.0-Release-1_122B6/image_19.png "What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.")
+![What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.](../../assets/blog/json-net-7-0-release-1-documentation-bug-fixes-performance/image_19.png "What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.")
 
 That’s a 3200% improvement. If you’re using F# then you don’t need to do anything other than update Json.NET.
 
@@ -73,6 +73,6 @@ Here is a complete list of what has changed since Json.NET 6.0 Release 8.
 
 ## Links
 
-## [Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)
+**[Json.NET GitHub Project](https://github.com/JamesNK/Newtonsoft.Json)**
 
-## [Json.NET 7.0 Release 1 Download - Json.NET source code and assemblies](https://github.com/JamesNK/Newtonsoft.Json/releases/tag/7.0.1)
+**[Json.NET 7.0 Release 1 Download - Json.NET source code and assemblies](https://github.com/JamesNK/Newtonsoft.Json/releases/tag/7.0.1)**

@@ -1,14 +1,14 @@
 ---
 title: "A .NET Open Source Project Retrospective: Json.NET"
-description: "A .NET Open Source Project Retrospective: Json.NET"
+description: "Discover the lessons learned from building Json.NET over 2.5 years, including what went right with incremental releases and unit testing, and what went wrong with documentation."
 pubDate: "Feb 02 2009"
 source: "https://james.newtonking.com/archive/2009/02/02/a-net-open-source-project-retrospective-json-net"
 ---
-![This is the greatest case of false advertising I&rsquo;ve seen since I sued the movie &quot;The Never Ending Story.&quot;](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/jsonxmlbutton.png "This is the greatest case of false advertising I&rsquo;ve seen since I sued the movie &quot;The Never Ending Story.&quot;")
+![This is the greatest case of false advertising I&rsquo;ve seen since I sued the movie &quot;The Never Ending Story.&quot;](../../assets/blog/a-net-open-source-project-retrospective-json-net/jsonxmlbutton.png "This is the greatest case of false advertising I&rsquo;ve seen since I sued the movie &quot;The Never Ending Story.&quot;")
 
 I have always enjoyed the [video game post-mortem articles on Gamesutra](http://www.gamasutra.com/php-bin/article_display.php?category=5). Written by developers for developers, they reflect on how the project went, what they learnt and what they would do differently. Hearing peoples thoughts on what they have created is very interesting to me (I \**love\** DVD commentries) and have never seen the same done for an open source project.
 
-This post on [Json.NET](http://james.newtonking.com/projects/json-net.aspx), a retrospective rather than a post-mortem since Json.NET is still alive, follows the same format as Gamesutra: What went right and what went wrong and lessons I have learnt along the way.
+This post on [Json.NET](http://www.newtonsoft.com/json), a retrospective rather than a post-mortem since Json.NET is still alive, follows the same format as Gamesutra: What went right and what went wrong and lessons I have learnt along the way.
 
 ## Background
 
@@ -26,13 +26,15 @@ The .NET tools stack I use with Json.NET likewise provides an excellent experien
 
 2. Incremental releases
 
-I like the quote ‘incremental improvement is better than delayed perfection’. The [1.0 release of Json.NET](http://james.newtonking.com/archive/2006/06/26/Json.NET-_2D00_-Simplifying-.NET-_3C002D003E00_-JavaScript-communication.aspx) came from just a couple of weekends of effort and after a flurry of releases to fix the initial bugs, a new major version of Json.NET has been released approximately every 6 months.
+I like the quote ‘incremental improvement is better than delayed perfection’. The [1.0 release of Json.NET](/archive/2006/06/26/Json.NET-Simplifying-.NET-JavaScript-communication) came from just a couple of weekends of effort and after a flurry of releases to fix the initial bugs, a new major version of Json.NET has been released approximately every 6 months.
 
 While not every feature I wanted was in version 1.0, users soon gave feedback on what they wanted most and I went from there. I haven’t been overly precious about maintaining 100% compatibility between releases but the core behaviour of Json.NET: reading, writing and serializing between .NET and JSON has remained unchanged since day one. New features like LINQ to JSON have slotted in side by side with existing classes.
 
 3. User driven design
 
-![Last night&rsquo;s &quot;Itchy and Scratchy Show&quot; was, without a doubt, the worst episode *ever.* Rest assured, I was on the Internet within minutes, registering my disgust throughout the world.](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/oldcomputer.jpg "Last night&rsquo;s &quot;Itchy and Scratchy Show&quot; was, without a doubt, the worst episode *ever.* Rest assured, I was on the Internet within minutes, registering my disgust throughout the world.")Confession time: I have not used JSON in anger on a project in years. Almost every change, bug fix and new feature since Json.NET 1.0 has come from user feedback.
+![Last night&rsquo;s &quot;Itchy and Scratchy Show&quot; was, without a doubt, the worst episode *ever.* Rest assured, I was on the Internet within minutes, registering my disgust throughout the world.](../../assets/blog/a-net-open-source-project-retrospective-json-net/oldcomputer.jpg "Last night&rsquo;s &quot;Itchy and Scratchy Show&quot; was, without a doubt, the worst episode *ever.* Rest assured, I was on the Internet within minutes, registering my disgust throughout the world.")
+
+Confession time: I have not used JSON in anger on a project in years. Almost every change, bug fix and new feature since Json.NET 1.0 has come from user feedback.
 
 Although it sounds like a negative, I think it turned out to be a great way to develop. The end result is a focus on what users want most rather than relying on your own experiences.
 
@@ -46,13 +48,15 @@ Each time a bug is reported I have a grown into a pattern where I recreate the b
 
 5. CodePlex
 
-![How do you like that, it's also illegal to put squirrels down your pants for the purpose of gambling. ](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/codeplexlogo_thumb.jpg "How do you like that, it's also illegal to put squirrels down your pants for the purpose of gambling. ")CodePlex is an open source project hosting website from Microsoft. Overall I have found it a great place to host releases, source control and discussion forums for Json.NET. These days it also has good Subversion support and it provides all kinds of [interesting statistics](http://www.codeplex.com/Json/stats).
+![How do you like that, it's also illegal to put squirrels down your pants for the purpose of gambling. ](../../assets/blog/a-net-open-source-project-retrospective-json-net/codeplexlogo_thumb.jpg "How do you like that, it's also illegal to put squirrels down your pants for the purpose of gambling. ")
+
+CodePlex is an open source project hosting website from Microsoft. Overall I have found it a great place to host releases, source control and discussion forums for Json.NET. These days it also has good Subversion support and it provides all kinds of [interesting statistics](http://www.codeplex.com/Json/stats).
 
 Probably the thing I like most about using a site like CodePlex is that it makes source code public and easy to download in a zip file. When I deal with a bug and check in the updated files I can straight away tell a user that fixed source code is available and [a link to where they can download it](http://www.codeplex.com/Json/SourceControl/ListDownloadableCommits.aspx).
 
 ## What Went Wrong?
 
-![I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.](http://james.newtonking.com/images/A.NETOpenSourceProjectRetrospectiveJ.NET_1455B/help.jpg "I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.")
+![I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.](../../assets/blog/a-net-open-source-project-retrospective-json-net/help.jpg "I'll keep it short and sweet -- Family. Religion. Friendship. These are the three demons you must slay if you wish to succeed in business.")
 
 1. Poor documentation
 
@@ -68,7 +72,7 @@ Directing users to one place to look or ask for help is key. In future I might l
 
 ## Conclusion
 
-I’m really happy with how [Json.NET](http://james.newtonking.com/projects/json-net.aspx) has gone as a project. JSON’s popularity in programming has grown markedly over the last 3 years and Json.NET’s has grown with it. I look forward to what new possibilities .NET 4.0 might bring.
+I’m really happy with how [Json.NET](http://www.newtonsoft.com/json) has gone as a project. JSON’s popularity in programming has grown markedly over the last 3 years and Json.NET’s has grown with it. I look forward to what new possibilities .NET 4.0 might bring.
 
 ## Stats
 

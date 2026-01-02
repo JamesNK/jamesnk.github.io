@@ -1,6 +1,6 @@
 ---
 title: "Json.NET 4.0 Release 3 – LINQ to JSON performance"
-description: "Json.NET 4.0 Release 3 – LINQ to JSON performance"
+description: "Experience faster LINQ to JSON operations in Release 3 with O(1) property lookups through internal structure optimizations using lists and dictionaries."
 pubDate: "Oct 02 2011"
 source: "https://james.newtonking.com/archive/2011/10/01/json-net-4-0-release-3-linq-to-json-performance"
 ---
@@ -10,7 +10,7 @@ Previously the LINQ to JSON collection objects (JObject and JArray) internally u
   
 Json.NET 4.0 Release 3 changes the internal structure of the collection objects to eliminate linked lists - JArray now uses a list internally to store child values and JObject uses a combination of a list and dictionary, letting it preserve property order and make property name lookups O(1).
   
-![I&#39;ll have to read Marge&#39;s book, and I swore never to read again after To Kill a Mockingbird gave me no useful advice on killing mockingbirds. It did teach me not to judge a man based on the color of his skin, but what good does that do me?](http://james.newtonking.com/images/Jso.0-Release-3--LINQ-to-JSON-performanc_B733/image.png "I&#39;ll have to read Marge&#39;s book, and I swore never to read again after To Kill a Mockingbird gave me no useful advice on killing mockingbirds. It did teach me not to judge a man based on the color of his skin, but what good does that do me?")
+![I&#39;ll have to read Marge&#39;s book, and I swore never to read again after To Kill a Mockingbird gave me no useful advice on killing mockingbirds. It did teach me not to judge a man based on the color of his skin, but what good does that do me?](../../assets/blog/json-net-4-0-release-3-linq-to-json-performance/image.png "I&#39;ll have to read Marge&#39;s book, and I swore never to read again after To Kill a Mockingbird gave me no useful advice on killing mockingbirds. It did teach me not to judge a man based on the color of his skin, but what good does that do me?")
 
 From your perspective the API for LINQ to JSON is exactly the same, it is just faster.
   
@@ -20,8 +20,8 @@ One thing to note in this release is that to play nicely with [NuGet](http://nug
   
 If you want to find out exactly which version of the dll you are using the Windows file properties dialog display’s a .NET assembly’s title as the File description.
   
-![Oh no, the Pawnee have returned. They probably want their souls back.](http://james.newtonking.com/images/Jso.0-Release-3--LINQ-to-JSON-performanc_B733/image_3.png "Oh no, the Pawnee have returned. They probably want their souls back.")
-
+![Oh no, the Pawnee have returned. They probably want their souls back.](../../assets/blog/json-net-4-0-release-3-linq-to-json-performance/image_3.png "Oh no, the Pawnee have returned. They probably want their souls back.")
+  
 ## Changes
   
 Here is a complete list of what has changed since Json.NET 4.0 Release 2.

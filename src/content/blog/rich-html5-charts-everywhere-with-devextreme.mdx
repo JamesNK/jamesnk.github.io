@@ -1,6 +1,6 @@
 ---
 title: "Rich HTML5 Charts everywhere with DevExtreme"
-description: "Rich HTML5 Charts everywhere with DevExtreme"
+description: "Build cross-platform HTML5 charting applications using DevExtreme's JavaScript widgets, with step-by-step guidance on creating interactive dashboards that fetch live data from REST APIs."
 pubDate: "Sept 04 2013"
 source: "https://james.newtonking.com/archive/2013/09/05/rich-html5-charts-everywhere-with-devextreme"
 ---
@@ -14,13 +14,13 @@ In this blog post I will look at [DevExtreme](http://www.devexpress.com/Products
 
 DevExtreme has a great looking custom installer that is impressively simple and easy to use: choose trial installation, customize that install location if you want and you’re done.
 
-![](http://james.newtonking.com/Media/Default/images/blog/dx-install1.png)![](http://james.newtonking.com/Media/Default/images/blog/dx-install2.png)
+![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-install1.png)![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-install2.png)
 
 After installation is complete you are presented with a dialog that serves as a hub to developers getting started with DevExtreme. Resources available to you include links a number of [online demos](http://www.devexpress.com/Products/HTML-JS/demos.xml), demo source code that was installed with DevExtreme and comprehensive documentation.
 
 The online chart demos in the DevExtreme [Data Visualization Gallery](http://chartjs.devexpress.com/demos/VizGallery/) are particularly impressive. There are over 50 charts and their source code available which I found a great aid when using DevExtreme.
 
-![](http://james.newtonking.com/Media/Default/images/blog/dx-visgallery.png)
+![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-visgallery.png)
 
 ## Getting Started
 
@@ -28,7 +28,7 @@ To try out DevExtreme’s charting widgets I’m going to create a simple cross-
 
 Although I’m building my dashboard using ASP.NET MVC and Visual Studio, DevExtreme is a JavaScript framework and it can be used with any server side language and IDE.
 
-![](http://james.newtonking.com/Media/Default/images/blog/dx-newproject.png)
+![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-newproject.png)
 
 ## Reference the DevExtreme CDN
 
@@ -99,7 +99,7 @@ $.getJSON("https://api.twitch.tv/kraken/games/top?callback=?", function (json) {
 
 Once you have your data ready just include it in the options when initializing the chart.
 
-![](http://james.newtonking.com/Media/Default/images/blog/dx-piechart.png)
+![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-piechart.png)
 
 ## Interactive Chart
 
@@ -165,7 +165,7 @@ setInterval(function () {
 
 Every 5 seconds the browser will poll the server for the current viewers, add the count and date to the data collection and then update the chart with the data collection as an argument.
 
-![](http://james.newtonking.com/Media/Default/images/blog/dx-dynamicchart.png)
+![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-dynamicchart.png)
 
 ## Wrapping Up
 
@@ -173,8 +173,8 @@ I found the chart widgets in [DevExtreme](http://www.devexpress.com/Products/HTM
 
 My small application has barely scratched the surface here of what the chart widgets offer, let alone the other features included in DevExtreme. If you’re looking to building a cross-platform multi-device application then DevExtreme is definitely worth a look.
 
-## [Click here to download the Twitch Dashboard application source code](http://james.newtonking.com/Media/Default/downloads/blog/TwitchDashboard.zip)
+**[Click here to download the Twitch Dashboard application source code](../../public/rich-html5-charts-everywhere-with-devextreme/TwitchDashboard.zip)**
 
-![](http://james.newtonking.com/Media/Default/images/blog/dx-ipad.png)
+![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-ipad.png)
 
 *Disclosure of Material Connection: I received one or more of the products or services mentioned above for free in the hope that I would mention it on my blog. Regardless, I only recommend products or services I use personally and believe my readers will enjoy. I am disclosing this in accordance with the Federal Trade Commission’s 16 CFR, Part 255:* [*Guides Concerning the Use of Endorsements and Testimonials in Advertising.*](http://www.access.gpo.gov/nara/cfr/waisidx_03/16cfr255_03.html)

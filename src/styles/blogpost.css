@@ -1,0 +1,41 @@
+/* Blog post content */
+article .hero-image {
+	width: 100%;
+}
+article .hero-image img {
+	display: block;
+	margin: 0 auto;
+	border-radius: 12px;
+	box-shadow: var(--box-shadow);
+}
+article .prose {
+	width: 720px;
+	max-width: calc(100% - 2em);
+	margin: auto;
+	padding: 1em;
+	color: rgb(var(--gray-dark));
+}
+article .title {
+	margin-bottom: 1em;
+	padding: 1em 0;
+	text-align: center;
+	line-height: 1;
+}
+article .title h1 {
+	margin: 0 0 0.5em 0;
+}
+article .title h1 a {
+	color: inherit;
+	text-decoration: none;
+}
+article .title h1 a:hover {
+	color: rgb(var(--accent));
+}
+article .date {
+	margin-bottom: 0.5em;
+	color: rgb(var(--gray));
+    font-family: sans-serif;
+}
+article .last-updated-on {
+	font-style: italic;
+}
