@@ -2,15 +2,15 @@
 import type { HTMLAttributes } from 'astro/types';
 
 type Props = HTMLAttributes<'a'> & {
-	activeFor?: string[];
+	isActiveFn?: (pathname: string) => boolean;
 };
 
-const { href, class: className, activeFor, ...props } = Astro.props;
+const { href, class: className, isActiveFn, ...props } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
 const subpath = pathname.match(/[^\/]+/g);
 const isActive = href === pathname 
 	|| href === '/' + (subpath?.[0] || '')
-	|| activeFor?.some(path => pathname.startsWith(path));
+	|| isActiveFn?.(pathname);
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>

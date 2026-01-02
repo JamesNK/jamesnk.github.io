@@ -17,7 +17,7 @@ import HeaderLink from './HeaderLink.astro';
 			</a>
 		</h2>
 		<div class="internal-links">
-			<HeaderLink href="/" activeFor={["archive"]}>Blog</HeaderLink>
+			<HeaderLink href="/" isActiveFn={(p) => p.startsWith('archive') || /^\d+\/?$/.test(p)}>Blog</HeaderLink>
 			<HeaderLink href="/bio">Bio</HeaderLink>
 		</div>
 		<div class="social-links">
