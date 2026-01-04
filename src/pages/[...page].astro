@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
 import BlogPostContent from '../components/BlogPostContent.astro';
 import Layout from '../layouts/Layout.astro';
+import { getPostUrl } from '../consts';
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const posts = (await getCollection('blog')).sort(
@@ -16,12 +17,7 @@ const { page } = Astro.props;
 const postsWithContent = await Promise.all(
 	page.data.map(async (post) => {
 		const { Content } = await render(post);
-		const date = post.data.pubDate;
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const day = String(date.getDate()).padStart(2, '0');
-		const url = `/archive/${year}/${month}/${day}/${post.id}/`;
-		return { post, Content, url };
+		return { post, Content, url: getPostUrl(post) };
 	})
 );
 ---

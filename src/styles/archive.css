@@ -31,24 +31,3 @@
 .archive-year .back-link a {
 	color: rgb(var(--accent));
 }
-.archive-year .post-title {
-	font-size: 1.25em;
-    font-family: sans-serif;
-}
-.archive-year .post-title a {
-	color: rgb(var(--black));
-}
-.archive-year .post-title a:hover {
-	color: rgb(var(--accent));
-}
-.archive-year .post-date {
-	color: rgb(var(--gray));
-	font-size: 0.9em;
-    font-family: sans-serif;
-}
-.archive-year .post-description {
-	color: rgb(var(--gray-dark));
-	font-size: 0.9em;
-	margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}

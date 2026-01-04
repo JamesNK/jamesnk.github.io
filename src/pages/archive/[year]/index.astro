@@ -1,9 +1,9 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
-import FormattedDate from '../../../components/FormattedDate.astro';
+import BlogPostContent from '../../../components/BlogPostContent.astro';
 import Layout from '../../../layouts/Layout.astro';
-import { SITE_TITLE } from '../../../consts';
+import { SITE_TITLE, getPostUrl } from '../../../consts';
 
 export const getStaticPaths = (async () => {
 	const posts = await getCollection('blog');
@@ -26,14 +26,6 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { year, posts } = Astro.props;
-
-function getPostUrl(post: typeof posts[0]) {
-	const date = post.data.pubDate;
-	const y = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, '0');
-	const day = String(date.getDate()).padStart(2, '0');
-	return `/archive/${y}/${month}/${day}/${post.id}/`;
-}
 ---
 
 <Layout title={`${year} Archive - ${SITE_TITLE}`}>
@@ -42,21 +34,10 @@ function getPostUrl(post: typeof posts[0]) {
 			<a href="/archive/">&lt; All years</a>
 		</div>
 		<h1>{year}</h1>
-		<ul>
-			{posts.map((post) => (
-				<li>
-					<div class="post-title">
-						<a href={getPostUrl(post)}>{post.data.title}</a>
-					</div>
-					<div class="post-date">
-						<FormattedDate date={post.data.pubDate} />
-					</div>
-					{post.data.description && (
-						<div class="post-description">{post.data.description}</div>
-					)}
-				</li>
-			))}
-		</ul>
+		{posts.map((post) => (
+			<BlogPostContent post={post.data} url={getPostUrl(post)}>
+				{post.data.description && <p>{post.data.description}</p>}
+			</BlogPostContent>
+		))}
 	</div>
 </Layout>
-</html>
