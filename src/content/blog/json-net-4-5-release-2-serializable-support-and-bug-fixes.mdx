@@ -6,15 +6,15 @@ source: "https://james.newtonking.com/archive/2012/04/11/json-net-4-5-release-2-
 ---
 ## Serializable Support
   
-Json.NET now detects types that have the [SerializableAttribute](http://msdn.microsoft.com/en-us/library/system.serializableattribute.aspx) and serializes all the fields on that type, both public and private, and ignores the properties. This is useful when you’re interested in round-tripping the data on a type and don’t care what the JSON looks like.
+Json.NET now detects types that have the [SerializableAttribute](http://msdn.microsoft.com/en-us/library/system.serializableattribute.aspx) and serializes all the fields on that type, both public and private, and ignores the properties. This is useful when you're interested in round-tripping the data on a type and don't care what the JSON looks like.
   
-If you are serializing types that have the attribute and don’t want the new behaviour, it can either be overridden on a type using the JsonObjectAttribute or disabled globally by setting IgnoreSerializableAttribute on DefaultContractResolver to true.
+If you are serializing types that have the attribute and don't want the new behaviour, it can either be overridden on a type using the JsonObjectAttribute or disabled globally by setting IgnoreSerializableAttribute on DefaultContractResolver to true.
   
 **Update:** IgnoreSerializableAttribute is true by default in release 3. If you want it you can still achieve this effect by either setting IgnoreSerializableAttribute to false or adding [JsonObject(MemberSerialization.Fields)] to your class.
   
 ## Bug fixes
   
-Interesting bug fixes this release include correctly reading JSON from slow streams (e.g. a network stream that is only returning one character at a time), fixing [invalid Unicode surrogate characters](http://blogs.msdn.com/b/shawnste/archive/2005/09/26/474105.aspx), and ignoring property order when comparing two JObjects (JavaScript objects aren’t ordered and so could come back serialized in a different order).
+Interesting bug fixes this release include correctly reading JSON from slow streams (e.g. a network stream that is only returning one character at a time), fixing [invalid Unicode surrogate characters](http://blogs.msdn.com/b/shawnste/archive/2005/09/26/474105.aspx), and ignoring property order when comparing two JObjects (JavaScript objects aren't ordered and so could come back serialized in a different order).
   
 ## Changes
   

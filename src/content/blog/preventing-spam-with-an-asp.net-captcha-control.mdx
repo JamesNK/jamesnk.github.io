@@ -4,7 +4,7 @@ description: "Implement a complete CAPTCHA solution for ASP.NET that combines se
 pubDate: "May 29 2006"
 source: "https://james.newtonking.com/archive/2006/05/29/Preventing-Spam-With-An-ASP.NET-CAPTCHA-Control"
 ---
-The source and dll for the project can be downloaded here: [CaptchaControl.zip](/downloads/captchacontrol/captchacontrol.zip) **About** A CAPTCHA image displays text that is readable to humans, but not to computers. The concept is useful because it provides a means to filter out automated programs while allowing real users to pass through. Bots for example, which spam comments on weblogs and other dynamic websites, are a fairly pervasive problem and even a regularly new and low traffic blog like this was getting dozens of spam comments every day. CAPTCHA is a means to stop them while still allowing real users to post.CaptchaControl is an ASP.NET server control that is designed to start working by just being dropping onto the page, without any modification. This version is based off [Michael Trefry’s](http://trefry.net/blogs/michael/archive/2005/05/11/182.aspx) implementation, which is in turn based off [Dan Burke’s](http://dbvt.com/blog/archive/2005/03/15/1433.aspx). My update fixes a couple of issues around storing the code in a browser cookie and adds features like client validation. **CatchaControl Overview**The CaptchaControl class is a composite control and encapsulates the CAPTCHA image, a textbox for capturing the result and a validator for verifying the correct code was entered. It handles hooking all the controls together, pointing the image src towards the image handler and maintaining the state of the code, which is stored encrypted in a hidden form field and then decrypted on postback.
+The source and dll for the project can be downloaded here: [CaptchaControl.zip](/downloads/captchacontrol/captchacontrol.zip) **About** A CAPTCHA image displays text that is readable to humans, but not to computers. The concept is useful because it provides a means to filter out automated programs while allowing real users to pass through. Bots for example, which spam comments on weblogs and other dynamic websites, are a fairly pervasive problem and even a regularly new and low traffic blog like this was getting dozens of spam comments every day. CAPTCHA is a means to stop them while still allowing real users to post.CaptchaControl is an ASP.NET server control that is designed to start working by just being dropping onto the page, without any modification. This version is based off [Michael Trefry's](http://trefry.net/blogs/michael/archive/2005/05/11/182.aspx) implementation, which is in turn based off [Dan Burke's](http://dbvt.com/blog/archive/2005/03/15/1433.aspx). My update fixes a couple of issues around storing the code in a browser cookie and adds features like client validation. **CatchaControl Overview**The CaptchaControl class is a composite control and encapsulates the CAPTCHA image, a textbox for capturing the result and a validator for verifying the correct code was entered. It handles hooking all the controls together, pointing the image src towards the image handler and maintaining the state of the code, which is stored encrypted in a hidden form field and then decrypted on postback.
 
 ```csharp
 protected override void OnPreRender(EventArgs e)
@@ -52,7 +52,7 @@ void IHttpHandler.ProcessRequest(HttpContext context)
 }
 ```
 
-**Usage**Register the CaptchaHandler by adding the following to your web.config’s httpModule element.
+**Usage**Register the CaptchaHandler by adding the following to your web.config's httpModule element.
 
 ```csharp
 <addverb="*"path="captchahandler.axd"type="Newtonsoft.CaptchaControl.CaptchaHandler, Newtonsoft.CaptchaControl"/>
@@ -66,7 +66,7 @@ To add the CaptchaControl to a page simply place it where you want it to be disp
 <ncc:CaptchaControl runat="server" ID="CaptchaControl" />
 ```
 
-The IsValid property on the page will automatically be set when the page’s validators, including CaptchaControl, are evaluated on postback.
+The IsValid property on the page will automatically be set when the page's validators, including CaptchaControl, are evaluated on postback.
 
 ```csharp
 private void btnSubmit_Click(object sender, EventArgs e)

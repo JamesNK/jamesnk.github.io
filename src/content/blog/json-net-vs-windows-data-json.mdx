@@ -6,13 +6,13 @@ source: "https://james.newtonking.com/archive/2012/09/14/json-net-vs-windows-dat
 ---
 Windows 8 introduces a new way to work with JSON via the [Windows.Data.Json](http://msdn.microsoft.com/en-us/library/windows/apps/xaml/br240639.aspx) namespace. Similar to LINQ to JSON in [Json.NET](http://www.newtonsoft.com/json) it defines classes that can be used to parse values, strings, objects, and arrays from JSON text or serialize value types into JSON text.
   
-Below is a comparison of Json.NET’s LINQ to JSON to Window 8’s Windows.Data.Json.
+Below is a comparison of Json.NET's LINQ to JSON to Window 8's Windows.Data.Json.
   
 ## Creating JSON
   
 The big difference between the two libraries when creating JSON is Windows.Data.Json requires string/integer/double values to be explicitly converted to JsonValue objects.
   
-Note that there is a weird limitation to creating JSON with Windows.Data.Json: it doesn’t allow you to set properties to null or have null array values.
+Note that there is a weird limitation to creating JSON with Windows.Data.Json: it doesn't allow you to set properties to null or have null array values.
   
 ```csharp
 // Windows.Data.Json
@@ -44,7 +44,7 @@ string json2 = jObject.ToString();
 
 ## Querying JSON
 
-Windows.Data.Json requires a value to be cast to its exact type with the GetObject/GetArray methods before it can be used, making Windows.Data.Json’s code verbose compared to LINQ to JSON.
+Windows.Data.Json requires a value to be cast to its exact type with the GetObject/GetArray methods before it can be used, making Windows.Data.Json's code verbose compared to LINQ to JSON.
 
 ```csharp
 string json = @"{
@@ -81,7 +81,7 @@ string itemTitle2 = (string)jObject["channel"]["item"][0]["title"];
 
 Json.NET is slightly slower at writing JSON than Windows.Data.Json but considerably faster parsing.
 
-![Things aren’t as happy as they used to be down here at the unemployment office. Joblessness is no longer just for philosophy majors. Useful people are starting to feel the pinch.](../../assets/blog/json-net-vs-windows-data-json/jsonnetwindowsdatajson.png "Things aren’t as happy as they used to be down here at the unemployment office. Joblessness is no longer just for philosophy majors. Useful people are starting to feel the pinch.")
+![Things aren't as happy as they used to be down here at the unemployment office. Joblessness is no longer just for philosophy majors. Useful people are starting to feel the pinch.](../../assets/blog/json-net-vs-windows-data-json/jsonnetwindowsdatajson.png "Things aren't as happy as they used to be down here at the unemployment office. Joblessness is no longer just for philosophy majors. Useful people are starting to feel the pinch.")
 
 ## Converting Between LINQ to JSON and Windows.Data.Json
 

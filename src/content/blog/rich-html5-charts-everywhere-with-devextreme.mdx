@@ -8,11 +8,11 @@ The rapid rise of mobile devices has created new opportunities for software deve
 
 While iOS, Andriod and Windows Phone all use different programming languages, frameworks and tools for native apps, what is cross-platform between every device is HTML and JavaScript. Not only will an HTML5 mobile application allow us to target every platform, we can also reuse skills and knowledge from traditional website development.
 
-In this blog post I will look at [DevExtreme](http://www.devexpress.com/Products/HTML-JS/), a cross-platform HTML JS framework for Visual Studio, and in particular DevExtreme’s rich JavaScript charting widgets.
+In this blog post I will look at [DevExtreme](http://www.devexpress.com/Products/HTML-JS/), a cross-platform HTML JS framework for Visual Studio, and in particular DevExtreme's rich JavaScript charting widgets.
 
 ## Installation and first impressions
 
-DevExtreme has a great looking custom installer that is impressively simple and easy to use: choose trial installation, customize that install location if you want and you’re done.
+DevExtreme has a great looking custom installer that is impressively simple and easy to use: choose trial installation, customize that install location if you want and you're done.
 
 ![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-install1.png)![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-install2.png)
 
@@ -24,9 +24,9 @@ The online chart demos in the DevExtreme [Data Visualization Gallery](http://cha
 
 ## Getting Started
 
-To try out DevExtreme’s charting widgets I’m going to create a simple cross-platform dashboard for the online game streaming website [Twitch](http://www.twitch.tv/). My dashboard app will query [Twitch’s REST API](https://github.com/justintv/Twitch-API/blob/master/README.md) for data and graph the games being streamed and the number of viewers over time of the most popular streams.
+To try out DevExtreme's charting widgets I'm going to create a simple cross-platform dashboard for the online game streaming website [Twitch](http://www.twitch.tv/). My dashboard app will query [Twitch's REST API](https://github.com/justintv/Twitch-API/blob/master/README.md) for data and graph the games being streamed and the number of viewers over time of the most popular streams.
 
-Although I’m building my dashboard using ASP.NET MVC and Visual Studio, DevExtreme is a JavaScript framework and it can be used with any server side language and IDE.
+Although I'm building my dashboard using ASP.NET MVC and Visual Studio, DevExtreme is a JavaScript framework and it can be used with any server side language and IDE.
 
 ![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-newproject.png)
 
@@ -42,7 +42,7 @@ The CDN returns a compressed, cached response to keep the website nice and fast.
 
 ## Creating a Chart
 
-DevExtreme’s data visualization widgets include line, bar, area and pie charts; circular and linear gauges; and range selectors. On the dashboard homepage I will create a pie chart displaying the most popular games being streamed on Twitch.
+DevExtreme's data visualization widgets include line, bar, area and pie charts; circular and linear gauges; and range selectors. On the dashboard homepage I will create a pie chart displaying the most popular games being streamed on Twitch.
 
 ```csharp
 $("#gamesChartContainer").dxPieChart({
@@ -80,7 +80,7 @@ Call dxPieChart on the element you want the chart to appear in. Options are pass
 
 ## Fetching Data from Twitch.tv
 
-Right now the pie chart is displaying static data. To bring in some real world data we’ll call [Twitch.tv’s REST API](https://github.com/justintv/Twitch-API/blob/master/README.md). Because their API supports [JSONP](http://en.wikipedia.org/wiki/JSONP) we can call the services directly from JavaScript using jQuery.
+Right now the pie chart is displaying static data. To bring in some real world data we'll call [Twitch.tv's REST API](https://github.com/justintv/Twitch-API/blob/master/README.md). Because their API supports [JSONP](http://en.wikipedia.org/wiki/JSONP) we can call the services directly from JavaScript using jQuery.
 
 ```csharp
 var ds = [];
@@ -121,7 +121,7 @@ pointClick: function (p) {
 
 ## Creating a Dynamically Updating Chart
 
-The second chart we’ll create for the dashboard application is an area graph over viewers over time for a video game stream. The chart will start out without any data but every couple of seconds we’ll call a Twitch API to return the viewer count and dynamically update the graph with the new data.
+The second chart we'll create for the dashboard application is an area graph over viewers over time for a video game stream. The chart will start out without any data but every couple of seconds we'll call a Twitch API to return the viewer count and dynamically update the graph with the new data.
 
 ```csharp
 $("#streamChartContainer").dxChart({
@@ -171,10 +171,10 @@ Every 5 seconds the browser will poll the server for the current viewers, add th
 
 I found the chart widgets in [DevExtreme](http://www.devexpress.com/Products/HTML-JS/) to be fast to setup and easy to use while still offering a lot of power for customization.
 
-My small application has barely scratched the surface here of what the chart widgets offer, let alone the other features included in DevExtreme. If you’re looking to building a cross-platform multi-device application then DevExtreme is definitely worth a look.
+My small application has barely scratched the surface here of what the chart widgets offer, let alone the other features included in DevExtreme. If you're looking to building a cross-platform multi-device application then DevExtreme is definitely worth a look.
 
 **[Click here to download the Twitch Dashboard application source code](../../public/rich-html5-charts-everywhere-with-devextreme/TwitchDashboard.zip)**
 
 ![](../../assets/blog/rich-html5-charts-everywhere-with-devextreme/dx-ipad.png)
 
-*Disclosure of Material Connection: I received one or more of the products or services mentioned above for free in the hope that I would mention it on my blog. Regardless, I only recommend products or services I use personally and believe my readers will enjoy. I am disclosing this in accordance with the Federal Trade Commission’s 16 CFR, Part 255:* [*Guides Concerning the Use of Endorsements and Testimonials in Advertising.*](http://www.access.gpo.gov/nara/cfr/waisidx_03/16cfr255_03.html)
+*Disclosure of Material Connection: I received one or more of the products or services mentioned above for free in the hope that I would mention it on my blog. Regardless, I only recommend products or services I use personally and believe my readers will enjoy. I am disclosing this in accordance with the Federal Trade Commission's 16 CFR, Part 255:* [*Guides Concerning the Use of Endorsements and Testimonials in Advertising.*](http://www.access.gpo.gov/nara/cfr/waisidx_03/16cfr255_03.html)

@@ -12,7 +12,7 @@ The big change this release is that the Silverlight/Windows Phone NuGet assembli
   
 Unfortunately Silverlight/Windows Phone applications [do not](http://wpdev.uservoice.com/forums/110705-app-platform/suggestions/2511980-assembly-binding-redirection-support) support redirecting strong-named assemblies like normal .NET apps do via [&lt;assemblyBinding&gt;](http://msdn.microsoft.com/en-us/library/twy1dw1e.aspx) configuration. If a Silverlight or Windows Phone application uses two libraries that each reference a different version of Json.NET then the only solution is to get the source code for the libraries and recompile them yourself to use the same version of Json.NET - not ideal.
   
-From 4.0.8 the NuGet assemblies for Silverlight/Windows Phone are no longer strong-named. If you do need strong-named versions of Json.NET for SL/WP then they are still available in the [Json.NET zip download](http://json.codeplex.com/releases) from CodePlex in the **Bin\Silverlight\Signed** and **Bin\WindowsPhone\Signed** zip folders. I don’t recommend using them with reusable SL/WP libraries because of the reasons above. 
+From 4.0.8 the NuGet assemblies for Silverlight/Windows Phone are no longer strong-named. If you do need strong-named versions of Json.NET for SL/WP then they are still available in the [Json.NET zip download](http://json.codeplex.com/releases) from CodePlex in the **Bin\Silverlight\Signed** and **Bin\WindowsPhone\Signed** zip folders. I don't recommend using them with reusable SL/WP libraries because of the reasons above. 
   
 ## Json.NET Assembly Redirection
   
@@ -35,7 +35,7 @@ Update **newVersion** as needed to the version of Json.NET you are using. This c
 
 ## Changes
 
-Here is a complete list of what has changed since Json.NET 4.0 Release 6 (if you’re curious where v7 is, it was a minor release to fix a couple of urgent bugs).
+Here is a complete list of what has changed since Json.NET 4.0 Release 6 (if you're curious where v7 is, it was a minor release to fix a couple of urgent bugs).
 
 - New feature - Added VersionConverter for System.Version
 - New feature - Added a JSON schema IsValid overload that returns a list of error messages
@@ -48,7 +48,7 @@ Here is a complete list of what has changed since Json.NET 4.0 Release 6 (if you
 - Fix - Fixed JsonReader.ReadAsDateTimeOffset throwing an incorrect error message
 - Fix - Fixed error when converting XML to JSON with a default namespace
 - Fix - Fixed JsonValidatingReader.ReadAsBytes throwing an exception
-- Fix - Fixed a unit test failing because of the running computer’s timezone
+- Fix - Fixed a unit test failing because of the running computer's timezone
 
 ## Links
 

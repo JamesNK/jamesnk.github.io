@@ -8,7 +8,7 @@ source: "https://james.newtonking.com/archive/2009/04/12/native-json-in-ie8-fire
 
 [Native JSON](http://blogs.msdn.com/ie/archive/2008/09/10/native-json-in-ie8.aspx) is a new feature to IE8 and Firefox 3.5. Built in serialization and deserialization in the browser makes evaling JSON text a thing of the past.
 
-This post looks at how to use native JSON and how it can complement [Json.NET’s](http://www.newtonsoft.com/json) server side JSON support by parsing and generating JSON on the browser.
+This post looks at how to use native JSON and how it can complement [Json.NET's](http://www.newtonsoft.com/json) server side JSON support by parsing and generating JSON on the browser.
 
 ## Native JSON API
 
@@ -29,7 +29,7 @@ var jsonText = JSON.stringify(person);
 // {"name":"Frodo","address":"Hobbiton, The Shire"}
 ```
 
-Because native JSON is based upon the popular [json2.js script](http://www.json.org/js.html) you can support old browsers by including that file in your webpage. Browsers that don’t support native JSON will now work while browsers with built in JSON support will automatically use their much faster native implementations.
+Because native JSON is based upon the popular [json2.js script](http://www.json.org/js.html) you can support old browsers by including that file in your webpage. Browsers that don't support native JSON will now work while browsers with built in JSON support will automatically use their much faster native implementations.
 
 ## Native JSON + Json.NET
 
@@ -80,4 +80,4 @@ The reviver function uses a regular expression to tests if a string matches an I
 
 ## Conclusion
 
-And that’s it. Server generated JSON using Json.NET will now be parsed natively in the browser, dates and all. The other direction, client generated JSON using JSON.stringify then being read by Json.NET doesn’t require any modification. It works by default. Sweet!
+And that's it. Server generated JSON using Json.NET will now be parsed natively in the browser, dates and all. The other direction, client generated JSON using JSON.stringify then being read by Json.NET doesn't require any modification. It works by default. Sweet!

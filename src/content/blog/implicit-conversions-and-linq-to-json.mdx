@@ -6,7 +6,7 @@ source: "https://james.newtonking.com/archive/2009/07/28/implicit-conversions-an
 ---
 I have been doing a lot of work with [Json.NET](http://www.newtonsoft.com/json) recently and have really been using LINQ to JSON in anger for the first time.
   
-Pretty quickly I became annoyed with having to constantly wrap .NET primitive objects (int, long, string, DateTime, etc) in JValue whenever they’re added to a JSON object or array.
+Pretty quickly I became annoyed with having to constantly wrap .NET primitive objects (int, long, string, DateTime, etc) in JValue whenever they're added to a JSON object or array.
   
 ```csharp
 JObject moss = new JObject();
@@ -28,7 +28,7 @@ Console.WriteLine(moss.ToString());
 
 ## Gross. Why?
 
-For all the LINQy goodness I’ve added to Json.NET to work everything has to inherit from a common object: JToken. Container objects (JObject and JArray) inherit from JToken and all their child values must also be JTokens. For that reason JObject implements IDictionary&lt;string, JToken&gt; and JArray implements IList&lt;JToken&gt;.
+For all the LINQy goodness I've added to Json.NET to work everything has to inherit from a common object: JToken. Container objects (JObject and JArray) inherit from JToken and all their child values must also be JTokens. For that reason JObject implements IDictionary&lt;string, JToken&gt; and JArray implements IList&lt;JToken&gt;.
 
 Because the containers only allow JTokens, basic primitive values need to be wrapped in an object which inherits from JToken: JValue.
 
@@ -61,4 +61,4 @@ jen["Department"] = "IT";
 jen["JobTitle"] = "Manager";
 ```
 
-Much better I think you’ll agree. I only wish I had done it earlier 😊
+Much better I think you'll agree. I only wish I had done it earlier 😊

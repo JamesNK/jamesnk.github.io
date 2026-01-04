@@ -40,19 +40,19 @@ Consuming the JSON web services with Silverlight was a breeze. Just add the web 
 
 Adding my router's 'realtime' usage (current kilobytes per second and total kilobytes) was an interesting experience. I wanted it to update asynchronously (every 5 seconds) but while attempting to do it on a new thread I quickly found out that a lot of operations, such as modifying the WPF UI or accessing the HTML DOM, must be done on the primary thread. In the end I got it working using the Completed event on the StoryBoard object, which is described [here](http://silverlight.net/forums/p/665/3365.aspx). Microsoft has said that multithreading is something that they are working on so hopefully it should be better in the final version.
 
-Silverlight also has support for [LINQ](http://en.wikipedia.org/wiki/Language_Integrated_Query). I’ve always enjoyed SQL and I’m really excited about being able to do queries within C#. At one point in my Silverlight client I needed to get what fraction of bytes a particular slice was. What would usually take a new class and a number of foreach loops instead took one LINQ query. Cool!
+Silverlight also has support for [LINQ](http://en.wikipedia.org/wiki/Language_Integrated_Query). I've always enjoyed SQL and I'm really excited about being able to do queries within C#. At one point in my Silverlight client I needed to get what fraction of bytes a particular slice was. What would usually take a new class and a number of foreach loops instead took one LINQ query. Cool!
 
 ```csharp
 var slices = from u in usages             select new {                      u.Name,                      SliceSize = (double)u.TotalBytes / usages.Sum(uu => uu.TotalBytes)                    };
 ```
 
-Finally I was also really impressed with the WPF support and what you can do with it. Adding scaling to the application, so that the Silverlight app resizes as the client’s browser resizes, required just one ScaleTransform and took about 15 minutes. Give resizing it a try, it is quite cool (double click makes the app go full screen).
+Finally I was also really impressed with the WPF support and what you can do with it. Adding scaling to the application, so that the Silverlight app resizes as the client's browser resizes, required just one ScaleTransform and took about 15 minutes. Give resizing it a try, it is quite cool (double click makes the app go full screen).
 
 ## Final Words
 
-I’ve learnt a lot on this project and had a lot of fun but TrafficWarden isn’t completely finished just yet. As well as a general clean up of some of the code I’d like to add a login screen for security and add a line graph for showing usage over time.
+I've learnt a lot on this project and had a lot of fun but TrafficWarden isn't completely finished just yet. As well as a general clean up of some of the code I'd like to add a login screen for security and add a line graph for showing usage over time.
 
-Overall I’m really impressed with the Silverlight platform. Silverlight 1.1 is still in alpha and definitely has some weak areas, particularly around the built in controls, but Microsoft has said that they’re working on it. Flash better watch out because Silverlight can only get better.
+Overall I'm really impressed with the Silverlight platform. Silverlight 1.1 is still in alpha and definitely has some weak areas, particularly around the built in controls, but Microsoft has said that they're working on it. Flash better watch out because Silverlight can only get better.
 
 ## Source Code & Demo
 

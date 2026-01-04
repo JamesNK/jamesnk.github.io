@@ -59,7 +59,7 @@ Note that camelcased property names in the serialized JSON.
 
 CamelCaseMappingResolver is just one example of what can be achieve using IMappingResolver. Off the top of my head some other examples could be modifying the JsonSerializer to serialize private fields, or adding additional properties to a serialized JSON object like the .NET type name.
 
-Overall I’m really happy with the way IMappingResolver has turned out. I think it provides a great halfway point between using attributes to control serializing an object, and writing a custom JsonConverter.
+Overall I'm really happy with the way IMappingResolver has turned out. I think it provides a great halfway point between using attributes to control serializing an object, and writing a custom JsonConverter.
 
 > 
 > 
@@ -74,7 +74,7 @@ Here is a complete list of what has changed since Json.NET 3.5 Beta 2.
 - New feature - Added CamelCaseMappingResolver
 - New feature - Added DeserializeNode overload to JsonConvert that allows a root element to be added to the XML
 - New feature - Added support for deserializing to IEnumerable&lt;T&gt;, ICollection&lt;T&gt;, IList&lt;T&gt; and IDictionary&lt;TKey, TValue&gt; members
-- New feature - Deserializer will now populate an object’s members with unused values after creating an object from a non-default constructor
+- New feature - Deserializer will now populate an object's members with unused values after creating an object from a non-default constructor
 - New feature - Deserializer now attempts a case insensitive match to a member if the exact case match fails
 - New feature - Added a ToString(Formatting, JsonConverters[]) overload to JToken
 - New feature - Added AddAfterSelf, AddBeforeSelf methods to JToken

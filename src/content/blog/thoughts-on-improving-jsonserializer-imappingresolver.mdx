@@ -10,7 +10,7 @@ JsonSerializer is pretty darn flexible. It has a half dozen options on the class
   
 The most popular request I get these days is control over how JsonSerializer determines what members on a type to serialize (e.g. serialize private as well as public properties) and control over the name of the written property (e.g. instead of “FirstName” write the property camelcase style: “firstName”).
   
-Controlling this behaviour is actually already possible by inheriting from JsonSerializer and overriding GetMemberMappings. The MemberMapping class contains all the information about how a .NET member gets mapped to a JSON property (name, readable, writable, converter, etc) and is used internally by JsonSerializer. The problem is it isn’t terribly discoverable to the average user.
+Controlling this behaviour is actually already possible by inheriting from JsonSerializer and overriding GetMemberMappings. The MemberMapping class contains all the information about how a .NET member gets mapped to a JSON property (name, readable, writable, converter, etc) and is used internally by JsonSerializer. The problem is it isn't terribly discoverable to the average user.
   
 ## IMappingResolver
   
@@ -23,10 +23,10 @@ public interface IMappingResolver
 }
 ```
 
-JsonSerializer would have a MappingResolver property and the instance of the object assigned to it would determine how the members on a .NET class get mapped to a JSON object (if you’re hip with the [GOF](http://en.wikipedia.org/wiki/Gang_of_Four_%28software%29) urban street lingo this is an example of the [strategy pattern](http://en.wikipedia.org/wiki/Strategy_pattern)).
+JsonSerializer would have a MappingResolver property and the instance of the object assigned to it would determine how the members on a .NET class get mapped to a JSON object (if you're hip with the [GOF](http://en.wikipedia.org/wiki/Gang_of_Four_%28software%29) urban street lingo this is an example of the [strategy pattern](http://en.wikipedia.org/wiki/Strategy_pattern)).
 
 Examples of resolvers that could come with Json.NET or you could create yourself: [CamelCaseMappingResolver](http://json.codeplex.com/Thread/View.aspx?ThreadId=48776), [TypeDescriptorMappingResolver](http://json.codeplex.com/WorkItem/View.aspx?WorkItemId=12716), [PrivateMembersMappingResolver](http://json.codeplex.com/WorkItem/View.aspx?WorkItemId=12606) and so on.
 
-I like this over inheritance because it is obvious and in a user’s face. MappingResolver could also be added to the JsonSerializerSettings class and used from the serialization helper methods on JsonConvert.
+I like this over inheritance because it is obvious and in a user's face. MappingResolver could also be added to the JsonSerializerSettings class and used from the serialization helper methods on JsonConvert.
 
 Yay or nay? Suggestions welcome 😊

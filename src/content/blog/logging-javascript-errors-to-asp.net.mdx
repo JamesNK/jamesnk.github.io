@@ -12,7 +12,7 @@ Over the past few years a huge jump in the complexity of JavaScript has occured 
 - User agent (browser and platform details)
 - Session ID
 
-**Catching and Sending the Error on the Client** Whenever an exception is not caught in JavaScript it triggers an onerror event on the browser's window object. It is comparable to ASP.NET’s Application\_Error event in the global.asax.When the page is downloaded a ClientLogger object is created and a function is attached to the onerror event. That function calls a method on ClientLogger object which will send the error details to ASP.NET on the server using the XMLHttpRequest object. This is done asynchronously and does not effect the user.
+**Catching and Sending the Error on the Client** Whenever an exception is not caught in JavaScript it triggers an onerror event on the browser's window object. It is comparable to ASP.NET's Application\_Error event in the global.asax.When the page is downloaded a ClientLogger object is created and a function is attached to the onerror event. That function calls a method on ClientLogger object which will send the error details to ASP.NET on the server using the XMLHttpRequest object. This is done asynchronously and does not effect the user.
 
 ```csharp
 var logger = new ClientLogger({handlerUrl:'../../ClientLogger.axd',sessionID:'2rnbawbkzuovsw55ymvflz45'});

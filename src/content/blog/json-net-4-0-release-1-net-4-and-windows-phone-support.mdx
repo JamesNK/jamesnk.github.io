@@ -4,13 +4,13 @@ description: "Target .NET 4 and Windows Phone with Json.NET 4.0, using the dynam
 pubDate: "Jan 04 2011"
 source: "https://james.newtonking.com/archive/2011/01/03/json-net-4-0-release-1-net-4-and-windows-phone-support"
 ---
-By popular demand: Json.NET 4.0! This is the first Json.NET release to target .NET 4 and integrates the many new features added in the latest version of .NET. Behind the scenes Json.NET’s source code has been upgraded to VS2010.
+By popular demand: Json.NET 4.0! This is the first Json.NET release to target .NET 4 and integrates the many new features added in the latest version of .NET. Behind the scenes Json.NET's source code has been upgraded to VS2010.
   
 Other major changes in this release are two new builds and the removal of an existing build. Removed is Compact Framework. VS2010 no longer supports Compact Framework so 3.5 r8 will be its last release if you are targeting the Compact Framework. New on the other hand are builds for .NET 3.5 (the main build has been upgraded to .NET 4) and Windows Phone.
   
 ## Windows Phone dll
   
-Json.NET 4.0 comes with a Windows Phone specific dll, compiled using the Windows Phone tools. The Silverlight build now targets Silverlight 4 so is no longer compatible with Windows Phone. A couple of little bonuses of Windows Phone having its own dll is that it doesn’t prompt with a warning when added. There is also some additional XML support. Because LINQ to XML is included in Windows Phone by default (it is an add-on dll for Silverlight) the Json.NET Windows Phone build has some XML features that are missing out of Silverlight release.
+Json.NET 4.0 comes with a Windows Phone specific dll, compiled using the Windows Phone tools. The Silverlight build now targets Silverlight 4 so is no longer compatible with Windows Phone. A couple of little bonuses of Windows Phone having its own dll is that it doesn't prompt with a warning when added. There is also some additional XML support. Because LINQ to XML is included in Windows Phone by default (it is an add-on dll for Silverlight) the Json.NET Windows Phone build has some XML features that are missing out of Silverlight release.
   
 ## Dynamic
   
@@ -69,7 +69,7 @@ Json.NET has a [NuGet](http://nuget.codeplex.com/) package available from the of
 
 ## JSON Schema
 
-Json.NET’s [JSON Schema](http://json-schema.org/) implementation has been updated to match version 3 of the specification. Notable new additions are patternProperties, exclusiveMinimum and exclusiveMaximum. Also new is the removal of optional which has been replaced with required. If you are using JSON Schema then you should check whether this change effects your schemas.
+Json.NET's [JSON Schema](http://json-schema.org/) implementation has been updated to match version 3 of the specification. Notable new additions are patternProperties, exclusiveMinimum and exclusiveMaximum. Also new is the removal of optional which has been replaced with required. If you are using JSON Schema then you should check whether this change effects your schemas.
 
 ## BSON Binary
 

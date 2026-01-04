@@ -12,7 +12,7 @@ When [Json.NET](http://www.newtonsoft.com/json) was first released it contained 
   
 The current state of the nation is that just about every Json.NET class is prefixed with Json (JsonReader, JsonWriter, JsonSerializer) except JavaScriptConvert, a situation which I think is somewhat confusing and gets in the way of learning and discovering the Json.NET API through intellisense.
   
-The downside of renaming JavaScriptConvert is that existing code that uses it will need to be updated when moving to a new version of Json.NET. A pain but nothing that Find and Replace couldn’t fix in 5 minutes. A [namespace alias](http://msdn.microsoft.com/en-us/library/dfb3cx8s.aspx) would also fix existing code.
+The downside of renaming JavaScriptConvert is that existing code that uses it will need to be updated when moving to a new version of Json.NET. A pain but nothing that Find and Replace couldn't fix in 5 minutes. A [namespace alias](http://msdn.microsoft.com/en-us/library/dfb3cx8s.aspx) would also fix existing code.
   
 ```csharp
 using JavaScriptConvert = Newtonsoft.Json.JsonConvert;

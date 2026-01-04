@@ -8,7 +8,7 @@ source: "https://james.newtonking.com/archive/2013/05/08/json-net-5-0-release-5-
   
 If you have used Json.NET then you will be familiar with JsonSerializerSettings. This class has been an extremely successful at providing an simple way for developers to customize Json.NET.
   
-With Json.NET’s increasing popularity and its use by more third party frameworks, a problem I have noticed is a developer has to customize serializer settings in multiple places. If you want your HtmlHelper.ToJson extension method, Web API services and SignalR to serialize JSON the same way across an application then you have to manually share a JsonSerializerSettings instance between them and figure out how each different framework allows you to customize Json.NET.
+With Json.NET's increasing popularity and its use by more third party frameworks, a problem I have noticed is a developer has to customize serializer settings in multiple places. If you want your HtmlHelper.ToJson extension method, Web API services and SignalR to serialize JSON the same way across an application then you have to manually share a JsonSerializerSettings instance between them and figure out how each different framework allows you to customize Json.NET.
   
 The solution I have come up with is to add global default settings. Set once with JsonConvert.DefaultSettings in an application, the default settings will automatically be used by all calls to JsonConvert.SerializeObject/DeserializeObject, and JToken.ToObject/FromObject. Any user supplied settings to these calls will override the default settings.
   
@@ -39,17 +39,17 @@ string json = JsonConvert.SerializeObject(e);
 // }
 ```
 
-Because there are cases where JSON should not be customized, e.g. a Facebook or Twitter library, by default JsonSerializer won’t use DefaultSettings, providing an opt-out for those frameworks or for places in your application that shouldn’t use default settings. To create a JsonSerializer that does use them there is a new JsonSerializer.CreateDefault() method.
+Because there are cases where JSON should not be customized, e.g. a Facebook or Twitter library, by default JsonSerializer won't use DefaultSettings, providing an opt-out for those frameworks or for places in your application that shouldn't use default settings. To create a JsonSerializer that does use them there is a new JsonSerializer.CreateDefault() method.
 
-In the short term there will be some third party libraries that don’t use default settings that should, and some third party libraries that do use default settings that shouldn’t. If you encounter a situation where DefaultSettings doesn’t work for you then continue to customize Json.NET settings like you do today.
+In the short term there will be some third party libraries that don't use default settings that should, and some third party libraries that do use default settings that shouldn't. If you encounter a situation where DefaultSettings doesn't work for you then continue to customize Json.NET settings like you do today.
 
 In the long term DefaultSettings will hopefully provide a simple, standard way to developers to customize JSON in .NET applications.
 
 ## Extension Data
 
-The second new feature in Json.NET 5.0 Release 5 is ~~copied~~ inspired by WCF’s [IExtensibleDataObject](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.iextensibledataobject.aspx).
+The second new feature in Json.NET 5.0 Release 5 is ~~copied~~ inspired by WCF's [IExtensibleDataObject](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.iextensibledataobject.aspx).
 
-Extension data is a JSON object’s values that aren’t matched to a .NET property during deserialization. By placing the JsonExtensionDataAttribute on a dictionary all unused values are automatically added to that dictionary and are accessible by you.
+Extension data is a JSON object's values that aren't matched to a .NET property during deserialization. By placing the JsonExtensionDataAttribute on a dictionary all unused values are automatically added to that dictionary and are accessible by you.
 
 ```csharp
 public class DirectoryAccount

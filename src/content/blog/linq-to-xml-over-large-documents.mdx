@@ -14,7 +14,7 @@ A less visible and less talked about improvement in LINQ to XML is its ability t
  
 LINQ to XML brings two notable improvements to working with large documents. The first is a reduction in the amount of memory required. LINQ to XML stores XML documents in memory more efficiently than DOM.
  
-The second improvement is LINQ to XML’s ability to combine the document approach the XmlReader approach. Using the static method XNode.ReadFrom, which takes an XmlReader and will return a XNode object of the reader’s current position, we can create XNode elements one by one, and work on them as needed. You still aren’t loading the entire document into memory but you get the ease of use of working with a document. The best of both worlds! Let’s see an example...
+The second improvement is LINQ to XML's ability to combine the document approach the XmlReader approach. Using the static method XNode.ReadFrom, which takes an XmlReader and will return a XNode object of the reader's current position, we can create XNode elements one by one, and work on them as needed. You still aren't loading the entire document into memory but you get the ease of use of working with a document. The best of both worlds! Let's see an example...
  
 ## Example: Streaming LINQ to XML over OOXML
  

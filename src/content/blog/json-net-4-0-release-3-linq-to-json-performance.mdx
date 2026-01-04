@@ -4,7 +4,7 @@ description: "Experience faster LINQ to JSON operations in Release 3 with O(1) p
 pubDate: "Oct 02 2011"
 source: "https://james.newtonking.com/archive/2011/10/01/json-net-4-0-release-3-linq-to-json-performance"
 ---
-One of Json.NET’s most popular features - LINQ to JSON - has gotten a speed boost.
+One of Json.NET's most popular features - LINQ to JSON - has gotten a speed boost.
   
 Previously the LINQ to JSON collection objects (JObject and JArray) internally used a linked list to keep track of their children. While this gave them complete control over the order of properties inside objects, it made lookups by key (a property name for an object, an index for an array) slow over large JSON documents.
   
@@ -18,7 +18,7 @@ From your perspective the API for LINQ to JSON is exactly the same, it is just f
   
 One thing to note in this release is that to play nicely with [NuGet](http://nuget.org/List/Packages/Newtonsoft.Json) the different versions of Json.NET now all use the same assembly file name: Newtonsoft.Json.dll
   
-If you want to find out exactly which version of the dll you are using the Windows file properties dialog display’s a .NET assembly’s title as the File description.
+If you want to find out exactly which version of the dll you are using the Windows file properties dialog display's a .NET assembly's title as the File description.
   
 ![Oh no, the Pawnee have returned. They probably want their souls back.](../../assets/blog/json-net-4-0-release-3-linq-to-json-performance/image_3.png "Oh no, the Pawnee have returned. They probably want their souls back.")
   

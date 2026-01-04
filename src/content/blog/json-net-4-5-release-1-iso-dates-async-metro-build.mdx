@@ -8,7 +8,7 @@ This is the first major release of Json.NET 4.5. Read on for the details.
   
 ## ISO Dates
   
-Json.NET now writes dates as an [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) string by default instead of Microsoft’s format.
+Json.NET now writes dates as an [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) string by default instead of Microsoft's format.
   
 The reason for the change is the ISO format is becoming the standard for JSON libraries. All major browsers output an ISO date from the [JSON.stringify](http://msdn.microsoft.com/en-us/library/cc836459%28v=vs.85%29.aspx) function for example. Other benefits are the ISO 8601 standard is human readable unlike Unix ticks and the format is better at handling time zones.
   
@@ -39,7 +39,7 @@ Json.NET now supports Windows 8 Metro applications (i.e. WinRT). Since WinRT is 
 
 ## Assembly Versioning
 
-I’m going to experiment with only updating the assembly version at major version changes (i.e. 4.5.0.0) and letting the assembly file version keep the true version number, similar to what the ASP.NET team do with MVC assemblies. Breaking changes will only happen on major version changes.
+I'm going to experiment with only updating the assembly version at major version changes (i.e. 4.5.0.0) and letting the assembly file version keep the true version number, similar to what the ASP.NET team do with MVC assemblies. Breaking changes will only happen on major version changes.
 
 Hopefully this should reduce the amount of assembly binding redirecting [going on](/archive/2012/02/11/json-net-4-0-release-8-bug-fixes) for everyone.
 

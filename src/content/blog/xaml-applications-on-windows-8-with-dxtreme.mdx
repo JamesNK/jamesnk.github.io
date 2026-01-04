@@ -8,11 +8,11 @@ source: "https://james.newtonking.com/archive/2012/10/12/xaml-applications-on-wi
 
 The public release date of Windows 8 is rapidly approaching and with it comes a brand new way to build and sell Windows applications via the new [Windows Store](http://en.wikipedia.org/wiki/Windows_Store).
 
-I first used the new Windows Store platform earlier this year when I ported my open source [Json.NET](http://www.newtonsoft.com/json) library to it, and since then I have also built a couple Windows applications on it using JavaScript. In this blog post I am trying out something new to me for the first time: Windows 8 development using .NET and XAML with [DXTREME’s XAML controls](http://www.devexpress.com/Subscriptions/DXTREME/).
+I first used the new Windows Store platform earlier this year when I ported my open source [Json.NET](http://www.newtonsoft.com/json) library to it, and since then I have also built a couple Windows applications on it using JavaScript. In this blog post I am trying out something new to me for the first time: Windows 8 development using .NET and XAML with [DXTREME's XAML controls](http://www.devexpress.com/Subscriptions/DXTREME/).
 
 ## Installation and first impressions
 
-The first thing you’ll notice after downloading DXTREME is its installer. The design is simple and to the point, and it looks completely at home in the Windows 8 UI.
+The first thing you'll notice after downloading DXTREME is its installer. The design is simple and to the point, and it looks completely at home in the Windows 8 UI.
 
 ![Installer8](../../assets/blog/xaml-applications-on-windows-8-with-dxtreme/installer.png "Installer8")
 
@@ -24,15 +24,15 @@ As someone completely new to DXTREME and Windows 8 XAML development I found both
 
 ## Getting Started
 
-I find the best way to learn something new is to make something with it. The Windows 8 application I’m going to step through making in this blog post is called **/r/Imgur** and is an app that integrates the popular social websites [Reddit](http://www.reddit.com/) and [Imgur](http://imgur.com/). It displays images from those websites within a Windows application. (a link to the final source code will be at the end of the blog post)
+I find the best way to learn something new is to make something with it. The Windows 8 application I'm going to step through making in this blog post is called **/r/Imgur** and is an app that integrates the popular social websites [Reddit](http://www.reddit.com/) and [Imgur](http://imgur.com/). It displays images from those websites within a Windows application. (a link to the final source code will be at the end of the blog post)
 
 ![newproject6](../../assets/blog/xaml-applications-on-windows-8-with-dxtreme/newproject.png "newproject6")
 
-As part of its installation DXTREME adds new Windows 8 project types to Visual Studio 2012. I used the DXTREME Grid Application project which sets up a basic Windows 8 tile based UI for you using DXTREME’s new controls.
+As part of its installation DXTREME adds new Windows 8 project types to Visual Studio 2012. I used the DXTREME Grid Application project which sets up a basic Windows 8 tile based UI for you using DXTREME's new controls.
 
 ## Fetching Data from Imgur
 
-The application’s data and images are driven from Imgur, an Internet image hosting service. They provide a [simple API](http://api.imgur.com/) for getting album information as JSON for their website.
+The application's data and images are driven from Imgur, an Internet image hosting service. They provide a [simple API](http://api.imgur.com/) for getting album information as JSON for their website.
 
 ```csharp
 public static async Task<Album> LoadAlbum(string subReddit)
@@ -61,7 +61,7 @@ The code above utilizes the Web API Client library and Json.NET. It simply gets 
 
 ## Styling the UI
 
-Two of XAML’s most powerful features are its support for the model-view-view-model pattern (MVVM) and design time view data, both of which have great support in DXTREME. Once setup design time view data lets you style your Windows 8 application from within Visual Studio 2012 or Expression Blend against pretend data. You no longer need to constantly restart your application to see what the final result will be because it is instantly visible in the XAML designer. It’s a great timesaver.
+Two of XAML's most powerful features are its support for the model-view-view-model pattern (MVVM) and design time view data, both of which have great support in DXTREME. Once setup design time view data lets you style your Windows 8 application from within Visual Studio 2012 or Expression Blend against pretend data. You no longer need to constantly restart your application to see what the final result will be because it is instantly visible in the XAML designer. It's a great timesaver.
 
 ![blend8](../../assets/blog/xaml-applications-on-windows-8-with-dxtreme/blend.png "blend8")
 
@@ -69,7 +69,7 @@ The screenshot above is **/r/Imgur** in Expression Blend after I have finished s
 
 ## Adding New Albums
 
-As well as displaying some pre-set albums in the app we want to give users the ability to add new albums. To do this we’ll add a Windows 8 appbar button that will launch a Windows 8 style dialog with fields for the user to enter the new album name. Fortunately DXTREME has a Windows 8 style dialog that is perfect for the task.
+As well as displaying some pre-set albums in the app we want to give users the ability to add new albums. To do this we'll add a Windows 8 appbar button that will launch a Windows 8 style dialog with fields for the user to enter the new album name. Fortunately DXTREME has a Windows 8 style dialog that is perfect for the task.
 
 ```csharp
 <Page.Resources>
@@ -91,11 +91,11 @@ As well as displaying some pre-set albums in the app we want to give users the a
 </dxcore:Interaction.Behaviors>
 ```
 
-Wiring up a DialogService to a DataTemplate using the code above lets you launch a dialog without having to worry about recreating the look and feel of a Windows 8 dialog; that’s all handled for you by the dialog control.
+Wiring up a DialogService to a DataTemplate using the code above lets you launch a dialog without having to worry about recreating the look and feel of a Windows 8 dialog; that's all handled for you by the dialog control.
 
 ## Album Rating
 
-The final piece to the application is to add the album rating to its detail page. Here we’ll add a pie graph using DXTREME’s graphing library to display the ratio of user up votes to down votes for the album.
+The final piece to the application is to add the album rating to its detail page. Here we'll add a pie graph using DXTREME's graphing library to display the ratio of user up votes to down votes for the album.
 
 ![chart5](../../assets/blog/xaml-applications-on-windows-8-with-dxtreme/chart.png "chart5")
 
@@ -107,4 +107,4 @@ I found the controls I used while making **/r/Imgur** well thought out and easy 
 
 **[Click here to download the /r/Imgur application source code](../../public/xaml-applications-on-windows-8-with-dxtreme/imgurapp.zip)**
 
-*Disclosure of Material Connection: I received one or more of the products or services mentioned above for free in the hope that I would mention it on my blog. Regardless, I only recommend products or services I use personally and believe my readers will enjoy. I am disclosing this in accordance with the Federal Trade Commission’s 16 CFR, Part 255:* [*Guides Concerning the Use of Endorsements and Testimonials in Advertising.*](http://www.access.gpo.gov/nara/cfr/waisidx_03/16cfr255_03.html)
+*Disclosure of Material Connection: I received one or more of the products or services mentioned above for free in the hope that I would mention it on my blog. Regardless, I only recommend products or services I use personally and believe my readers will enjoy. I am disclosing this in accordance with the Federal Trade Commission's 16 CFR, Part 255:* [*Guides Concerning the Use of Endorsements and Testimonials in Advertising.*](http://www.access.gpo.gov/nara/cfr/waisidx_03/16cfr255_03.html)

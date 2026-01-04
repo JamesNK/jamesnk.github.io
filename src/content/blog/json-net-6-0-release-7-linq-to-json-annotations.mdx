@@ -8,7 +8,7 @@ source: "https://james.newtonking.com/archive/2014/12/23/json-net-6-0-release-7-
  
 This release of Json.NET adds annotations to LINQ to JSON. Annotations allow you to associate arbitrary objects with LINQ to JSON JObjects, JArrays and JValues.
  
-Annotations aren’t part of the JSON specification; they aren’t read from JSON or written to JSON. Annotations are for use within an application.
+Annotations aren't part of the JSON specification; they aren't read from JSON or written to JSON. Annotations are for use within an application.
  
 ```csharp
 JObject o = JObject.Parse(@"{
@@ -29,7 +29,7 @@ HashSet<string> changedProperties = o.Annotation<HashSet<string>>();
 // employer
 ```
 
-In this example we use annotations to track changes to a JObject. First a set of strings for is associated with a JObject using annotations. The PropertyChanged event is then used to add a property name to the set whenever its value is changed. The JObject’s changed properties are now easily accessible anywhere in your application from the JObject.
+In this example we use annotations to track changes to a JObject. First a set of strings for is associated with a JObject using annotations. The PropertyChanged event is then used to add a property name to the set whenever its value is changed. The JObject's changed properties are now easily accessible anywhere in your application from the JObject.
 
 **Changes** 
 

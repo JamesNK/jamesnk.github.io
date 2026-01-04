@@ -16,14 +16,14 @@ A huge amount has changed in the [Json.NET](http://www.newtonsoft.com/json) seri
 
 New to the serializer is reference tracking, type tracking, serialization callback events, [MetadataTypeAttribute](http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations.metadatatypeattribute.aspx) support for when working with code generation, additional property level control over serialization settings, a BinaryConverter to convert byte arrays, a StringEnumConverter to convert enum values to their string name, a Populate method for populating JSON values onto an existing object, additional programmatic control over serialization via the IReferenceResolver interface (it replaces [IMappingResolver](/archive/2009/02/28/thoughts-on-improving-jsonserializer-imappingresolver)), and much more…
 
-There is too much to cover in one blog post so I’m going to split everything up over a couple of weeks. If you’re really eager for the inside scoop then check out the [Json.NET help](http://www.newtonsoft.com/json/help/html/Introduction.htm?topic=html/Performance.htm).
+There is too much to cover in one blog post so I'm going to split everything up over a couple of weeks. If you're really eager for the inside scoop then check out the [Json.NET help](http://www.newtonsoft.com/json/help/html/Introduction.htm?topic=html/Performance.htm).
 
 - [Preserving Object References](http://www.newtonsoft.com/json/help/PreserveObjectReferences.html)
 - [Serialization Callbacks](http://www.newtonsoft.com/json/help/SerializationCallbacks.html)
 - [CustomCreationConverter](http://www.newtonsoft.com/json/help/CustomCreationConverter.html)
 - [Contract Resolvers](http://www.newtonsoft.com/json/help/ContractResolver.html)
 
-I’m going to be adding more as I go. The first topic to be covered is my favourite new feature, one that very few serializers support and no JSON serializers anywhere as far as I know: Object reference tracking
+I'm going to be adding more as I go. The first topic to be covered is my favourite new feature, one that very few serializers support and no JSON serializers anywhere as far as I know: Object reference tracking
 
 ## Preserving Object References
 

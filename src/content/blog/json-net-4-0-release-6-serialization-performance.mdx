@@ -4,7 +4,7 @@ description: "Troubleshoot JSON deserialization errors with line number informat
 pubDate: "Jan 23 2012"
 source: "https://james.newtonking.com/archive/2012/01/23/json-net-4-0-release-6-serialization-performance"
 ---
-The big feature of this release is improved performance. For the first time in a couple of years I’ve sat down and benchmarked, profiled and tuned Json.NET.
+The big feature of this release is improved performance. For the first time in a couple of years I've sat down and benchmarked, profiled and tuned Json.NET.
   
 ![And now, in the spirit of the season: start shopping. And for every dollar of Krusty merchandise you buy, I will be nice to a sick kid. For legal purposes, sick kids may include hookers with a cold.](../../assets/blog/json-net-4-0-release-6-serialization-performance/json406jsonperformance.png "And now, in the spirit of the season: start shopping. And for every dollar of Krusty merchandise you buy, I will be nice to a sick kid. For legal purposes, sick kids may include hookers with a cold.")
 
@@ -30,11 +30,11 @@ List<int> numbers = JsonConvert.DeserializeObject<List<int>>(json);
 
 ## Worst. Bug. Ever. Fixed.
 
-Visual Studio Ultimate Edition has a feature called [Intellitrace](http://msdn.microsoft.com/en-us/library/dd264915.aspx). Intellitrace and Json.NET [didn’t get along](https://www.google.com/search?q=json.net+intellitrace+operation+could+destabilize+the+runtime). After a year of at first being unsure why only some people were getting the error, and then not knowing what exactly why Intellitrace was breaking Json.NET, I finally nailed it down to one three line method that Intellitrace didn’t like. [Fixed... finally](http://json.codeplex.com/SourceControl/changeset/changes/64489).
+Visual Studio Ultimate Edition has a feature called [Intellitrace](http://msdn.microsoft.com/en-us/library/dd264915.aspx). Intellitrace and Json.NET [didn't get along](https://www.google.com/search?q=json.net+intellitrace+operation+could+destabilize+the+runtime). After a year of at first being unsure why only some people were getting the error, and then not knowing what exactly why Intellitrace was breaking Json.NET, I finally nailed it down to one three line method that Intellitrace didn't like. [Fixed... finally](http://json.codeplex.com/SourceControl/changeset/changes/64489).
 
 ## Changes
 
-Here is a complete list of what has changed since Json.NET 4.0 Release 4 (if you’re curious where v5 is, it was just one fix for Windows Phone Mango and NuGet).
+Here is a complete list of what has changed since Json.NET 4.0 Release 4 (if you're curious where v5 is, it was just one fix for Windows Phone Mango and NuGet).
 
 - New feature - Added line number information to deserialization errors
 - New feature - Added ReadAsInt32 to JsonReader

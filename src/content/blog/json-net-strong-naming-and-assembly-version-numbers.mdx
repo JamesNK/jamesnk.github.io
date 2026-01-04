@@ -10,6 +10,6 @@ The problem is a combination of factors: Json.NET is strong named, has frequent 
 
 NuGet does its best to solve the issue of different assemblies referencing different versions by automatically inserting binding redirects for you, but having to rely on a tool to fix up problems is sub-optimal.
 
-The solution that I’m evaluating to improve the situation is to only update the assembly version number on major releases (update: now evaluating never updating the assembly version). For example Json.NET 4.5 R1 has an assembly version number of 4.5.0.0, R2 will have an the version number 4.5.0.0, R3 = 4.5.0.0, and so on. While the assembly version number will be static the assembly *file* version number will continue to be updated each release so you can identify exactly which version you are using, e.g. 4.5.1.14720.
+The solution that I'm evaluating to improve the situation is to only update the assembly version number on major releases (update: now evaluating never updating the assembly version). For example Json.NET 4.5 R1 has an assembly version number of 4.5.0.0, R2 will have an the version number 4.5.0.0, R3 = 4.5.0.0, and so on. While the assembly version number will be static the assembly *file* version number will continue to be updated each release so you can identify exactly which version you are using, e.g. 4.5.1.14720.
 
 The .NET framework is doing something [similar](http://blogs.msdn.com/b/dotnet/archive/2011/09/26/compatibility-of-net-framework-4-5.aspx) with .NET 4.5, replacing 4.0 assemblies with new files using the same version number.

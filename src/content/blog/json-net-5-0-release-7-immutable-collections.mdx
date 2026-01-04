@@ -26,7 +26,7 @@ There is nothing you need to do to make immutable collection and Json.NET work t
 
 ## Round-trip Extension Data
 
-Extension data is now written when an object is serialized. Reading and writing extension data makes it possible to automatically round-trip all JSON without adding every property to the .NET type you’re deserializing to. Only declare the properties you’re interested in and let extension data do the rest.
+Extension data is now written when an object is serialized. Reading and writing extension data makes it possible to automatically round-trip all JSON without adding every property to the .NET type you're deserializing to. Only declare the properties you're interested in and let extension data do the rest.
 
 ```csharp
 public class CustomerInvoice
@@ -60,9 +60,9 @@ string result = JsonConvert.SerializeObject(invoice);
 // }
 ```
 
-Using extension data to round-trip JSON like this also means you don’t need to worry about third-party sources adding additional JSON because it will automatically be preserved when serializing/deserializing. Nifty.
+Using extension data to round-trip JSON like this also means you don't need to worry about third-party sources adding additional JSON because it will automatically be preserved when serializing/deserializing. Nifty.
 
-If you don’t want extension data serialized (or deserialized) then disable that functionality by setting WriteData and ReadData properties on ExtensionDataAttribute to false.
+If you don't want extension data serialized (or deserialized) then disable that functionality by setting WriteData and ReadData properties on ExtensionDataAttribute to false.
 
 ## Bug fixes
 

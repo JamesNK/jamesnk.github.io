@@ -6,7 +6,7 @@ source: "https://james.newtonking.com/archive/2006/08/10/WebRequestDetailedError
 ---
 **[Download DetailedErrorEvent](/downloads/detailederrorevent/detailederrorevent.zip)** - DetailedErrorEvent dll and C# source code
 
-One of the least talked about new ASP.NET 2.0 features, and one of my favorites, is the health monitoring system. Designed to help you monitor the status of a deployed website, the ASP.NET health monitoring system makes what could potentially be a chore easy. With just a few lines in your site’s web.config you can automatically log a variety of events to a file, a database or even send an email to an email address.
+One of the least talked about new ASP.NET 2.0 features, and one of my favorites, is the health monitoring system. Designed to help you monitor the status of a deployed website, the ASP.NET health monitoring system makes what could potentially be a chore easy. With just a few lines in your site's web.config you can automatically log a variety of events to a file, a database or even send an email to an email address.
 
 While overall health monitoring it is a great new feature for ASP.NET, the WebRequestErrorEvent class provides disappointingly small amount of information. Raised when an unhandled exception is thrown during a web request, only basic information about the request that caused the error is provided such as the URL, the user host address and the authenticated user. Vital information like the request headers, form values, cookies and server variables are missing, making debugging the error more difficult than it needs to be.
 
@@ -79,7 +79,7 @@ The old event will still be raised so if you may want to modify your web.config 
 
 ## Usage
 
-To use the WebRequestDetailedErrorEvent simply add the module to your website’s httpModule section.
+To use the WebRequestDetailedErrorEvent simply add the module to your website's httpModule section.
 
 ```csharp
 <httpModules>
@@ -87,6 +87,6 @@ To use the WebRequestDetailedErrorEvent simply add the module to your website’
 </httpModules>
 ```
 
-And that’s it. The new error event is now raised whenever an unhandled exception is thrown from a web request. Note that if you haven’t already setup ASP.NET to log health monitor events you can find out how [here](http://www.asp.net/QuickStart/aspnet/doc/monitoring/webevents.aspx).
+And that's it. The new error event is now raised whenever an unhandled exception is thrown from a web request. Note that if you haven't already setup ASP.NET to log health monitor events you can find out how [here](http://www.asp.net/QuickStart/aspnet/doc/monitoring/webevents.aspx).
 
 **[Download DetailedErrorEvent](/downloads/detailederrorevent/detailederrorevent.zip)** - DetailedErrorEvent dll and C# source code

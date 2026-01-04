@@ -6,12 +6,12 @@ source: "https://james.newtonking.com/archive/2009/10/24/breaking-hard-assembly-
 ---
 ![Smithers: &quot;I love you, sir.&quot; Mr. Burns: &quot;Oh, hot dog. Thank you for making my last moments on earth socially awkward.&quot;](../../assets/blog/breaking-hard-assembly-dependencies/image.png "Smithers: &quot;I love you, sir.&quot; Mr. Burns: &quot;Oh, hot dog. Thank you for making my last moments on earth socially awkward.&quot;")
 
-[Json.NET](http://www.newtonsoft.com/json) references a couple of assemblies that you wouldn’t expect for a JSON parser:
+[Json.NET](http://www.newtonsoft.com/json) references a couple of assemblies that you wouldn't expect for a JSON parser:
 
 - System.Data.Linq (LINQ to SQL)
 - System.Data.Entity (ADO.NET Entity Framework)
 
-Types from these assemblies are used to customize serialization behavior and make using Json.NET with them Just Work. While I always like things that Just Work, I’m not super happy about having dependencies on unrelated assemblies for small bits of functionality.
+Types from these assemblies are used to customize serialization behavior and make using Json.NET with them Just Work. While I always like things that Just Work, I'm not super happy about having dependencies on unrelated assemblies for small bits of functionality.
 
 My first thought is to ditch the assembly reference and create stand-in objects that internally use reflection to access the actual type. Instances of the original object would be replaced by the stand-in. Off the top of my head I think that would work but this seems like a problem that someone somewhere would have invested some time to fix properly.
 

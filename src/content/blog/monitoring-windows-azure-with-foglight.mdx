@@ -16,7 +16,7 @@ Setting up Foglight for Azure Apps is really simple. Foglight has two configurat
 
 ![foglightconfigure](../../assets/blog/monitoring-windows-azure-with-foglight/foglightconfigure.png "foglightconfigure")
 
-With Foglight automatic discovery the only information you need is your role’s Azure Subscription ID. Subscription IDs can be found in the Windows Azure Management Portal by browsing to Settings -&gt; Management Certificates.
+With Foglight automatic discovery the only information you need is your role's Azure Subscription ID. Subscription IDs can be found in the Windows Azure Management Portal by browsing to Settings -&gt; Management Certificates.
 
 ![foglightsubscriptionid](../../assets/blog/monitoring-windows-azure-with-foglight/foglightsubscriptionid.png "foglightsubscriptionid")
 
@@ -24,7 +24,7 @@ The next step after copy/pasting your Subscription ID is to add a management cer
 
 ![foglightcertificate](../../assets/blog/monitoring-windows-azure-with-foglight/foglightcertificate.png "foglightcertificate")
 
-Finally select the deployment you want to monitor and you’re finished.
+Finally select the deployment you want to monitor and you're finished.
 
 ![foglightconfigurationcomplete](../../assets/blog/monitoring-windows-azure-with-foglight/foglightconfigurationcomplete.png "foglightconfigurationcomplete")
 
@@ -32,11 +32,11 @@ Finally select the deployment you want to monitor and you’re finished.
 
 ![foglightdashboard](../../assets/blog/monitoring-windows-azure-with-foglight/foglightdashboard.png "foglightdashboard")
 
-The core of Foglight for Azure Apps are the monitors it provides to measure the health of your application. The first page you’ll come upon after setup is the dashboard which provides a nice summary of the state of your application. From this screen or from the menu you can drill into more detail about each monitor.
+The core of Foglight for Azure Apps are the monitors it provides to measure the health of your application. The first page you'll come upon after setup is the dashboard which provides a nice summary of the state of your application. From this screen or from the menu you can drill into more detail about each monitor.
 
 ![availability](../../assets/blog/monitoring-windows-azure-with-foglight/availability.png "availability")
 
-The availability page shows you whether your application is accessible from various locations around the world - useful for times when a user or users from a country report they can’t access your application. In the screenshot above I've activated server errors on my demo website which you can see showing up in orange in the availability graphs.
+The availability page shows you whether your application is accessible from various locations around the world - useful for times when a user or users from a country report they can't access your application. In the screenshot above I've activated server errors on my demo website which you can see showing up in orange in the availability graphs.
 
 ![health](../../assets/blog/monitoring-windows-azure-with-foglight/health.png "health")
 
@@ -60,16 +60,16 @@ Once you're happy with the health thresholds (the screenshot above shows the def
 
 Health alerts are one of the most important features when monitoring, letting you know about problems as soon as they happen rather than waiting until someone look at Foglight or hear about errors from your users.
 
-One thing I’ve done in the past with errors is to send an SMS message to my phone. Foglight doesn’t have built in SMS support but it is simple to set up using [IFTTT](https://ifttt.com/).
+One thing I've done in the past with errors is to send an SMS message to my phone. Foglight doesn't have built in SMS support but it is simple to set up using [IFTTT](https://ifttt.com/).
 
 ![ifttt](../../assets/blog/monitoring-windows-azure-with-foglight/ifttt.png "ifttt")
 
 ## Wrapping Up
 
-I found Foglight's monitoring easy to understand and fast to update. Really impressive is how simple Foglight is to setup, taking just a couple of minutes and requiring no changes to your application. Finally the Foglight’s health alerts will ensure you know about critical issues as they happen.
+I found Foglight's monitoring easy to understand and fast to update. Really impressive is how simple Foglight is to setup, taking just a couple of minutes and requiring no changes to your application. Finally the Foglight's health alerts will ensure you know about critical issues as they happen.
 
 If you're deploying applications to Azure and it is important they are rock solid then I recommend you check [Foglight for Azure Apps](http://foglight-on-demand.com/) out.
 
 **[Click here to download the Windows Azure JsonFormat application source code](../../public/monitoring-windows-azure-with-foglight/jsonformat.zip)**
 
-*Disclosure of Material Connection: I received one or more of the products or services mentioned above for free in the hope that I would mention it on my blog. Regardless, I only recommend products or services I use personally and believe my readers will enjoy. I am disclosing this in accordance with the Federal Trade Commission’s 16 CFR, Part 255:* [*Guides Concerning the Use of Endorsements and Testimonials in Advertising.*](http://www.access.gpo.gov/nara/cfr/waisidx_03/16cfr255_03.html)
+*Disclosure of Material Connection: I received one or more of the products or services mentioned above for free in the hope that I would mention it on my blog. Regardless, I only recommend products or services I use personally and believe my readers will enjoy. I am disclosing this in accordance with the Federal Trade Commission's 16 CFR, Part 255:* [*Guides Concerning the Use of Endorsements and Testimonials in Advertising.*](http://www.access.gpo.gov/nara/cfr/waisidx_03/16cfr255_03.html)

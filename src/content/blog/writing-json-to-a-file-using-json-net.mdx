@@ -15,7 +15,7 @@ File.WriteAllText(@"c:\person.json", json);
 
 In this C# example we get the string returned from SerializeObject and pass it to [WriteAllText](http://msdn.microsoft.com/en-us/library/system.io.file.writealltext.aspx), a helper method on the very useful [System.IO.File](http://msdn.microsoft.com/en-us/library/system.io.file.aspx) class. The JSON contents of the string is written to the file.
 
-If greater control is required over how the file is written, or the JSON you are writing is large and you don’t want the overhead of having the entire JSON string in memory, a better approach is to use JsonSerializer directly.
+If greater control is required over how the file is written, or the JSON you are writing is large and you don't want the overhead of having the entire JSON string in memory, a better approach is to use JsonSerializer directly.
 
 ```csharp
 Person person = GetPerson();
@@ -33,4 +33,4 @@ using (JsonWriter jw = new JsonTextWriter(sw))
 
 More code but also more efficient: the JSON is written directly to the file stream. The other bonus to using this approach is that it can be adapted to write to any .NET [Stream](http://msdn.microsoft.com/en-us/library/system.io.stream.aspx): file streams, web response streams, memory streams, etc.
 
-Isn’t [polymorphism](http://stackoverflow.com/questions/210460/try-to-describe-polymorphism-as-easy-as-you-can) cool? 😊
+Isn't [polymorphism](http://stackoverflow.com/questions/210460/try-to-describe-polymorphism-as-easy-as-you-can) cool? 😊

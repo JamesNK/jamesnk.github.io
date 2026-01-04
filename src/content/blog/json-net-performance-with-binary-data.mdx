@@ -4,7 +4,7 @@ description: "Compare Json.NET, BSON, DataContractSerializer, and BinaryFormatte
 pubDate: "Feb 07 2010"
 source: "https://james.newtonking.com/archive/2010/02/07/json-net-performance-with-binary-data"
 ---
-Binary data and text file formats (JSON, XML) don’t tend get along. To be included in JSON or XML binary data has to be encode into a text friendly format, generally [base64](http://en.wikipedia.org/wiki/Base64), which creates overhead both in the time spent encoding/decoding binary, and the extra size of the text encoded data in the message.
+Binary data and text file formats (JSON, XML) don't tend get along. To be included in JSON or XML binary data has to be encode into a text friendly format, generally [base64](http://en.wikipedia.org/wiki/Base64), which creates overhead both in the time spent encoding/decoding binary, and the extra size of the text encoded data in the message.
   
 ```csharp
 {
@@ -14,7 +14,7 @@ Binary data and text file formats (JSON, XML) don’t tend get along. To be incl
 
 ## The Test
 
-In our test we’ll compare serializing a message with binary data using common .NET serialization methods and compare the result. First our message…
+In our test we'll compare serializing a message with binary data using common .NET serialization methods and compare the result. First our message…
 
 ```csharp
 public class Image
@@ -34,13 +34,13 @@ And some test data…
 
   **Author:** Hironori Akutagawa 
 
-  **Caption:** I have no idea what you are talking about so here’s a bunny with a pancake on its head.
+  **Caption:** I have no idea what you are talking about so here's a bunny with a pancake on its head.
 
 ## The Results
 
-[Json.NET](http://www.newtonsoft.com/json) and the [DataContractSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.datacontractserializer.aspx) are about equal to each other in the size of the resulting message - each is encoding the image byte array as base64 encoded text. The small edge to Json.NET comes from the smaller size of the JSON metadata compared to the DataContractSerializer’s XML.
+[Json.NET](http://www.newtonsoft.com/json) and the [DataContractSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.datacontractserializer.aspx) are about equal to each other in the size of the resulting message - each is encoding the image byte array as base64 encoded text. The small edge to Json.NET comes from the smaller size of the JSON metadata compared to the DataContractSerializer's XML.
 
-[Json.NET BSON](http://www.newtonsoft.com/json) and the [BinaryFormatter](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatters.binary.binaryformatter.aspx) are binary formats so they can include the image data directly in the message. They’re approximately 25% smaller than JSON/XML by saving the overhead of base64. Again the Json.NET BSON format is more efficient than the BinaryFormatter making it slightly smaller.
+[Json.NET BSON](http://www.newtonsoft.com/json) and the [BinaryFormatter](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatters.binary.binaryformatter.aspx) are binary formats so they can include the image data directly in the message. They're approximately 25% smaller than JSON/XML by saving the overhead of base64. Again the Json.NET BSON format is more efficient than the BinaryFormatter making it slightly smaller.
 
 Finally as you can see the WCF [DataContractJsonSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx) is by far the least efficient. When I looked into why it performed so badly it turns out that the WCF JsonSerializer serializes binary data as a JSON array of integers, one integer representing each byte. It goes without saying that you should never use the WCF JsonSerializer with binary data.
 

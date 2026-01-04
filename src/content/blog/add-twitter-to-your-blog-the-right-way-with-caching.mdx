@@ -18,7 +18,7 @@ If Twitter.com is down, [not an uncommon occurrence](http://failwhale.com/), and
 
 To get around this problem Twitter advises that the script reference should be placed at the end of a page. That fixes one issue but creates another: The content from Twitter pops into the page only once the page is completely loaded. It looks a little hacky at best and could cause the content on the page to suddenly move and reflow depending upon where the Twitter statuses are being inserted.
   
-An example of content pop-in can be seen in the sidebar of [MajorNelson](http://www.majornelson.com/)’s blog. Each time the page reloads there is a noticeable delay before the Twitter statues are populated.
+An example of content pop-in can be seen in the sidebar of [MajorNelson](http://www.majornelson.com/)'s blog. Each time the page reloads there is a noticeable delay before the Twitter statues are populated.
   
 ## The Solution
   
@@ -69,6 +69,6 @@ The JavaScript is pretty simple.
 
 Add this script immediately after the Twitter content. If cached content is found then it will be inserted into the page straight away, improving user experience.
 
-The only other change that needs to be made is to the script reference to Twitter. Rename the callback function from twitterCallback2 to twitterCachedCallback in the querystring and you’re done.
+The only other change that needs to be made is to the script reference to Twitter. Rename the callback function from twitterCallback2 to twitterCachedCallback in the querystring and you're done.
 
 I use this technique on my blog (look to the sidebar on the right). You can also see an example webpage I threw together [**here**](/blogfiles/twittercaching/twittercaching.html).

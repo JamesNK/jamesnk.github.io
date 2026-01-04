@@ -24,11 +24,11 @@ Json.NET has a NuGet logo. Check it:
 
 ## DiscriminatedUnionConverter performance improvements
 
-Json.NET’s F# discriminated union support has been rewritten. Serializing very large collections of large discriminated unions was noticeably slow. The [new implementation](https://github.com/JamesNK/Newtonsoft.Json/commit/95e04ba96e1c1ce40bcaab5c93544f37f9abf2e2#diff-cb3fb9511e571c94735be121f80b6fe5) caches reflection and type data, and significantly improves performance.
+Json.NET's F# discriminated union support has been rewritten. Serializing very large collections of large discriminated unions was noticeably slow. The [new implementation](https://github.com/JamesNK/Newtonsoft.Json/commit/95e04ba96e1c1ce40bcaab5c93544f37f9abf2e2#diff-cb3fb9511e571c94735be121f80b6fe5) caches reflection and type data, and significantly improves performance.
 
 ![What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.](../../assets/blog/json-net-7-0-release-1-documentation-bug-fixes-performance/image_19.png "What&rsquo;s the point of going out? We&rsquo;re just gonna wind up back home anyway.")
 
-That’s a 3200% improvement. If you’re using F# then you don’t need to do anything other than update Json.NET.
+That's a 3200% improvement. If you're using F# then you don't need to do anything other than update Json.NET.
 
 ## And everything else
 
